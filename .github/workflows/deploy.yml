@@ -17,8 +17,8 @@ jobs:
 
       - name: Replace Supabase Credentials 🛠️
         run: |
-          sed -i 's|URL_DE_TU_PROYECTO_SUPABASE|${{ secrets.SUPABASE_URL }}|g' index.html
-          sed -i 's|CLAVE_ANON_PUBLICA_DE_SUPABASE|${{ secrets.SUPABASE_ANON_KEY }}|g' index.html
+          sed -i 's|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g' index.html
+          sed -i 's|SUPABASE_ANON_KEY_PLACEHOLDER|${{ secrets.SUPABASE_ANON_KEY }}|g' index.html
         
       - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v3
