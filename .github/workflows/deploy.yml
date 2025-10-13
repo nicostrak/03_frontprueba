@@ -1,0 +1,26 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # O 'master' si esa es tu rama principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Replace Supabase Credentials 🛠️
+        run: |
+          sed -i 's|URL_DE_TU_PROYECTO_SUPABASE|${{ secrets.SUPABASE_URL }}|g' index.html
+          sed -i 's|CLAVE_ANON_PUBLICA_DE_SUPABASE|${{ secrets.SUPABASE_ANON_KEY }}|g' index.html
+        
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages # La rama donde se publicará la página
