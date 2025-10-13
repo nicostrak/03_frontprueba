@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Boletas Masivas - Automatiza tu Facturación</title>
+    
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for rapid UI development -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Custom styles to complement Tailwind and achieve the Supabase look */
+        :root {
+            --bg-dark: #121212;
+            --surface-dark: #1a1a1a;
+            --primary-green: #00B37E; /* Color primario restaurado a verde */
+            --primary-green-hover: #00996A; /* Tono más oscuro para hover */
+            --primary-amber: #f59e0b; 
+            --primary-red: #e53e3e;
+            --border-dark: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        /* Custom classes */
+        .bg-surface-dark { background-color: var(--surface-dark); }
+        .border-dark { border-color: var(--border-dark); }
+        .text-primary-green { color: var(--primary-green); }
+        .bg-primary-green { background-color: var(--primary-green); }
+        .bg-primary-green-hover:hover { background-color: var(--primary-green-hover); }
+        .btn-loading { background-color: var(--primary-amber); }
+        .btn-danger { background-color: var(--primary-red); }
+        .btn-danger:hover { background-color: #c53030; }
+
+        /* Code block styling */
+        pre {
+            background-color: #0d0d0d;
+            border: 1px solid var(--border-dark);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .hero-code-block {
+            transform: perspective(800px) rotateX(10deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .hero-code-block:hover {
+            transform: perspective(800px) rotateX(0deg);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        .code-method { color: #3ecf8e; font-weight: bold; }
+        .code-key { color: #58a6ff; }
+        .code-string { color: #a5d6ff; }
+        .code-number { color: #ffab70; }
+        .code-comment { color: #6a737d; }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.7s ease-in-out forwards;
+        }
+        
+        /* Custom button styling */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .btn-secondary {
+            border: 1px solid var(--border-dark);
+        }
+        .btn-secondary:hover {
+            background-color: var(--surface-dark);
+            border-color: var(--text-secondary);
+        }
+        
+        /* Logout button hover */
+        #logout-btn:hover {
+            background-color: var(--primary-red) !important;
+            border-color: var(--primary-red) !important;
+        }
+        
+        /* Modal transition */
+        .modal-container {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-container > div {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Spinner for loading state */
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--bg-dark); /* Color oscuro para contraste con botón ámbar */
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dashboard sidebar */
+        .sidebar-link {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .sidebar-link.active, .sidebar-link:hover {
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ======== LANDING PAGE SECTION ======== -->
+    <main id="landing-page" class="w-full flex flex-col min-h-screen">
+        <div class="flex-grow">
+            <!-- Header -->
+            <header class="sticky top-0 z-50 bg-black bg-opacity-50 backdrop-blur-lg border-b border-dark">
+                <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <a href="#" class="text-2xl font-bold text-white">API<span class="text-primary-green">Boletas</span></a>
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="#features" class="text-gray-400 hover:text-white transition">Características</a>
+                        <a href="#pricing" class="text-gray-400 hover:text-white transition">Precios</a>
+                        <a href="#contact" class="text-gray-400 hover:text-white transition">Contacto</a>
+                        <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-white transition">Documentación</a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="login-btn" class="btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">Iniciar Sesión</button>
+                        <button id="signup-btn" class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold bg-primary-green-hover">Empezar Ahora</button>
+                    </div>
+                </nav>
+            </header>
+
+            <!-- Hero Section -->
+            <section class="container mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
+                 <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 fade-in">
+                        Emite Boletas de Honorarios de Forma Masiva y Automática
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-400 mb-10 fade-in">
+                        Nuestra API REST se integra fácilmente en tus sistemas para automatizar la emisión de boletas, ahorrándote tiempo y esfuerzo.
+                    </p>
+                    <div class="flex justify-center space-x-4 fade-in">
+                        <a href="#pricing" class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover">Comenzar Gratis</a>
+                        <button class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-lg">Ver Documentación</button>
+                    </div>
+                </div>
+                <div class="mt-20 fade-in">
+                    <pre class="hero-code-block"><code><span class="code-method">POST</span> /v1/boletas/emitir
+<span class="code-key">x-api-key:</span> <span class="code-string">"sk_live_..."</span>
+<span class="code-key">Content-Type:</span> <span class="code-string">"application/json"</span>
+
+{
+  <span class="code-key">"rut":</span> <span class="code-string">"11.111.111-1"</span>,
+  <span class="code-key">"clave":</span> <span class="code-string">"tu_clave_secreta"</span>,
+  <span class="code-key">"csv_file":</span> <span class="code-string">"archivo_con_datos.csv"</span>
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="py-20 bg-surface-dark">
+                 <div class="container mx-auto px-6 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Por qué automatizar con nuestra API?</h2>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-16">Nuestra API no solo emite boletas. Es una herramienta de optimización que transforma tus procesos administrativos y financieros.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30"><div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div><h3 class="text-xl font-bold text-white mb-2">Ahorro Masivo de Tiempo</h3><p class="text-gray-400">Elimina la entrada manual de datos. Genera cientos o miles de boletas en segundos, liberando a tu equipo para tareas de mayor valor.</p></div>
+                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30"><div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div><h3 class="text-xl font-bold text-white mb-2">Reducción de Errores</h3><p class="text-gray-400">La automatización minimiza los errores de tipeo y cálculo, asegurando que los montos y datos de los receptores sean siempre correctos.</p></div>
+                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30"><div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V4a2 2 0 012-2h8a2 2 0 012 2v4z" /></svg></div><h3 class="text-xl font-bold text-white mb-2">Integración Fluida</h3><p class="text-gray-400">Con documentación clara y snippets de código generados por IA, integrar nuestra API en tu software o ERP actual es un proceso rápido y sencillo.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section id="pricing" class="py-20">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Planes para cada necesidad</h2>
+                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-16">Empieza gratis y escala a medida que tu negocio crece. Sin contratos a largo plazo.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div class="border border-dark rounded-lg p-8 flex flex-col bg-surface-dark"><h3 class="text-2xl font-bold text-primary-green mb-2">Gratuito</h3><p class="text-gray-400 mb-6">Para probar y proyectos personales.</p><p class="text-5xl font-extrabold text-white mb-4">$0<span class="text-lg font-normal text-gray-400">/mes</span></p><ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>100 boletas/mes</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Acceso a la API</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte comunitario</li></ul><button class="w-full btn btn-secondary text-white py-3 rounded-md font-bold">Empezar Gratis</button></div>
+                        <div class="border-2 border-primary-green rounded-lg p-8 flex flex-col bg-surface-dark relative shadow-2xl shadow-green-500/10"><span class="absolute top-0 -translate-y-1/2 bg-primary-green text-white text-xs font-bold px-3 py-1 rounded-full">MÁS POPULAR</span><h3 class="text-2xl font-bold text-white mb-2">Profesional</h3><p class="text-gray-400 mb-6">Para startups y PyMEs en crecimiento.</p><p class="text-5xl font-extrabold text-white mb-4">$49<span class="text-lg font-normal text-gray-400">/mes</span></p><ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>2.000 boletas/mes</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Generador de código IA</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Análisis de errores IA</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte prioritario por email</li></ul><button class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover">Elegir Plan Pro</button></div>
+                        <div class="border border-dark rounded-lg p-8 flex flex-col bg-surface-dark"><h3 class="text-2xl font-bold text-white mb-2">Empresa</h3><p class="text-gray-400 mb-6">Para grandes volúmenes y necesidades a medida.</p><p class="text-5xl font-extrabold text-white mb-4">Hablemos</p><ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Volumen de boletas personalizado</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte dedicado (SLA)</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Funcionalidades a medida</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>On-premise o nube privada</li></ul><button class="w-full btn btn-secondary text-white py-3 rounded-md font-bold">Contactar a Ventas</button></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="contact" class="py-20 bg-surface-dark">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Tienes alguna pregunta?</h2>
+                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-12">Estamos aquí para ayudarte. Completa el formulario y nos pondremos en contacto contigo.</p>
+                    <form class="max-w-xl mx-auto text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="contact-name" class="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
+                                <input type="text" id="contact-name" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                                <input type="email" id="contact-email" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="contact-message" class="block text-sm font-medium text-gray-400 mb-2">Mensaje</label>
+                            <textarea id="contact-message" rows="4" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover">Enviar Mensaje</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+        <!-- Footer -->
+        <footer class="bg-surface-dark border-t border-dark">
+            <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+                <p>&copy; 2025 APIBoletas. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- ======== LOGIN/SIGNUP SECTION (HIDDEN BY DEFAULT) ======== -->
+    <section id="auth-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="auth-modal" class="bg-surface-dark w-full max-w-md p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            <!-- Login View -->
+            <div id="login-view">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-white">Iniciar Sesión</h2><button id="close-auth-modal-btn" class="text-gray-500 hover:text-white text-2xl">&times;</button></div>
+                <p class="text-gray-400 mb-6">Accede a tu dashboard para gestionar tu API.</p>
+                <form id="login-form">
+                    <div id="login-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div class="mb-4"><label for="login-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label><input type="email" id="login-email" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></div>
+                    <div class="mb-6"><label for="login-password" class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label><input type="password" id="login-password" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></div>
+                    <button type="submit" class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Ingresar</button>
+                </form>
+                <p class="text-center text-sm text-gray-400 mt-6">¿No tienes cuenta? <button id="show-signup-view" class="font-semibold text-primary-green hover:underline">Regístrate</button></p>
+            </div>
+            <!-- Signup View -->
+            <div id="signup-view" class="hidden">
+                 <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-white">Crear Cuenta</h2><button class="close-auth-modal-btn text-gray-500 hover:text-white text-2xl">&times;</button></div>
+                 <p class="text-gray-400 mb-6">Comienza gratis y escala a medida que creces.</p>
+                 <form id="signup-form">
+                    <div id="signup-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div id="signup-success-message" class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
+                    <div class="mb-4"><label for="signup-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label><input type="email" id="signup-email" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></div>
+                    <div class="mb-4"><label for="signup-password" class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label><input type="password" id="signup-password" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></div>
+                    <div class="mb-6"><label for="signup-confirm-password" class="block text-sm font-medium text-gray-400 mb-2">Confirmar Contraseña</label><input type="password" id="signup-confirm-password" required class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"></div>
+                    <button type="submit" class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Crear Cuenta</button>
+                 </form>
+                 <p class="text-center text-sm text-gray-400 mt-6">¿Ya tienes cuenta? <button id="show-login-view" class="font-semibold text-primary-green hover:underline">Inicia Sesión</button></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== DASHBOARD SECTION (HIDDEN BY DEFAULT) ======== -->
+    <main id="dashboard-section" class="hidden w-full min-h-screen bg-black">
+        <div class="flex h-screen">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="bg-surface-dark w-64 flex-shrink-0 border-r border-dark p-4 flex flex-col fixed lg:relative h-full lg:h-auto -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+                <a href="#" class="text-2xl font-bold text-white mb-8 block">API<span class="text-primary-green">Boletas</span></a>
+                <nav class="flex flex-col space-y-2">
+                    <a href="#dashboard" data-view="dashboard-view" class="sidebar-link active flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        Dashboard
+                    </a>
+                    <a href="#api-explorer" data-view="api-explorer-view" class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10m-2 5a8 8 0 015-5m5 5a8 8 0 01-5 5m5-5s-1 2-3 3m-2-11a8 8 0 015 5m-5-5s1-2 3-3"></path></svg>
+                        API Explorer
+                    </a>
+                    <a href="#settings" data-view="settings-view" class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Configuración
+                    </a>
+                </nav>
+                <div class="mt-auto">
+                     <button id="logout-btn" class="w-full btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">Cerrar Sesión</button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col">
+                <!-- Top bar -->
+                <header class="bg-surface-dark border-b border-dark flex justify-between items-center p-4 lg:hidden">
+                    <button id="menu-toggle-btn" class="text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="text-gray-400">Bienvenido, <span id="user-email-display"></span></div>
+                </header>
+                
+                <div class="flex-1 overflow-y-auto p-6 md:p-8">
+                    <!-- Dashboard View -->
+                    <div id="dashboard-view" class="dashboard-view">
+                        <h2 class="text-4xl font-bold text-white mb-8">Dashboard</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Consumo Mensual de Servicios</h3>
+                                <div id="consumption-container" class="space-y-4">
+                                    <!-- Datos de consumo se cargarán aquí -->
+                                </div>
+                            </div>
+                            <!--<div class="bg-surface-dark p-6 rounded-lg border border-dark"><h3 class="text-lg font-semibold text-gray-400 mb-4">Tu API Key Secreta</h3><div class="flex items-center bg-gray-900 border border-dark rounded-md p-2"><input type="text" value="sk_live_a1b2c3d4e5f6g7h8i9j0k1l2" readonly id="api-key-input" class="flex-grow bg-transparent text-gray-400 font-mono focus:outline-none"><button id="copy-key-btn" class="ml-4 px-4 py-1.5 bg-primary-green text-white text-sm font-semibold rounded-md bg-primary-green-hover">Copiar</button></div><p class="text-xs text-gray-500 mt-2">No compartas esta clave. Úsala de forma segura en tu backend.</p></div>
+                            -->
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Historial de Envíos</h3>
+                        <div class="bg-surface-dark rounded-lg border border-dark overflow-hidden">
+                             <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="border-b border-dark">
+                                            <th class="p-4 font-semibold text-gray-400">ID de Trabajo</th><th class="p-4 font-semibold text-gray-400">Fecha</th><th class="p-4 font-semibold text-gray-400">Servicio</th><th class="p-4 font-semibold text-gray-400">Cantidad</th><th class="p-4 font-semibold text-gray-400">Estado</th><th class="p-4 font-semibold text-gray-400">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usage-history-body">
+                                        <!-- Filas del historial se cargarán aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- REEMPLAZA TU DIV "pagination-controls" CON ESTE BLOQUE COMPLETO -->
+                            <div id="pagination-controls" class="flex items-center justify-between p-4 border-t border-dark">
+                                <div class="flex items-center space-x-2">
+                                    <label for="page-size-select" class="text-sm text-gray-400">Mostrar:</label>
+                                    <select id="page-size-select" class="bg-gray-900 border border-dark rounded-md p-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <button id="prev-page-btn" class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">
+                                        Anterior
+                                    </button>
+                                    <span id="page-indicator" class="text-sm text-gray-400"></span>
+                                    <button id="next-page-btn" class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">
+                                        Siguiente
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- API Explorer View -->
+                    <div id="api-explorer-view" class="dashboard-view hidden">
+                        <h2 class="text-4xl font-bold text-white mb-2">API Explorer</h2>
+                        <p class="text-gray-400 mb-6">Selecciona una API y usa el formulario para hacer llamadas de prueba directamente desde tu navegador.</p>
+                        <div class="mb-6"><label for="api-select" class="block text-sm font-medium text-gray-400 mb-2">Seleccionar API</label>
+                            <select id="api-select" class="w-full md:w-1/3 bg-gray-900 border border-dark rounded-md p-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                <option value="bht" selected>API BHT (Boletas de Honorarios)</option>
+                                <!--<option value="rc">API RC (Registro de Compras)</option>
+                                <option value="rv">API RV (Registro de Ventas)</option> -->
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                            <div class="bg-surface-dark p-6 rounded-lg border border-dark lg:col-span-2"><h3 class="text-xl font-bold text-white mb-4">Parámetros de la Petición</h3><form id="form-bht" class="api-form space-y-4"><div><label for="bht-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input type="text" id="bht-rut" placeholder="11.111.111-1" required class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white"></div><div><label for="bht-clave" class="block text-sm font-medium text-gray-400 mb-1">Clave</label><input type="password" id="bht-clave" placeholder="••••••••" required class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white"></div><div><label for="bht-csv" class="block text-sm font-medium text-gray-400 mb-1">Archivo CSV</label><input type="file" id="bht-csv" accept=".csv" required class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-green file:text-background hover:file:bg-primary-green-hover"></div> <!--<div><label for="bht-output" class="block text-sm font-medium text-gray-400 mb-1">Output</label><select id="bht-output" class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"><option value="json" selected>JSON</option><option value="sap-hana">SAP Hana</option></select></div> --><button type="submit" class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar Petición</button></form><form id="form-rc-rv" class="api-form space-y-4 hidden"><div><label for="rcrv-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input type="text" id="rcrv-rut" placeholder="11.111.111-1" required class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white"></div><div><label for="rcrv-clave" class="block text-sm font-medium text-gray-400 mb-1">Clave</label><input type="password" id="rcrv-clave" placeholder="••••••••" required class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white"></div><div><label for="rcrv-periodo" class="block text-sm font-medium text-gray-400 mb-1">Periodo (YYYY-MM)</label><input type="text" id="rcrv-periodo" placeholder="2025-07" required class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white"></div><div><label for="rcrv-output" class="block text-sm font-medium text-gray-400 mb-1">Output</label><select id="rcrv-output" class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"><option value="json" selected>JSON</option><option value="sap-hana">SAP Hana</option></select></div><button type="submit" class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar Petición</button></form></div>
+                            <div class="space-y-8 lg:col-span-3"><div class="relative bg-surface-dark p-6 rounded-lg border border-dark"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold text-white">Respuesta de la API</h3><button id="copy-response-btn" class="btn btn-secondary text-white px-3 py-1 text-xs rounded-md font-semibold">Copiar</button></div><div id="api-response-area"><pre><code class="language-json"><span class="code-comment">// La respuesta de la API aparecerá aquí...</span></code></pre></div></div>
+                            <div class="bg-surface-dark p-6 rounded-lg border border-dark"><h3 class="text-xl font-bold text-white mb-4">✨ Generador de Código</h3><div class="flex items-center space-x-4 mb-4"><select id="language-select" class="bg-gray-900 border border-dark rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-green"><option value="python">Python</option><option value="javascript">JavaScript</option><option value="curl">cURL</option><option value="php">PHP</option></select><button id="generate-code-btn" class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center justify-center">Generar</button></div><div id="code-generator-output"><pre><code><span class="code-comment">// El código generado aparecerá aquí...</span></code></pre></div></div></div>
+                        </div>
+                    </div>
+                    <!-- Settings View -->
+                    <div id="settings-view" class="dashboard-view hidden">
+                         <h2 class="text-4xl font-bold text-white mb-8">Configuración de la Cuenta</h2>
+                         <div class="space-y-12">
+                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                                <h3 class="text-xl font-bold text-white mb-4">Perfil</h3>
+                                <form class="space-y-4">
+                                    <div><label for="profile-email" class="block text-sm font-medium text-gray-400 mb-1">Email</label><input type="email" id="profile-email" value="usuario@ejemplo.com" disabled class="w-full md:w-1/2 p-2 bg-gray-800 border-dark rounded-md text-gray-400 cursor-not-allowed"></div>
+                                    <button type="submit" class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">Guardar Cambios</button>
+                                </form>
+                            </div>
+                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xl font-bold text-white">API Key</h3>
+                                    <button id="generate-new-key-btn" class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">Generar Nueva API Key</button>
+                                </div>
+                                <ul id="api-keys-list" class="space-y-3">
+                                    <!-- API Keys se cargarán aquí -->
+                                </ul>
+                            </div>
+                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                                <h3 class="text-xl font-bold text-white mb-4">Plan y Facturación</h3>
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                                    <div class="mb-4 md:mb-0">
+                                        <p class="text-gray-400">Plan actual: <span id="current-plan-name" class="font-bold text-primary-green">Gratuito</span></p>
+                                        <p class="text-gray-400">¿Necesitas más potencia? Actualiza a nuestro plan Profesional.</p>
+                                    </div>
+                                    <a href="mailto:ventas@tuempresa.com?subject=Solicitud de Upgrade a Plan Profesional" id="upgrade-plan-btn" class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                        Contactar para Upgrade
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="bg-surface-dark p-6 rounded-lg border border-red-500/30">
+                                <h3 class="text-xl font-bold text-red-500 mb-2">Zona de Peligro</h3>
+                                <p class="text-gray-400 mb-4">Estas acciones son permanentes y no se pueden deshacer.</p>
+                                <button id="delete-account-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Eliminar mi Cuenta</button>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+                <!-- Footer for Dashboard -->
+                <footer class="bg-surface-dark border-t border-dark mt-auto">
+                    <div class="container mx-auto px-6 py-4 text-center text-gray-400 text-sm">
+                        <p>&copy; 2025 APIBoletas. Todos los derechos reservados.</p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <!-- ======== GEMINI ERROR ANALYSIS MODAL ======== -->
+    <section id="error-modal-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="error-modal" class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-white">✨ Análisis de Error con IA</h2><button id="close-error-modal" class="text-gray-500 hover:text-white text-2xl">&times;</button></div><div id="error-analysis-content" class="text-gray-300 space-y-4"></div></div>
+    </section>
+    
+    <!-- ======== DELETE ACCOUNT CONFIRMATION MODAL ======== -->
+    <section id="delete-confirm-modal-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="delete-confirm-modal" class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            <h2 class="text-2xl font-bold text-red-500 mb-4">¿Estás seguro?</h2>
+            <p class="text-gray-400 mb-6">Esta acción no se puede deshacer. Se eliminarán permanentemente tu cuenta, tus claves de API y todo tu historial de consumo.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-delete-btn" class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
+                <button id="confirm-delete-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí, eliminar mi cuenta</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== REVOKE API KEY CONFIRMATION MODAL ======== -->
+    <section id="revoke-key-modal-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="revoke-key-modal" class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            <h2 class="text-2xl font-bold text-amber-500 mb-4">Confirmar Revocación</h2>
+            <p class="text-gray-400 mb-6">¿Estás seguro de que quieres revocar esta API key? Cualquier aplicación o script que la esté utilizando dejará de funcionar inmediatamente. Esta acción no se puede deshacer.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-revoke-btn" class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
+                <button id="confirm-revoke-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí, revocar clave</button>
+            </div>
+        </div>
+    </section>
+
+        <!-- ======== NEW API KEY MODAL ======== -->
+    <section id="new-api-key-modal-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="new-api-key-modal" class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            <h2 class="text-2xl font-bold text-primary-green mb-4">Nueva API Key Generada</h2>
+            <p class="text-gray-400 mb-4">Esta es la única vez que verás esta clave. Cópiala y guárdala en un lugar seguro.</p>
+            <div class="flex items-center bg-gray-900 border border-dark rounded-md p-2 mb-6">
+                <input type="text" readonly id="new-api-key-display" class="flex-grow bg-transparent text-gray-400 font-mono focus:outline-none">
+                <button id="copy-new-key-btn" class="ml-4 px-4 py-1.5 bg-primary-green text-white text-sm font-semibold rounded-md bg-primary-green-hover">Copiar</button>
+            </div>
+            <div class="flex justify-end">
+                <button id="close-new-key-modal-btn" class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cerrar</button>
+            </div>
+        </div>
+    </section>
+    <!-- MODAL ANALIZAR ERRORES -->
+    <section id="error-analysis-modal-section" class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="error-analysis-modal" class="bg-surface-dark w-full max-w-2xl p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-amber-500">Detalles del Error</h2>
+                <button id="close-error-modal-btn" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <p class="text-gray-400 mb-6">Se encontraron los siguientes errores al procesar tu archivo. Por favor, corrígelos y vuelve a intentarlo.</p>
+            <div id="error-analysis-content" class="space-y-3 bg-gray-900 border border-dark rounded-md p-4 max-h-80 overflow-y-auto">
+                <!-- Los detalles del error se cargarán aquí -->
+            </div>
+            <div class="flex justify-end mt-6">
+                <button id="close-error-modal-btn-bottom" class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cerrar</button>
+            </div>
+        </div>
+    </section>
+    <!-- FIN DEL BLOQUE A PEGAR -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Supabase Client Initialization ---
+
+            const SUPABASE_URL = SUPABASE_URL_PLACEHOLDER; 
+            const SUPABASE_ANON_KEY = SUPABASE_ANON_KEY_PLACEHOLDER;
+
+            let supabaseClient;
+
+            
+            try {
+                if (SUPABASE_URL === SUPABASE_URL_PLACEHOLDER || SUPABASE_ANON_KEY === SUPABASE_ANON_KEY_PLACEHOLDER) {
+                    throw new Error("Las credenciales de Supabase no han sido configuradas en el script.");
+                }
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } catch (error) {
+                console.error("Error al inicializar Supabase:", error.message);
+                return;
+            }
+            let isDashboardInitialized = false; // <-- AÑADE ESTA LÍNEA
+            // --- DOM Element Selection ---
+            const landingPage = document.getElementById('landing-page');
+            const authSection = document.getElementById('auth-section');
+            const dashboardSection = document.getElementById('dashboard-section');
+            const loginBtn = document.getElementById('login-btn');
+            const signupBtn = document.getElementById('signup-btn');
+            const closeAuthModalBtn = document.getElementById('close-auth-modal-btn');
+            
+            const loginView = document.getElementById('login-view');
+            const signupView = document.getElementById('signup-view');
+            const showSignupViewBtn = document.getElementById('show-signup-view');
+            const showLoginViewBtn = document.getElementById('show-login-view');
+
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            
+            // --- UI Logic Functions ---
+            const showAuthModal = (view = 'login') => {
+                authSection.classList.remove('opacity-0', 'pointer-events-none');
+                authSection.querySelector('#auth-modal').classList.remove('scale-95');
+                if (view === 'login') {
+                    loginView.classList.remove('hidden');
+                    signupView.classList.add('hidden');
+                } else {
+                    loginView.classList.add('hidden');
+                    signupView.classList.remove('hidden');
+                }
+            };
+
+            // --- Lógica de UI ---
+            const showCopyConfirmation = (button) => {
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.classList.add('bg-primary-green-hover');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-primary-green-hover');
+                }, 2000);
+            };
+
+
+            // --- New API Key Modal Logic ---
+            const newApiKeyModalSection = document.getElementById('new-api-key-modal-section');
+            const newApiKeyDisplay = document.getElementById('new-api-key-display');
+            const copyNewKeyBtn = document.getElementById('copy-new-key-btn');
+            const closeNewKeyModalBtn = document.getElementById('close-new-key-modal-btn');
+
+            const showNewApiKeyModal = (apiKey) => {
+                newApiKeyDisplay.value = apiKey;
+                newApiKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.remove('scale-95');
+            };
+
+            const hideNewApiKeyModal = () => {
+                newApiKeyModalSection.classList.add('opacity-0');
+                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.add('scale-95');
+                setTimeout(() => newApiKeyModalSection.classList.add('pointer-events-none'), 300);
+            };
+
+            copyNewKeyBtn.addEventListener('click', (e) => {
+                navigator.clipboard.writeText(newApiKeyDisplay.value);
+                showCopyConfirmation(e.target);
+            });
+
+            closeNewKeyModalBtn.addEventListener('click', hideNewApiKeyModal);
+
+
+            const hideAuthModal = () => {
+                authSection.classList.add('opacity-0');
+                authSection.querySelector('#auth-modal').classList.add('scale-95');
+                setTimeout(() => authSection.classList.add('pointer-events-none'), 300);
+            };
+            
+            const showDashboard = (user) => { 
+                landingPage.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                dashboardSection.classList.add('fade-in');
+                if (!isDashboardInitialized) {
+                    initializeDashboard(user);
+                    isDashboardInitialized = true;
+                }
+            };
+
+            const showLanding = () => { 
+                dashboardSection.classList.add('hidden');
+                landingPage.classList.remove('hidden');
+                landingPage.classList.add('fade-in');
+            };
+            
+            const showLoadingState = (button, text) => {
+                button.disabled = true;
+                button.innerHTML = `<div class="spinner"></div><span class="ml-2">${text}</span>`;
+            };
+
+            const hideLoadingState = (button, originalText) => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            };
+
+            const showMessage = (elementId, message, isError = true) => {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.classList.remove('hidden');
+                if (isError) {
+                    element.classList.add('text-red-400', 'bg-red-900/50');
+                    element.classList.remove('text-green-400', 'bg-green-900/50');
+                } else {
+                    element.classList.remove('text-red-400', 'bg-red-900/50');
+                    element.classList.add('text-green-400', 'bg-green-900/50');
+                }
+            };
+
+            const hideMessage = (elementId) => {
+                document.getElementById(elementId).classList.add('hidden');
+            };
+
+            // --- Event Listeners (Landing Page) ---
+            loginBtn.addEventListener('click', () => showAuthModal('login'));
+            signupBtn.addEventListener('click', () => showAuthModal('signup'));
+            closeAuthModalBtn.addEventListener('click', hideAuthModal);
+            document.querySelectorAll('.close-auth-modal-btn').forEach(btn => btn.addEventListener('click', hideAuthModal));
+            
+            showSignupViewBtn.addEventListener('click', () => showAuthModal('signup'));
+            showLoginViewBtn.addEventListener('click', () => showAuthModal('login'));
+
+            // --- Real Auth Logic ---
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const submitButton = loginForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                
+                hideMessage('login-error-message');
+                showLoadingState(submitButton, 'Ingresando...');
+
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    showMessage('login-error-message', error.message);
+                    hideLoadingState(submitButton, originalButtonText);
+                } else {
+                    hideAuthModal();
+                    loginForm.reset();
+                    hideLoadingState(submitButton, originalButtonText);
+                }
+            });
+
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                const submitButton = signupForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+
+                hideMessage('signup-error-message');
+                hideMessage('signup-success-message');
+
+                if (password !== confirmPassword) {
+                    showMessage('signup-error-message', 'Las contraseñas no coinciden.');
+                    return;
+                }
+                
+                showLoadingState(submitButton, 'Creando cuenta...');
+
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+                if (error) {
+                    showMessage('signup-error-message', error.message);
+                } else {
+                    showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar tu cuenta.', false);
+                    signupForm.reset();
+                }
+                hideLoadingState(submitButton, originalButtonText);
+            });
+            
+            // --- Session Management ---
+            supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                if (session) {
+                    showDashboard(session.user);
+                } else {
+                    showLanding();
+                }
+            });
+            
+            // --- Dashboard Initialization ---
+            // REEMPLAZA TU FUNCIÓN initializeDashboard CON ESTA VERSIÓN COMPLETA Y CORREGIDA
+// REEMPLAZA TU FUNCIÓN initializeDashboard CON ESTA VERSIÓN COMPLETA Y CORREGIDA
+        const initializeDashboard = (user) => {
+            // --- State Variables for Pagination ---
+            let currentPage = 0;
+            let pageSize = 5;
+            let totalRecords = 0;
+
+            // --- DOM Element Selection (Dashboard) ---
+            const userEmailDisplay = document.getElementById('user-email-display');
+            const logoutBtn = document.getElementById('logout-btn');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggleBtn = document.getElementById('menu-toggle-btn');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const dashboardViews = document.querySelectorAll('.dashboard-view');
+            const apiSelect = document.getElementById('api-select');
+            const formBht = document.getElementById('form-bht');
+            const formRcRv = document.getElementById('form-rc-rv');
+            const generateCodeBtn = document.getElementById('generate-code-btn');
+            const copyResponseBtn = document.getElementById('copy-response-btn');
+            const generateNewKeyBtn = document.getElementById('generate-new-key-btn');
+            const apiKeysList = document.getElementById('api-keys-list');
+            const deleteAccountBtn = document.getElementById('delete-account-btn');
+            const deleteConfirmModalSection = document.getElementById('delete-confirm-modal-section');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const revokeKeyModalSection = document.getElementById('revoke-key-modal-section');
+            const cancelRevokeBtn = document.getElementById('cancel-revoke-btn');
+            const confirmRevokeBtn = document.getElementById('confirm-revoke-btn');
+            const newApiKeyModalSection = document.getElementById('new-api-key-modal-section');
+            const newApiKeyDisplay = document.getElementById('new-api-key-display');
+            const copyNewKeyBtn = document.getElementById('copy-new-key-btn');
+            const closeNewKeyModalBtn = document.getElementById('close-new-key-modal-btn');
+            const pageSizeSelect = document.getElementById('page-size-select');
+            const prevPageBtn = document.getElementById('prev-page-btn');
+            const nextPageBtn = document.getElementById('next-page-btn');
+            const pageIndicator = document.getElementById('page-indicator');
+            const usageHistoryBody = document.getElementById('usage-history-body');
+            const errorAnalysisModalSection = document.getElementById('error-analysis-modal-section');
+            const errorAnalysisContent = document.getElementById('error-analysis-content');
+            const closeErrorModalBtn = document.getElementById('close-error-modal-btn');
+            const closeErrorModalBtnBottom = document.getElementById('close-error-modal-btn-bottom');
+            
+            let keyElementToRevoke = null;
+
+            userEmailDisplay.textContent = user.email;
+            document.getElementById('profile-email').value = user.email;
+
+            // --- UI Functions ---
+            const showCopyConfirmation = (button) => {
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.classList.add('bg-primary-green-hover');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-primary-green-hover');
+                }, 2000);
+            };
+
+            // --- Modals Logic ---
+            const showRevokeKeyModal = () => {
+                revokeKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                revokeKeyModalSection.querySelector('#revoke-key-modal').classList.remove('scale-95');
+            };
+            const hideRevokeKeyModal = () => {
+                revokeKeyModalSection.classList.add('opacity-0');
+                revokeKeyModalSection.querySelector('#revoke-key-modal').classList.add('scale-95');
+                setTimeout(() => revokeKeyModalSection.classList.add('pointer-events-none'), 300);
+            };
+            const showNewApiKeyModal = (apiKey) => {
+                newApiKeyDisplay.value = apiKey;
+                newApiKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.remove('scale-95');
+            };
+            const hideNewApiKeyModal = () => {
+                newApiKeyModalSection.classList.add('opacity-0');
+                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.add('scale-95');
+                setTimeout(() => newApiKeyModalSection.classList.add('pointer-events-none'), 300);
+            };
+            const showErrorModal = () => {
+                errorAnalysisModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                errorAnalysisModalSection.querySelector('#error-analysis-modal').classList.remove('scale-95');
+            };
+            const hideErrorModal = () => {
+                errorAnalysisModalSection.classList.add('opacity-0');
+                errorAnalysisModalSection.querySelector('#error-analysis-modal').classList.add('scale-95');
+                setTimeout(() => errorAnalysisModalSection.classList.add('pointer-events-none'), 300);
+            };
+
+
+
+
+
+
+            // <-- FUNCION PARA LLAMAR A API -->
+            const handleApiSubmit = async (e) => {
+                e.preventDefault(); // ¡MUY IMPORTANTE! Evita que la página se recargue.
+                const form = e.target;
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                showLoadingState(submitButton, 'Procesando...', true);
+
+                const apiResponseArea = document.getElementById('api-response-area');
+                apiResponseArea.innerHTML = `<pre><code class="language-json"><span class="code-comment">// Enviando petición a la API...</span></code></pre>`;
+
+                try {
+                    const apiKey = prompt("Por favor, pega tu API Key completa para esta prueba:");
+                    if (!apiKey) {
+                        throw new Error("Prueba cancelada. Se requiere una API Key.");
+                    }
+
+                    const formData = new FormData();
+                    formData.append('rut', form.querySelector('#bht-rut').value);
+                    formData.append('clave', form.querySelector('#bht-clave').value);
+
+                    const csvInput = form.querySelector('#bht-csv');
+                    if (csvInput && csvInput.files.length > 0) {
+                        formData.append('csv_file', csvInput.files[0]);
+                    } else {
+                        throw new Error("Por favor, selecciona un archivo CSV.");
+                    }
+
+                    // ¡IMPORTANTE! Reemplaza esta URL con la URL de tu API en Render
+                    const apiUrl = 'https://bht-sii.onrender.com/bht';   //  'https://bht-sii.onrender.com/bht' 'http://localhost:8000/bht'
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'x-api-key': apiKey,
+                        },
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        if (response.headers.get("content-type")?.includes("application/zip")) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = 'boletas_emitidas.zip';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                            apiResponseArea.innerHTML = `<pre><code class="language-json"><span class="code-comment">// Éxito: El archivo ZIP se ha descargado.</span></code></pre>`;
+                        } else {
+                            const result = await response.json();
+                            const formattedResult = JSON.stringify(result, null, 2);
+                            apiResponseArea.innerHTML = `<pre><code class="language-json">${formattedResult}</code></pre>`;
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        const formattedError = JSON.stringify(errorData, null, 2);
+                        apiResponseArea.innerHTML = `<pre><code class="language-json">${formattedError}</code></pre>`;
+                    }
+
+                } catch (error) {
+                    const errorResult = JSON.stringify({ error: { message: error.message } }, null, 2);
+                    apiResponseArea.innerHTML = `<pre><code class="language-json">${errorResult}</code></pre>`;
+                } finally {
+                    hideLoadingState(submitButton, originalButtonText);
+                }
+            };
+
+
+
+
+
+
+
+
+
+
+
+
+            // --- Data Loading and Rendering ---
+            const addRevokeListeners = () => {
+                document.querySelectorAll('.revoke-key-btn').forEach(button => {
+                    button.onclick = (e) => {
+                        keyElementToRevoke = e.target.closest('li');
+                        showRevokeKeyModal();
+                    };
+                });
+            };
+            
+            const renderApiKeys = (keys) => {
+                apiKeysList.innerHTML = '';
+                if (!keys || keys.length === 0) {
+                    apiKeysList.innerHTML = '<p class="text-gray-400 text-sm">No tienes claves de API. ¡Genera una para empezar!</p>';
+                    return;
+                }
+                keys.forEach(key => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center p-3 bg-gray-900 rounded-md border border-dark';
+                    li.dataset.keyId = key.id;
+                    li.innerHTML = `<div class="font-mono text-sm text-gray-300">${key.prefijo_clave}</div><button class="revoke-key-btn text-sm text-red-500 hover:underline">Revocar</button>`;
+                    apiKeysList.appendChild(li);
+                });
+                addRevokeListeners();
+            };
+
+
+            // <-- AÑADE ESTA FUNCIÓN COMPLETA DENTRO DE initializeDashboard -->
+            const renderConsumption = (currentUsage, planLimit) => {
+                const container = document.getElementById('consumption-container');
+                container.innerHTML = ''; // Limpia el contenido anterior para evitar duplicados
+
+                const serviceName = 'Boletas Procesadas Api BHT';
+                const usage = currentUsage || 0;
+                const limit = planLimit > 0 ? planLimit : 'Ilimitado';
+                const percentage = (limit !== 'Ilimitado' && limit > 0) ? (usage / limit) * 100 : 0;
+
+                const consumptionHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-300">${serviceName}</span>
+                            <span class="text-sm text-gray-400">${usage} / ${limit}</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-primary-green h-2 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = consumptionHTML;
+            };
+
+
+
+
+            const updatePaginationControls = () => {
+                const totalPages = Math.ceil(totalRecords / pageSize);
+                pageIndicator.textContent = `Página ${currentPage + 1} de ${totalPages || 1}`;
+                prevPageBtn.disabled = currentPage === 0;
+                nextPageBtn.disabled = (currentPage + 1) * pageSize >= totalRecords;
+            };
+            
+            const renderErrorDetails = (errors) => {
+                errorAnalysisContent.innerHTML = '';
+                if (!errors || errors.length === 0) {
+                    errorAnalysisContent.innerHTML = '<p class="text-gray-400">No se encontraron detalles específicos del error.</p>';
+                    return;
+                }
+                errors.forEach(err => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'text-sm';
+                    errorDiv.innerHTML = `<p><strong class="text-amber-500">Línea ${err.linea}:</strong> <span class="text-gray-300">${err.error}</span></p>`;
+                    errorAnalysisContent.appendChild(errorDiv);
+                });
+            };
+
+            const renderUsageHistory = (logs) => {
+                usageHistoryBody.innerHTML = ''; 
+
+                if (!logs || logs.length === 0) {
+                    usageHistoryBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">No hay registros de uso todavía.</td></tr>`;
+                } else {
+                    logs.forEach(log => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'border-b border-dark';
+                        const statusBadge = log.fue_exitoso ? `<span class="px-2 py-1 text-xs font-semibold text-green-300 bg-green-800 bg-opacity-50 rounded-full">Completado</span>` : `<span class="px-2 py-1 text-xs font-semibold text-red-300 bg-red-800 bg-opacity-50 rounded-full">Error</span>`;
+                        const actionsCell = !log.fue_exitoso && log.detalles_error ? `<button class="analyze-error-btn text-sm text-primary-green hover:underline" data-error='${JSON.stringify(log.detalles_error)}'>✨ Analizar Error</button>` : '';
+                        tr.innerHTML = `
+                            <td class="p-4 font-mono text-sm">${log.id}</td>
+                            <td class="p-4">${new Date(log.fecha_registro).toLocaleString('es-CL')}</td>
+                            <td class="p-4">${log.servicio_api.toUpperCase()}</td>
+                            <td class="p-4">${log.cantidad_procesada}</td>
+                            <td class="p-4">${statusBadge}</td>
+                            <td class="p-4">${actionsCell}</td>
+                        `;
+                        usageHistoryBody.appendChild(tr);
+                    });
+                }
+                updatePaginationControls();
+            };  
+
+            const loadUsageHistory = async () => {
+                const from = currentPage * pageSize;
+                const to = from + pageSize - 1;
+
+                const { count, error: countError } = await supabaseClient
+                    .from('registros_uso_api')
+                    .select('*', { count: 'exact', head: true });
+
+                if (countError) {
+                    console.error("Error al contar el historial:", countError);
+                    return;
+                }
+                totalRecords = count;
+
+                const { data: usageData, error: usageError } = await supabaseClient
+                    .from('registros_uso_api')
+                    .select('*')
+                    .order('fecha_registro', { ascending: false })
+                    .range(from, to);
+
+                if (usageError) {
+                    console.error("Error al cargar el historial de uso:", usageError);
+                } else if (usageData) {
+                    renderUsageHistory(usageData);
+                }
+            };
+
+// <-- REEMPLAZA TU FUNCIÓN loadDashboardData CON ESTA -->
+            const loadDashboardData = async () => {
+                // Cargar perfil y plan (ahora pedimos el límite del plan)
+                const { data: profileData, error: profileError } = await supabaseClient
+                    .from('perfiles')
+                    .select(`*, planes (nombre, limite_llamadas_api)`)
+                    .eq('usuario_id', user.id)
+                    .single();
+
+                if (profileError) {
+                    console.error("Error al cargar el perfil:", profileError);
+                } else if (profileData) {
+                    document.getElementById('current-plan-name').textContent = profileData.planes.nombre;
+
+                    // Llamar a la función RPC para obtener el consumo
+                    const { data: consumptionData, error: consumptionError } = await supabaseClient
+                        .rpc('get_monthly_consumption');
+
+                    if (consumptionError) {
+                        console.error("Error al cargar el consumo:", consumptionError);
+                    } else {
+                        // Renderizar el consumo con los datos reales
+                        renderConsumption(consumptionData, profileData.planes.limite_llamadas_api);
+                    }
+                }
+
+                // Cargar claves de API
+                const { data: keysData, error: keysError } = await supabaseClient
+                    .from('claves_api')
+                    .select('id, prefijo_clave')
+                    .eq('esta_activa', true);
+
+                if (keysData) {
+                    renderApiKeys(keysData);
+                }
+
+                // Cargar el historial de uso (la paginación se mantiene)
+                loadUsageHistory();
+            };
+
+            // --- Attach Event Listeners ---
+            logoutBtn.onclick = () => supabaseClient.auth.signOut();
+            menuToggleBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
+            sidebarLinks.forEach(link => {
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const viewId = link.dataset.view;
+                    dashboardViews.forEach(view => view.classList.toggle('hidden', view.id !== viewId));
+                    if(window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
+                };
+            });
+            copyResponseBtn.onclick = (e) => {
+                const responseText = document.querySelector('#api-response-area pre code').innerText;
+                navigator.clipboard.writeText(responseText);
+                showCopyConfirmation(e.target);
+            };
+            apiSelect.onchange = () => {
+                const selectedApi = apiSelect.value;
+                formBht.classList.toggle('hidden', selectedApi !== 'bht');
+                formRcRv.classList.toggle('hidden', selectedApi === 'bht');
+            };
+            generateCodeBtn.onclick = () => {
+                const language = document.getElementById('language-select').value;
+                const codeOutput = document.getElementById('code-generator-output');
+                codeOutput.innerHTML = `<pre><code>// Código de ejemplo para ${language} y ${apiSelect.value.toUpperCase()}...</code></pre>`;
+            };
+            cancelRevokeBtn.onclick = hideRevokeKeyModal;
+            confirmRevokeBtn.onclick = async () => {
+                if (keyElementToRevoke) {
+                    const keyId = keyElementToRevoke.dataset.keyId;
+                    const { error } = await supabaseClient.from('claves_api').update({ esta_activa: false, fecha_revocacion: new Date().toISOString() }).eq('id', keyId);
+                    if (error) {
+                        alert("Error al revocar la clave: " + error.message);
+                    } else {
+                        keyElementToRevoke.remove();
+                    }
+                    keyElementToRevoke = null;
+                }
+                hideRevokeKeyModal();
+            };
+            copyNewKeyBtn.onclick = (e) => {
+                navigator.clipboard.writeText(newApiKeyDisplay.value);
+                showCopyConfirmation(e.target);
+            };
+            closeNewKeyModalBtn.onclick = hideNewApiKeyModal;
+            closeErrorModalBtn.onclick = hideErrorModal;
+            closeErrorModalBtnBottom.onclick = hideErrorModal;
+            
+            generateNewKeyBtn.onclick = async () => {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) {
+                    alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
+                    return;
+                }
+                const originalText = generateNewKeyBtn.innerHTML;
+                showLoadingState(generateNewKeyBtn, "Generando...");
+
+                const { data, error } = await supabaseClient.functions.invoke('create-api-key', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` },
+                    body: JSON.stringify({ key_name: 'Nueva Clave' })
+                });
+                
+                hideLoadingState(generateNewKeyBtn, originalText);
+
+                if (error) {
+                    alert(`Error al generar la clave: ${error.message}`);
+                } else {
+                    showNewApiKeyModal(data.rawApiKey);
+                    loadDashboardData();
+                }
+            };
+
+            prevPageBtn.onclick = () => {
+                if (currentPage > 0) {
+                    currentPage--;
+                    loadUsageHistory();
+                }
+            };
+            nextPageBtn.onclick = () => {
+                if ((currentPage + 1) * pageSize < totalRecords) {
+                    currentPage++;
+                    loadUsageHistory();
+                }
+            };
+            pageSizeSelect.onchange = (e) => {
+                pageSize = parseInt(e.target.value, 10);
+                currentPage = 0; // Reset to first page
+                loadUsageHistory();
+            };
+            
+
+            // ... (después de los otros event listeners como pageSizeSelect.onchange)
+
+
+
+
+            usageHistoryBody.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('analyze-error-btn')) {
+                    try {
+                        const errorData = JSON.parse(e.target.dataset.error);
+                        renderErrorDetails(errorData);
+                        showErrorModal();
+                    } catch (parseError) {
+                        console.error("No se pudo parsear el JSON del error:", parseError);
+                        renderErrorDetails([{ linea: 'N/A', error: 'No se pudieron cargar los detalles del error.' }]);
+                        showErrorModal();
+                    }
+                }
+            });
+
+
+            formBht.addEventListener('submit', handleApiSubmit);
+            // formRcRv.addEventListener('submit', handleApiSubmit); // Descomentar si se implementa la lógica para RC/RV
+            // --- FIN DEL BLOQUE A AÑADIR ---
+
+
+
+            // Carga inicial de datos
+            loadDashboardData();
+        };
+
+});
+    </script>
+</body>
+</html>
