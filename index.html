@@ -500,18 +500,10 @@
             const SUPABASE_URL = 'https://lzhwfchgrhaoxmgemdto.supabase.co'; 
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6aHdmY2hncmhhb3htZ2VtZHRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2ODYwNDksImV4cCI6MjA2ODI2MjA0OX0.MRNrDTLu62ybHVlm_cytfqqe1SxhEtndcQyavIdIZ00';
 
-            let supabaseClient;
 
-            
-            try {
-                if (SUPABASE_URL === https://lzhwfchgrhaoxmgemdto.supabase.co || SUPABASE_ANON_KEY === eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6aHdmY2hncmhhb3htZ2VtZHRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2ODYwNDksImV4cCI6MjA2ODI2MjA0OX0.MRNrDTLu62ybHVlm_cytfqqe1SxhEtndcQyavIdIZ00) {
-                    throw new Error("Las credenciales de Supabase no han sido configuradas en el script.");
-                }
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } catch (error) {
-                console.error("Error al inicializar Supabase:", error.message);
-                return;
-            }
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
             let isDashboardInitialized = false; // <-- AÑADE ESTA LÍNEA
             // --- DOM Element Selection ---
             const landingPage = document.getElementById('landing-page');
