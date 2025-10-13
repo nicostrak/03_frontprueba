@@ -500,18 +500,10 @@
             const SUPABASE_URL = 'SUPABASE_URL_PLACEHOLDER'; 
             const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_PLACEHOLDER';
 
-            let supabaseClient;
 
-            
-            try {
-                if (SUPABASE_URL === SUPABASE_URL_PLACEHOLDER || SUPABASE_ANON_KEY === SUPABASE_ANON_KEY_PLACEHOLDER) {
-                    throw new Error("Las credenciales de Supabase no han sido configuradas en el script.");
-                }
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } catch (error) {
-                console.error("Error al inicializar Supabase:", error.message);
-                return;
-            }
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
             let isDashboardInitialized = false; // <-- AÑADE ESTA LÍNEA
             // --- DOM Element Selection ---
             const landingPage = document.getElementById('landing-page');
