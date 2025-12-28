@@ -403,7 +403,7 @@
         <!-- Footer -->
         <footer class="bg-surface-dark border-t border-dark">
             <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-                <p>&copy; 2025 APIBoletas. Todos los derechos reservados.</p>
+                <p>&copy; 2025 BoletaPro. Todos los derechos reservados.</p>
             </div>
         </footer>
     </main>
@@ -492,7 +492,7 @@
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                             </path>
                         </svg>
-                        Dashboard
+                        Inicio
                     </a>
                     <a href="#api-explorer" data-view="api-explorer-view"
                         class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
@@ -501,7 +501,7 @@
                                 d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10m-2 5a8 8 0 015-5m5 5a8 8 0 01-5 5m5-5s-1 2-3 3m-2-11a8 8 0 015 5m-5-5s1-2 3-3">
                             </path>
                         </svg>
-                        API Explorer
+                        Emisor de honorarios
                     </a>
                     <a href="#settings" data-view="settings-view"
                         class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
@@ -538,7 +538,7 @@
                 <div class="flex-1 overflow-y-auto p-6 md:p-8">
                     <!-- Dashboard View -->
                     <div id="dashboard-view" class="dashboard-view">
-                        <h2 class="text-4xl font-bold text-white mb-8">Dashboard</h2>
+                        <h2 class="text-4xl font-bold text-white mb-8">Panel de Control</h2>
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-4">Consumo Mensual de Servicios</h3>
@@ -599,11 +599,11 @@
                     </div>
                     <!-- API Explorer View -->
                     <div id="api-explorer-view" class="dashboard-view hidden">
-                        <h2 class="text-4xl font-bold text-white mb-2">API Explorer</h2>
-                        <p class="text-gray-400 mb-6">Selecciona una API y usa el formulario para hacer llamadas de
-                            prueba directamente desde tu navegador.</p>
+                        <h2 class="text-4xl font-bold text-white mb-2">Emisor de honorarios</h2>
+                        <p class="text-gray-400 mb-6">Selecciona un servicio y rellena el formulario para poder emitir
+                            boletas de honorarios de forma masiva.</p>
                         <div class="mb-6"><label for="api-select"
-                                class="block text-sm font-medium text-gray-400 mb-2">Seleccionar API</label>
+                                class="block text-sm font-medium text-gray-400 mb-2">Selecciona un servicio</label>
                             <select id="api-select"
                                 class="w-full md:w-1/3 bg-gray-900 border border-dark rounded-md p-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                                 <option value="bht" selected>API BHT (Boletas de Honorarios de Terceros)</option>
@@ -622,8 +622,9 @@
                                             class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
                                     </div>
                                     <div><label for="bht-clave"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Clave</label><input
-                                            type="password" id="bht-clave" name="clave" placeholder="••••••••" required
+                                            class="block text-sm font-medium text-gray-400 mb-1">Clave
+                                            tributaria</label><input type="password" id="bht-clave" name="clave"
+                                            placeholder="••••••••" required
                                             class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
                                     </div>
                                     <div><label for="bht-csv"
@@ -637,20 +638,40 @@
                                         Petición</button>
                                 </form>
                                 <form id="form-bhe" class="api-form space-y-4 hidden">
+                                    <div class="mb-4">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-sm font-medium text-white">Preparar archivo</h4>
+                                            <a href="/bhe/plantilla-excel" target="_blank"
+                                                class="text-xs text-primary-green hover:underline flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                                                    </path>
+                                                </svg>
+                                                Descargar Plantilla Excel
+                                            </a>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mb-2">Descarga la plantilla oficial con
+                                            validación de comunas para evitar errores.</p>
+                                    </div>
+
                                     <div><label for="bhe-rut"
                                             class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input
                                             type="text" id="bhe-rut" name="rut" placeholder="11.111.111-1" required
                                             class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
                                     </div>
                                     <div><label for="bhe-clave"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Clave</label><input
-                                            type="password" id="bhe-clave" name="clave" placeholder="••••••••" required
+                                            class="block text-sm font-medium text-gray-400 mb-1">Clave
+                                            tributaria</label><input type="password" id="bhe-clave" name="clave"
+                                            placeholder="••••••••" required
                                             class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
                                     </div>
                                     <div><label for="bhe-csv"
                                             class="block text-sm font-medium text-gray-400 mb-1">Archivo
-                                            CSV</label><input type="file" id="bhe-csv" name="csv_file" accept=".csv"
-                                            required
+                                            CSV o Excel</label><input type="file" id="bhe-csv" name="csv_file"
+                                            accept=".csv, .xlsx, .xls" required
                                             class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-green file:text-background hover:file:bg-primary-green-hover">
                                     </div>
                                     <div>
@@ -1208,7 +1229,7 @@
 
                         // URL del nuevo endpoint proxy en tu backend.
                         // Le pasamos la API de destino como un query parameter.
-                        const proxyApiUrl = `http://127.0.0.1:8000/api-proxy/call/${selectedApi}`;
+                        const proxyApiUrl = `https://bht-sii.onrender.com/api-proxy/call/${selectedApi}`;
 
                         // 4. Realizar la llamada al endpoint proxy.
                         const response = await fetch(proxyApiUrl, {
