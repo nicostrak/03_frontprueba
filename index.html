@@ -4,32 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Boletas Masivas - Automatiza tu Facturación</title>
+    <title>BoletaPro - Automatización de Honorarios para Profesionales</title>
 
     <!-- Google Fonts: Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS for rapid UI development -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- SheetJS for Excel Reading -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
 
     <style>
-        /* Custom styles to complement Tailwind and achieve the Supabase look */
         :root {
             --bg-dark: #121212;
             --surface-dark: #1a1a1a;
             --primary-green: #00B37E;
-            /* Color primario restaurado a verde */
             --primary-green-hover: #00996A;
-            /* Tono más oscuro para hover */
             --primary-amber: #f59e0b;
             --primary-red: #e53e3e;
             --border-dark: #2a2a2a;
             --text-primary: #f5f5f5;
             --text-secondary: #a0a0a0;
+            --whatsapp-color: #25D366;
         }
 
         html {
@@ -42,7 +42,7 @@
             color: var(--text-primary);
         }
 
-        /* Custom classes */
+        /* Utility Classes */
         .bg-surface-dark {
             background-color: var(--surface-dark);
         }
@@ -75,53 +75,7 @@
             background-color: #c53030;
         }
 
-        /* Code block styling */
-        pre {
-            background-color: #0d0d0d;
-            border: 1px solid var(--border-dark);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            line-height: 1.6;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .hero-code-block {
-            transform: perspective(800px) rotateX(10deg);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .hero-code-block:hover {
-            transform: perspective(800px) rotateX(0deg);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .code-method {
-            color: #3ecf8e;
-            font-weight: bold;
-        }
-
-        .code-key {
-            color: #58a6ff;
-        }
-
-        .code-string {
-            color: #a5d6ff;
-        }
-
-        .code-number {
-            color: #ffab70;
-        }
-
-        .code-comment {
-            color: #6a737d;
-        }
-
-        /* Animation */
+        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -138,7 +92,19 @@
             animation: fadeIn 0.7s ease-in-out forwards;
         }
 
-        /* Custom button styling */
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Buttons */
         .btn {
             transition: all 0.3s ease;
         }
@@ -152,13 +118,12 @@
             border-color: var(--text-secondary);
         }
 
-        /* Logout button hover */
         #logout-btn:hover {
             background-color: var(--primary-red) !important;
             border-color: var(--primary-red) !important;
         }
 
-        /* Modal transition */
+        /* Modals */
         .modal-container {
             transition: opacity 0.3s ease-in-out;
         }
@@ -167,11 +132,10 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        /* Spinner for loading state */
+        /* Spinner */
         .spinner {
             border: 2px solid #f3f3f3;
             border-top: 2px solid var(--bg-dark);
-            /* Color oscuro para contraste con botón ámbar */
             border-radius: 50%;
             width: 16px;
             height: 16px;
@@ -188,7 +152,7 @@
             }
         }
 
-        /* Dashboard sidebar */
+        /* Sidebar */
         .sidebar-link {
             transition: background-color 0.2s, color 0.2s;
         }
@@ -197,33 +161,298 @@
         .sidebar-link:hover {
             background-color: var(--surface-dark);
             color: var(--text-primary);
+            border-left: 3px solid var(--primary-green);
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--whatsapp-color);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: pulse-soft 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #1ebe57;
+            transform: scale(1.1);
+        }
+
+        /* Video Modal */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Wizard Stepper Styles */
+        .wizard-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .wizard-step-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid var(--border-dark);
+            background-color: var(--surface-dark);
+            color: var(--text-secondary);
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .wizard-step.active .wizard-step-circle {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(0, 179, 126, 0.1);
+        }
+
+        .wizard-step.completed .wizard-step-circle {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+            color: white;
+        }
+
+        .wizard-step-label {
+            margin-top: 8px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .wizard-step.active .wizard-step-label {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .wizard-step.completed .wizard-step-label {
+            color: var(--text-primary);
+        }
+
+        .wizard-step-connector {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border-dark);
+            z-index: 1;
+            transition: background-color 0.3s ease;
+        }
+
+        .wizard-step.completed .wizard-step-connector {
+            background-color: var(--primary-green);
+        }
+
+        /* Radio Card Styles */
+        .radio-card {
+            display: block;
+            /* Asegurar comportamiento de bloque */
+            width: 100%;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .radio-card:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .radio-card.selected {
+            border-color: var(--primary-green);
+            background-color: rgba(0, 179, 126, 0.08);
+            /* Fondo más sutil */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            /* Sombra mejorada */
+            transform: translateY(-2px);
+            /* Pequeña elevación */
+        }
+
+
+
+        .radio-card-content {
+            display: flex;
+            align-items: start;
+            gap: 16px;
+            position: relative;
+        }
+
+        /* Radio indicator (círculo) */
+        .radio-card-content::before {
+            content: '';
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-dark);
+            background-color: var(--bg-dark);
+            transition: all 0.3s ease;
+            margin-top: 2px;
+        }
+
+        .radio-card.selected .radio-card-content::before {
+            border-color: #00a3e0;
+            background-color: #00a3e0;
+            box-shadow: inset 0 0 0 4px var(--surface-dark);
+        }
+
+        .radio-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+
+
+        /* Drag and Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--border-dark);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: var(--surface-dark);
+        }
+
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: var(--primary-green);
+            background-color: rgba(0, 179, 126, 0.05);
+        }
+
+        .drop-zone.drag-over {
+            transform: scale(1.02);
+        }
+
+        /* Step Content Animation */
+        .wizard-content {
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .toast.success {
+            background-color: var(--primary-green);
+        }
+
+        .toast.error {
+            background-color: var(--primary-red);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 
 <body class="antialiased">
 
+    <!-- ======== WHATSAPP FLOATING BUTTON ======== -->
+    <a href="https://wa.me/56912345678" class="whatsapp-float" target="_blank" title="Contactar por WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+            <path
+                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+        </svg>
+    </a>
+
     <!-- ======== LANDING PAGE SECTION ======== -->
     <main id="landing-page" class="w-full flex flex-col min-h-screen">
         <div class="flex-grow">
             <!-- Header -->
-            <header class="sticky top-0 z-50 bg-black bg-opacity-50 backdrop-blur-lg border-b border-dark">
+            <header class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-lg border-b border-dark">
                 <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <a href="#" class="text-2xl font-bold text-white">Boleta<span
-                            class="text-primary-green">Pro</span></a>
+                    <a href="#" class="text-2xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-8 h-8 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        Boleta<span class="text-primary-green">Pro</span>
+                    </a>
                     <div class="hidden md:flex items-center space-x-8">
-                        <a href="#features" class="text-gray-400 hover:text-white transition">Servicios</a>
-                        <!-- <a href="#pricing" class="text-gray-400 hover:text-white transition">Precios</a>   -->
+                        <a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a>
+                        <a href="#pricing" class="text-gray-400 hover:text-white transition">Planes</a>
                         <a href="#contact" class="text-gray-400 hover:text-white transition">Contacto</a>
-                        <!-- <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-white transition">Documentación</a>   -->
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="login-btn"
-                            class="btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">Iniciar
+                            class="btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Iniciar
                             Sesión</button>
                         <button id="signup-btn"
-                            class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold bg-primary-green-hover">Empezar
-                            Ahora</button>
+                            class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold text-sm bg-primary-green-hover">Crear
+                            Cuenta</button>
                     </div>
                 </nav>
             </header>
@@ -232,144 +461,239 @@
             <section class="container mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
                 <div class="max-w-4xl mx-auto">
                     <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 fade-in">
-                        Emite Boletas de Honorarios de Forma Masiva y Automática
+                        Automatiza tus Boletas de Honorarios <span class="text-primary-green">Sin Estrés</span>
                     </h1>
-                    <p class="text-lg md:text-xl text-gray-400 mb-10 fade-in">
-                        Nuestra API REST se integra fácilmente en tus sistemas para automatizar la emisión de boletas,
-                        ahorrándote tiempo y esfuerzo.
+                    <p class="text-lg md:text-xl text-gray-400 mb-10 fade-in max-w-2xl mx-auto">
+                        La solución definitiva para profesionales independientes. Carga tu planilla y emite miles de
+                        boletas ante el SII en segundos. Sin códigos complejos, solo resultados.
                     </p>
                     <div class="flex justify-center space-x-4 fade-in">
                         <a href="#pricing"
-                            class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover">Comenzar
+                            class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover transform hover:-translate-y-1 transition duration-300">Empezar
                             Gratis</a>
-                        <!--<button class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-lg">Ver Documentación</button> -->
+                        <a href="#features"
+                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-gray-800">Cómo
+                            Funciona</a>
                     </div>
                 </div>
-                <div class="mt-20 fade-in">
-                    <pre class="hero-code-block"><code><span class="code-method">POST</span> /v1/boletas/emitir
-<span class="code-key">x-api-key:</span> <span class="code-string">"sk_live_..."</span>
-<span class="code-key">Content-Type:</span> <span class="code-string">"application/json"</span>
-
-{
-  <span class="code-key">"rut":</span> <span class="code-string">"11.111.111-1"</span>,
-  <span class="code-key">"clave":</span> <span class="code-string">"tu_clave_secreta"</span>,
-  <span class="code-key">"csv_file":</span> <span class="code-string">"archivo_con_datos.csv"</span>
-}</code></pre>
+                <!-- Visual Element Instead of Code Block -->
+                <div class="mt-16 fade-in relative max-w-4xl mx-auto">
+                    <div class="absolute inset-0 bg-primary-green opacity-10 blur-3xl rounded-full"></div>
+                    <div
+                        class="relative bg-surface-dark border border-dark rounded-xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-around gap-8">
+                        <div class="text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-white mb-2">1. Carga tu Excel</h3>
+                            <p class="text-gray-400">Sube tus destinatarios en un archivo simple.</p>
+                        </div>
+                        <div class="hidden md:block text-gray-600">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-white mb-2">2. Procesa</h3>
+                            <p class="text-gray-400">Nuestra plataforma conecta con el SII automáticamente.</p>
+                        </div>
+                        <div class="hidden md:block text-gray-600">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-primary-green mb-2">3. ¡Listo!</h3>
+                            <p class="text-gray-400">Descarga tus boletas emitidas al instante.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Features Section -->
             <section id="features" class="py-20 bg-surface-dark">
                 <div class="container mx-auto px-6 text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Por qué automatizar con nuestra API?
-                    </h2>
-                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-16">Nuestra API no solo emite boletas. Es una
-                        herramienta de optimización que transforma tus procesos administrativos y financieros ahorrando
-                        tiempo y dinero a tu organización.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Diseñado para Profesionales</h2>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-16">Olvídate de procesos manuales lentos.
+                        Enfócate en tu trabajo mientras nosotros gestionamos la burocracia.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30">
-                            <div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div
+                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            <div
+                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Ahorro Masivo de Tiempo</h3>
-                            <p class="text-gray-400">Elimina la entrada manual de datos. Genera cientos o miles de
-                                boletas en segundos, liberando a tu equipo para tareas de mayor valor.</p>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Ahorra Horas de Trabajo</h3>
+                            <p class="text-gray-400">Emite 10, 100 o 1000 boletas en el tiempo que te toma tomarte un
+                                café.</p>
                         </div>
-                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30">
-                            <div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div
+                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            <div
+                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Reducción de Errores</h3>
-                            <p class="text-gray-400">La automatización minimiza los errores de tipeo y cálculo,
-                                asegurando que los montos y datos de los receptores sean siempre correctos.</p>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Cero Errores</h3>
+                            <p class="text-gray-400">Evita multas y problemas contables eliminando el error humano en la
+                                digitación.</p>
                         </div>
-                        <div class="p-8 border border-dark rounded-lg bg-gray-900/30">
-                            <div class="text-primary-green mb-4"><svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div
+                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            <div
+                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V4a2 2 0 012-2h8a2 2 0 012 2v4z" />
-                                </svg></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Integración Fluida</h3>
-                            <p class="text-gray-400">Con documentación clara y snippets de código generados por IA,
-                                integrar nuestra API en tu software o ERP actual es un proceso rápido y sencillo.</p>
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Rápido y Seguro</h3>
+                            <p class="text-gray-400">Tu información y claves viajan encriptadas. Solo tú tienes el
+                                control.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Pricing Section -->
+            <!-- Pricing Section (UPDATED) -->
             <section id="pricing" class="py-20">
-                <div class="container mx-auto px-6 text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Planes para cada necesidad</h2>
-                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-16">Empieza gratis y escala a medida que tu
-                        negocio crece. Sin contratos a largo plazo.</p>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        <div class="border border-dark rounded-lg p-8 flex flex-col bg-surface-dark">
-                            <h3 class="text-2xl font-bold text-primary-green mb-2">Gratuito</h3>
-                            <p class="text-gray-400 mb-6">Para probar y proyectos personales.</p>
-                            <p class="text-5xl font-extrabold text-white mb-4">$0<span
-                                    class="text-lg font-normal text-gray-400">/mes</span></p>
-                            <ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Planes Flexibles</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Elige el plan que se adapte al volumen de tu
+                            negocio.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+
+                        <!-- Plan Gratuito -->
+                        <div
+                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
+                            <h3 class="text-xl font-bold text-gray-300 mb-2">Gratuito</h3>
+                            <p class="text-gray-500 text-sm mb-4">Ideal para probar</p>
+                            <p class="text-3xl font-extrabold text-white mb-6">$0<span
+                                    class="text-sm font-normal text-gray-400">/mes</span></p>
+                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
-                                    </svg>40 boletas/mes</li>
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    </svg>20 boletas/mes</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
-                                    </svg>Acceso a la API</li>
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte comunitario</li>
-                            </ul><button class="w-full btn btn-secondary text-white py-3 rounded-md font-bold">Empezar
-                                Gratis</button>
+                                    </svg>Soporte básico</li>
+                            </ul>
+                            <button class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm"
+                                onclick="document.getElementById('signup-btn').click()">Crear Cuenta</button>
                         </div>
-                        <!-- <div class="border-2 border-primary-green rounded-lg p-8 flex flex-col bg-surface-dark relative shadow-2xl shadow-green-500/10"><span class="absolute top-0 -translate-y-1/2 bg-primary-green text-white text-xs font-bold px-3 py-1 rounded-full">MÁS POPULAR</span><h3 class="text-2xl font-bold text-white mb-2">Profesional</h3><p class="text-gray-400 mb-6">Para startups y PyMEs en crecimiento.</p><p class="text-5xl font-extrabold text-white mb-4">$49<span class="text-lg font-normal text-gray-400">/mes</span></p><ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>2.000 boletas/mes</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Generador de código IA</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Análisis de errores IA</li><li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Soporte prioritario por email</li></ul><button class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover">Elegir Plan Pro</button></div> -->
-                        <div class="border border-dark rounded-lg p-8 flex flex-col bg-surface-dark">
-                            <h3 class="text-2xl font-bold text-white mb-2">Empresa</h3>
-                            <p class="text-gray-400 mb-6">Para grandes volúmenes y necesidades a medida.</p>
-                            <p class="text-5xl font-extrabold text-white mb-4">Hablemos</p>
-                            <ul class="text-left space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <!-- Plan Básico -->
+                        <div
+                            class="border border-primary-green rounded-xl p-6 flex flex-col bg-gray-900 relative shadow-lg shadow-green-900/20 transform md:-translate-y-2">
+                            <div
+                                class="absolute top-0 right-0 bg-primary-green text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
+                                INICIAL</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Básico</h3>
+                            <p class="text-gray-400 text-sm mb-4">Pequeños independientes</p>
+                            <p class="text-3xl font-extrabold text-white mb-6">$4.990<span
+                                    class="text-sm font-normal text-gray-400">/mes</span></p>
+                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
-                                    </svg>Volumen de boletas personalizado</li>
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    </svg>100 boletas/mes</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte dedicado (SLA)</li>
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    </svg>Soporte por email</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
-                                    </svg>Funcionalidades a medida</li>
-                                <li class="flex items-center"><svg class="w-5 h-5 text-primary-green mr-2 flex-shrink-0"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>On-premise o nube privada</li>
-                            </ul><button class="w-full btn btn-secondary text-white py-3 rounded-md font-bold">Contactar
-                                a Ventas</button>
+                                    </svg>Historial de 3 meses</li>
+                            </ul>
+                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Básico" target="_blank"
+                                class="w-full btn bg-primary-green text-white py-2 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
                         </div>
+
+                        <!-- Plan Avanzado -->
+                        <div
+                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
+                            <h3 class="text-xl font-bold text-white mb-2">Avanzado</h3>
+                            <p class="text-gray-400 text-sm mb-4">Consultoras y PyMEs</p>
+                            <p class="text-3xl font-extrabold text-white mb-6">$14.990<span
+                                    class="text-sm font-normal text-gray-400">/mes</span></p>
+                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>500 boletas/mes</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>Soporte Prioritario</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>Historial de 1 año</li>
+                            </ul>
+                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Avanzado"
+                                target="_blank"
+                                class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center">Contratar</a>
+                        </div>
+
+                        <!-- Plan Premium -->
+                        <div
+                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
+                            <h3 class="text-xl font-bold text-primary-amber mb-2">Premium</h3>
+                            <p class="text-gray-400 text-sm mb-4">Alto volumen</p>
+                            <p class="text-3xl font-extrabold text-white mb-6">$39.990<span
+                                    class="text-sm font-normal text-gray-400">/mes</span></p>
+                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>2000 boletas/mes</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>Atención WhatsApp Directa</li>
+                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>Historial Ilimitado</li>
+                            </ul>
+                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Premium"
+                                target="_blank"
+                                class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center border-primary-amber text-primary-amber hover:bg-amber-900/20">Contratar</a>
+                        </div>
+
                     </div>
                 </div>
             </section>
 
             <section id="contact" class="py-20 bg-surface-dark">
                 <div class="container mx-auto px-6 text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Tienes alguna pregunta?</h2>
-                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-12">Estamos aquí para ayudarte. Completa el
-                        formulario y nos pondremos en contacto contigo.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Contáctanos</h2>
+                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-12">¿Tienes dudas sobre los planes? Hablemos.
+                    </p>
                     <form class="max-w-xl mx-auto text-left">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
@@ -408,7 +732,7 @@
         </footer>
     </main>
 
-    <!-- ======== LOGIN/SIGNUP SECTION (HIDDEN BY DEFAULT) ======== -->
+    <!-- ======== LOGIN/SIGNUP SECTION ======== -->
     <section id="auth-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="auth-modal"
@@ -416,21 +740,22 @@
             <!-- Login View -->
             <div id="login-view">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-white">Iniciar Sesión</h2><button id="close-auth-modal-btn"
-                        class="text-gray-500 hover:text-white text-2xl">&times;</button>
+                    <h2 class="text-2xl font-bold text-white">Iniciar Sesión</h2>
+                    <button id="close-auth-modal-btn" class="text-gray-500 hover:text-white text-2xl">&times;</button>
                 </div>
-                <p class="text-gray-400 mb-6">Accede a tu dashboard para gestionar tu API.</p>
+                <p class="text-gray-400 mb-6">Accede a tu plataforma para emitir boletas.</p>
                 <form id="login-form">
                     <div id="login-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md">
                     </div>
-                    <div class="mb-4"><label for="login-email"
-                            class="block text-sm font-medium text-gray-400 mb-2">Email</label><input type="email"
-                            id="login-email" required
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                        <input type="email" id="login-email" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
-                    <div class="mb-6"><label for="login-password"
-                            class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label><input
-                            type="password" id="login-password" required
+                    <div class="mb-6">
+                        <label for="login-password"
+                            class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label>
+                        <input type="password" id="login-password" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
                     <button type="submit"
@@ -439,33 +764,49 @@
                 <p class="text-center text-sm text-gray-400 mt-6">¿No tienes cuenta? <button id="show-signup-view"
                         class="font-semibold text-primary-green hover:underline">Regístrate</button></p>
             </div>
-            <!-- Signup View -->
+
+            <!-- Signup View (With T&C) -->
             <div id="signup-view" class="hidden">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-white">Crear Cuenta</h2><button
-                        class="close-auth-modal-btn text-gray-500 hover:text-white text-2xl">&times;</button>
+                    <h2 class="text-2xl font-bold text-white">Crear Cuenta</h2>
+                    <button class="close-auth-modal-btn text-gray-500 hover:text-white text-2xl">&times;</button>
                 </div>
-                <p class="text-gray-400 mb-6">Comienza gratis y escala a medida que creces.</p>
+                <p class="text-gray-400 mb-6">Comienza con el Plan Gratuito.</p>
                 <form id="signup-form">
                     <div id="signup-error-message"
                         class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
                     <div id="signup-success-message"
                         class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
-                    <div class="mb-4"><label for="signup-email"
-                            class="block text-sm font-medium text-gray-400 mb-2">Email</label><input type="email"
-                            id="signup-email" required
+                    <div class="mb-4">
+                        <label for="signup-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                        <input type="email" id="signup-email" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
-                    <div class="mb-4"><label for="signup-password"
-                            class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label><input
-                            type="password" id="signup-password" required
+                    <div class="mb-4">
+                        <label for="signup-password"
+                            class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label>
+                        <input type="password" id="signup-password" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
-                    <div class="mb-6"><label for="signup-confirm-password"
-                            class="block text-sm font-medium text-gray-400 mb-2">Confirmar Contraseña</label><input
-                            type="password" id="signup-confirm-password" required
+                    <div class="mb-4">
+                        <label for="signup-confirm-password"
+                            class="block text-sm font-medium text-gray-400 mb-2">Confirmar Contraseña</label>
+                        <input type="password" id="signup-confirm-password" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
+                    <!-- T&C Checkbox -->
+                    <div class="mb-6 flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="terms" name="terms" type="checkbox" required
+                                class="w-4 h-4 bg-gray-900 border border-dark rounded focus:ring-primary-green text-primary-green">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="font-medium text-gray-400">Acepto los <a href="#"
+                                    class="text-primary-green hover:underline">Términos y Condiciones</a> de
+                                uso.</label>
+                        </div>
+                    </div>
+
                     <button type="submit"
                         class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Crear
                         Cuenta</button>
@@ -476,14 +817,50 @@
         </div>
     </section>
 
-    <!-- ======== DASHBOARD SECTION (HIDDEN BY DEFAULT) ======== -->
+    <!-- ======== TUTORIAL MODAL (NEW) ======== -->
+    <section id="tutorial-modal-section"
+        class="modal-container fixed inset-0 bg-black bg-opacity-90 z-[60] flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="tutorial-modal"
+            class="bg-surface-dark w-full max-w-4xl p-6 rounded-lg border border-dark shadow-2xl transform scale-95 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-white">🎓 Aprende a usar BoletaPro en 2 minutos</h2>
+                <button id="close-tutorial-modal-btn" class="text-gray-500 hover:text-white text-3xl">&times;</button>
+            </div>
+            <div class="video-container mb-6 bg-black rounded-lg border border-dark">
+                <!-- Placeholder for Video Tutorial -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
+                    <svg class="w-16 h-16 mb-4 text-primary-green opacity-80" fill="currentColor" viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+                    </svg>
+                    <p class="text-lg">Aquí se reproducirá el Video Tutorial</p>
+                    <p class="text-sm text-gray-600">(YouTube Embed)</p>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID" title="Tutorial BoletaPro" allowfullscreen></iframe> -->
+            </div>
+            <div class="flex justify-end">
+                <button id="finish-tutorial-btn"
+                    class="btn bg-primary-green text-white px-6 py-2 rounded-md font-bold bg-primary-green-hover">¡Entendido,
+                    vamos!</button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======== DASHBOARD SECTION ======== -->
     <main id="dashboard-section" class="hidden w-full min-h-screen bg-black">
         <div class="flex h-screen">
             <!-- Sidebar -->
             <aside id="sidebar"
                 class="bg-surface-dark w-64 flex-shrink-0 border-r border-dark p-4 flex flex-col fixed lg:relative h-full lg:h-auto -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
-                <a href="#" class="text-2xl font-bold text-white mb-8 block">API<span
-                        class="text-primary-green">Boletas</span></a>
+                <a href="#" class="text-2xl font-bold text-white mb-8 block flex items-center gap-2">
+                    <svg class="w-6 h-6 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Boleta<span class="text-primary-green">Pro</span>
+                </a>
                 <nav class="flex flex-col space-y-2">
                     <a href="#dashboard" data-view="dashboard-view"
                         class="sidebar-link active flex items-center p-3 rounded-md text-gray-400 font-semibold">
@@ -492,16 +869,17 @@
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                             </path>
                         </svg>
-                        Inicio
+                        Resumen
                     </a>
                     <a href="#api-explorer" data-view="api-explorer-view"
                         class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <!-- ICONO ACTUALIZADO: Documento/Factura -->
                         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10m-2 5a8 8 0 015-5m5 5a8 8 0 01-5 5m5-5s-1 2-3 3m-2-11a8 8 0 015 5m-5-5s1-2 3-3">
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                             </path>
                         </svg>
-                        Emisor de honorarios
+                        Emitir Boletas
                     </a>
                     <a href="#settings" data-view="settings-view"
                         class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
@@ -532,36 +910,53 @@
                                 d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-                    <div class="text-gray-400">Bienvenido, <span id="user-email-display"></span></div>
+                    <div class="text-gray-400">Hola, <span id="user-email-display"></span></div>
                 </header>
 
                 <div class="flex-1 overflow-y-auto p-6 md:p-8">
+
                     <!-- Dashboard View -->
                     <div id="dashboard-view" class="dashboard-view">
-                        <h2 class="text-4xl font-bold text-white mb-8">Panel de Control</h2>
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <h2 class="text-4xl font-bold text-white">Panel de Control</h2>
+                                <p class="text-gray-400 mt-2">Bienvenido de vuelta. Aquí está el resumen de tus
+                                    emisiones.</p>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Consumo Mensual de Servicios</h3>
+                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Consumo Mensual</h3>
                                 <div id="consumption-container" class="space-y-4">
                                     <!-- Datos de consumo se cargarán aquí -->
                                 </div>
                             </div>
-                            <!--<div class="bg-surface-dark p-6 rounded-lg border border-dark"><h3 class="text-lg font-semibold text-gray-400 mb-4">Tu API Key Secreta</h3><div class="flex items-center bg-gray-900 border border-dark rounded-md p-2"><input type="text" value="sk_live_a1b2c3d4e5f6g7h8i9j0k1l2" readonly id="api-key-input" class="flex-grow bg-transparent text-gray-400 font-mono focus:outline-none"><button id="copy-key-btn" class="ml-4 px-4 py-1.5 bg-primary-green text-white text-sm font-semibold rounded-md bg-primary-green-hover">Copiar</button></div><p class="text-xs text-gray-500 mt-2">No compartas esta clave. Úsala de forma segura en tu backend.</p></div>
-                            -->
+                            <div
+                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-white mb-2">¿Necesitas ayuda?</h3>
+                                <p class="text-gray-400 text-sm mb-4">Contacta a nuestro soporte especializado.</p>
+                                <a href="https://wa.me/56912345678" target="_blank"
+                                    class="btn bg-primary-green text-white px-6 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                    Chat Soporte WhatsApp
+                                </a>
+                            </div>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Historial de Envíos</h3>
+
+                        <h3 class="text-2xl font-bold text-white mb-4">Historial de Boletas</h3>
                         <div class="bg-surface-dark rounded-lg border border-dark overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left">
                                     <thead>
                                         <tr class="border-b border-dark">
-                                            <th class="p-4 font-semibold text-gray-400">ID de Trabajo</th>
+                                            <th class="p-4 font-semibold text-gray-400"
+                                                title="ID de la tarea en Google Cloud">ID Tarea / Proceso</th>
                                             <th class="p-4 font-semibold text-gray-400">Fecha</th>
-                                            <th class="p-4 font-semibold text-gray-400">Servicio</th>
+                                            <th class="p-4 font-semibold text-gray-400">Tipo</th>
                                             <th class="p-4 font-semibold text-gray-400">Cantidad</th>
                                             <th class="p-4 font-semibold text-gray-400">Estado</th>
-                                            <th class="p-4 font-semibold text-gray-400">Descarga</th>
-                                            <th class="p-4 font-semibold text-gray-400">Acciones</th>
+                                            <th class="p-4 font-semibold text-gray-400">Archivo</th>
+                                            <th class="p-4 font-semibold text-gray-400">Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody id="usage-history-body">
@@ -569,7 +964,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- REEMPLAZA TU DIV "pagination-controls" CON ESTE BLOQUE COMPLETO -->
                             <div id="pagination-controls"
                                 class="flex items-center justify-between p-4 border-t border-dark">
                                 <div class="flex items-center space-x-2">
@@ -579,354 +973,403 @@
                                         <option value="5">5</option>
                                         <option value="10">10</option>
                                         <option value="20">20</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
                                     </select>
                                 </div>
                                 <div class="flex items-center space-x-4">
                                     <button id="prev-page-btn"
-                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">
-                                        Anterior
-                                    </button>
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Anterior</button>
                                     <span id="page-indicator" class="text-sm text-gray-400"></span>
                                     <button id="next-page-btn"
-                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emission View (Wizard de 4 Pasos) -->
+                    <div id="api-explorer-view" class="dashboard-view hidden">
+                        <h2 class="text-4xl font-bold text-white mb-2">Asistente de Emisión de Boletas</h2>
+                        <p class="text-gray-400 mb-8">Sigue los pasos para emitir tus boletas de honorarios de forma
+                            masiva.</p>
+
+                        <!-- Stepper (Indicador de Progreso) -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between max-w-4xl mx-auto px-4">
+                                <!-- Step 1 -->
+                                <div class="wizard-step active" data-step="1">
+                                    <div class="wizard-step-circle">1</div>
+                                    <div class="wizard-step-label">Tipo de boleta</div>
+                                    <div class="wizard-step-connector"></div>
+                                </div>
+                                <!-- Step 2 -->
+                                <div class="wizard-step" data-step="2">
+                                    <div class="wizard-step-circle">2</div>
+                                    <div class="wizard-step-label">Carga de Datos</div>
+                                    <div class="wizard-step-connector"></div>
+                                </div>
+                                <!-- Step 3 -->
+                                <div class="wizard-step" data-step="3">
+                                    <div class="wizard-step-circle">3</div>
+                                    <div class="wizard-step-label">Previsualizar y Validar</div>
+                                    <div class="wizard-step-connector"></div>
+                                </div>
+                                <!-- Step 4 -->
+                                <div class="wizard-step" data-step="4">
+                                    <div class="wizard-step-circle">4</div>
+                                    <div class="wizard-step-label">Emitir</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wizard Content Container -->
+                        <div class="bg-surface-dark rounded-xl border border-dark p-8 max-w-4xl mx-auto">
+
+                            <!-- PASO 1: Tipo de Boleta -->
+                            <div id="wizard-step-1" class="wizard-content">
+                                <h3 class="text-2xl font-bold text-white mb-6">Selecciona el Tipo de Boleta</h3>
+                                <div class="space-y-8">
+                                    <!-- Opción BHE -->
+                                    <label class="radio-card" for="tipo-bhe">
+                                        <input type="radio" name="tipo-boleta" id="tipo-bhe" value="bhe">
+                                        <div class="radio-card-content">
+                                            <div class="text-primary-green">
+                                                <svg class="w-8 h-8" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-lg font-bold text-white mb-1">Boleta de Honorarios
+                                                    Electrónica (BHE)</h4>
+                                                <p class="text-sm text-gray-400">Emisión de boletas por servicios
+                                                    personales</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Opción BHET -->
+                                    <label class="radio-card hidden" for="tipo-bhet">
+                                        <input type="radio" name="tipo-boleta" id="tipo-bhet" value="bht">
+                                        <div class="radio-card-content">
+                                            <div class="text-primary-green">
+                                                <svg class="w-8 h-8" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-lg font-bold text-white mb-1">Boleta de Honorarios de
+                                                    Terceros (BHET)</h4>
+                                                <p class="text-sm text-gray-400">Emisión de boletas por cuenta de
+                                                    terceros</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="flex justify-end mt-8">
+                                    <button id="btn-step1-next" disabled
+                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
                                         Siguiente
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- API Explorer View -->
-                    <div id="api-explorer-view" class="dashboard-view hidden">
-                        <h2 class="text-4xl font-bold text-white mb-2">Emisor de honorarios</h2>
-                        <p class="text-gray-400 mb-6">Selecciona un servicio y rellena el formulario para poder emitir
-                            boletas de honorarios de forma masiva.</p>
-                        <div class="mb-6"><label for="api-select"
-                                class="block text-sm font-medium text-gray-400 mb-2">Selecciona un servicio</label>
-                            <select id="api-select"
-                                class="w-full md:w-1/3 bg-gray-900 border border-dark rounded-md p-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                <option value="bht" selected>API BHT (Boletas de Honorarios de Terceros)</option>
-                                <option value="bhe">API BHE (Boletas de Honorarios Propias)</option>
-                                <!--<option value="rc">API RC (Registro de Compras)</option>
-                                <option value="rv">API RV (Registro de Ventas)</option> -->
-                            </select>
-                        </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark lg:col-span-2">
-                                <h3 class="text-xl font-bold text-white mb-4">Parámetros de la Petición</h3>
-                                <form id="form-bht" class="api-form space-y-4">
-                                    <div><label for="bht-rut"
-                                            class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input
-                                            type="text" id="bht-rut" name="rut" placeholder="11.111.111-1" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
+
+                            <!-- PASO 2: Carga de Archivo -->
+                            <div id="wizard-step-2" class="wizard-content hidden">
+                                <h3 class="text-2xl font-bold text-white mb-6">Cargar Archivo</h3>
+
+                                <!-- Plantilla de descarga (solo para BHE) -->
+                                <div id="plantilla-bhe-info"
+                                    class="hidden mb-6 bg-gray-900/50 p-4 rounded border border-dark">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="text-sm font-medium text-white">Plantilla Requerida</h4>
+                                        <a href="/bhe/plantilla-excel" target="_blank"
+                                            class="text-xs text-primary-green hover:underline flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                                                </path>
+                                            </svg>
+                                            Descargar Excel
+                                        </a>
                                     </div>
-                                    <div><label for="bht-clave"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Clave
-                                            tributaria</label><input type="password" id="bht-clave" name="clave"
-                                            placeholder="••••••••" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="bht-csv"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Archivo
-                                            CSV</label><input type="file" id="bht-csv" name="csv_file" accept=".csv"
-                                            required
-                                            class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-green file:text-background hover:file:bg-primary-green-hover">
-                                    </div>
-                                    <button type="submit"
-                                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar
-                                        Petición</button>
-                                </form>
-                                <form id="form-bhe" class="api-form space-y-4 hidden">
-                                    <div class="mb-4">
-                                        <div class="flex justify-between items-center mb-2">
-                                            <h4 class="text-sm font-medium text-white">Preparar archivo</h4>
-                                            <a href="/bhe/plantilla-excel" target="_blank"
-                                                class="text-xs text-primary-green hover:underline flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
-                                                    </path>
-                                                </svg>
-                                                Descargar Plantilla Excel
-                                            </a>
+                                    <p class="text-xs text-gray-500">Usa la plantilla oficial para evitar errores de
+                                        formato.</p>
+                                </div>
+
+                                <!-- Drag & Drop Zone -->
+                                <div id="drop-zone" class="drop-zone">
+                                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
+                                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                        </path>
+                                    </svg>
+                                    <p class="text-lg text-gray-400 mb-2">Arrastra tu Excel aquí</p>
+                                    <p class="text-sm text-gray-600 mb-4">o haz clic para seleccionar</p>
+                                    <p class="text-xs text-gray-700">Formatos permitidos: .csv, .xlsx | Máximo 5MB</p>
+                                </div>
+
+                                <!-- File Info (después de cargar) -->
+                                <div id="file-info"
+                                    class="hidden mt-4 p-4 bg-green-900/20 border border-green-800 rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <svg class="w-6 h-6 text-primary-green" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <div>
+                                                <p class="text-sm font-semibold text-primary-green" id="file-name"></p>
+                                                <p class="text-xs text-gray-500" id="file-size"></p>
+                                            </div>
                                         </div>
-                                        <p class="text-xs text-gray-500 mb-2">Descarga la plantilla oficial con
-                                            validación de comunas para evitar errores.</p>
+                                        <button id="btn-remove-file" class="text-red-400 hover:text-red-300">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between mt-8">
+                                    <button id="btn-step2-back"
+                                        class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                        Atrás
+                                    </button>
+                                    <button id="btn-step2-next" disabled
+                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
+                                        Siguiente
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PASO 3: Previsualización y Validación -->
+                            <div id="wizard-step-3" class="wizard-content hidden">
+                                <h3 class="text-2xl font-bold text-white mb-6">Previsualizar y Validar Datos</h3>
+
+                                <!-- Validation Status -->
+                                <div id="validation-status" class="mb-6 hidden">
+                                    <!-- Se llenará dinámicamente -->
+                                </div>
+
+                                <!-- Preview Table -->
+                                <div class="overflow-x-auto mb-6 border border-dark rounded-lg">
+                                    <table id="preview-table" class="w-full text-left text-sm">
+                                        <thead class="bg-gray-900/50">
+                                            <!-- Headers se llenarán dinámicamente -->
+                                        </thead>
+                                        <tbody class="text-gray-300">
+                                            <!-- Rows se llenarán dinámicamente -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <p class="text-xs text-gray-600 mb-6">Mostrando las primeras 5 filas del archivo
+                                    cargado.</p>
+
+                                <div class="flex justify-between">
+                                    <button id="btn-step3-back"
+                                        class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                        Atrás
+                                    </button>
+                                    <button id="btn-step3-next" disabled
+                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PASO 4: Emisión Final -->
+                            <div id="wizard-step-4" class="wizard-content hidden">
+                                <h3 class="text-2xl font-bold text-white mb-6">Credenciales y Emisión</h3>
+
+                                <form id="wizard-final-form" class="space-y-6">
+                                    <div>
+                                        <label for="wizard-rut" class="block text-sm font-medium text-gray-400 mb-2">RUT
+                                            Emisor</label>
+                                        <input type="text" id="wizard-rut" name="rut" placeholder="11.111.111-1"
+                                            required
+                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                                     </div>
 
-                                    <div><label for="bhe-rut"
-                                            class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input
-                                            type="text" id="bhe-rut" name="rut" placeholder="11.111.111-1" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="bhe-clave"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Clave
-                                            tributaria</label><input type="password" id="bhe-clave" name="clave"
-                                            placeholder="••••••••" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="bhe-csv"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Archivo
-                                            CSV o Excel</label><input type="file" id="bhe-csv" name="csv_file"
-                                            accept=".csv, .xlsx, .xls" required
-                                            class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-green file:text-background hover:file:bg-primary-green-hover">
-                                    </div>
                                     <div>
-                                        <label for="bhe-tipo-retencion"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Tipo de
+                                        <label for="wizard-clave"
+                                            class="block text-sm font-medium text-gray-400 mb-2">Clave SII</label>
+                                        <input type="password" id="wizard-clave" name="clave" placeholder="••••••••"
+                                            required
+                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                    </div>
+
+                                    <!-- Campo adicional para BHE -->
+                                    <div id="wizard-tipo-retencion-container" class="hidden">
+                                        <label for="wizard-tipo-retencion"
+                                            class="block text-sm font-medium text-gray-400 mb-2">Tipo de
                                             Retención</label>
-                                        <select id="bhe-tipo-retencion" name="tipo_retencion"
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                            <option value="Receptor" selected>Retiene el Receptor</option>
-                                            <option value="Emisor">Retiene el Emisor (Contribuyente)</option>
+                                        <select id="wizard-tipo-retencion" name="tipo_retencion"
+                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                            <option value="Receptor" selected>Retiene el Receptor (Empresa)</option>
+                                            <option value="Emisor">Retiene el Emisor (Yo)</option>
                                         </select>
                                     </div>
-                                    <button type="submit"
-                                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar
-                                        Petición</button>
+
+                                    <div class="flex justify-between items-center pt-4">
+                                        <button type="button" id="btn-step4-back"
+                                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                            Atrás
+                                        </button>
+                                        <button type="submit" id="btn-emit-now"
+                                            class="btn bg-primary-green text-white px-12 py-3 rounded-md font-bold text-lg bg-primary-green-hover shadow-lg shadow-green-900/50">
+                                            EMITIR AHORA
+                                        </button>
+                                    </div>
                                 </form>
-                                <form id="form-rc-rv" class="api-form space-y-4 hidden">
-                                    <div><label for="rcrv-rut"
-                                            class="block text-sm font-medium text-gray-400 mb-1">RUT</label><input
-                                            type="text" id="rcrv-rut" placeholder="11.111.111-1" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="rcrv-clave"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Clave</label><input
-                                            type="password" id="rcrv-clave" placeholder="••••••••" required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="rcrv-periodo"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Periodo
-                                            (YYYY-MM)</label><input type="text" id="rcrv-periodo" placeholder="2025-07"
-                                            required
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white">
-                                    </div>
-                                    <div><label for="rcrv-output"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Output</label><select
-                                            id="rcrv-output"
-                                            class="w-full p-2 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                            <option value="json" selected>JSON</option>
-                                            <option value="sap-hana">SAP Hana</option>
-                                        </select></div><button type="submit"
-                                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar
-                                        Petición</button>
-                                </form>
-                            </div>
-                            <div class="space-y-8 lg:col-span-3">
-                                <div class="relative bg-surface-dark p-6 rounded-lg border border-dark">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h3 class="text-xl font-bold text-white">Respuesta de la API</h3><button
-                                            id="copy-response-btn"
-                                            class="btn btn-secondary text-white px-3 py-1 text-xs rounded-md font-semibold">Copiar</button>
-                                    </div>
-                                    <div id="api-response-area">
-                                        <pre><code class="language-json"><span class="code-comment">// La respuesta de la API aparecerá aquí...</span></code></pre>
-                                    </div>
-                                </div>
-                                <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                    <h3 class="text-xl font-bold text-white mb-4">✨ Generador de Código</h3>
-                                    <div class="flex items-center space-x-4 mb-4"><select id="language-select"
-                                            class="bg-gray-900 border border-dark rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                            <option value="python">Python</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="curl">cURL</option>
-                                            <option value="php">PHP</option>
-                                        </select><button id="generate-code-btn"
-                                            class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center justify-center">Generar</button>
-                                    </div>
-                                    <div id="code-generator-output">
-                                        <pre><code><span class="code-comment">// El código generado aparecerá aquí...</span></code></pre>
-                                    </div>
+
+                                <!-- Resultado de la emisión -->
+                                <div id="emission-result" class="hidden mt-8 p-6 rounded-lg border">
+                                    <!-- Se llenará dinámicamente -->
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                     <!-- Settings View -->
                     <div id="settings-view" class="dashboard-view hidden">
-                        <h2 class="text-4xl font-bold text-white mb-8">Configuración de la Cuenta</h2>
-                        <div class="space-y-12">
+                        <h2 class="text-4xl font-bold text-white mb-8">Configuración</h2>
+                        <div class="space-y-8">
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-xl font-bold text-white mb-4">Perfil</h3>
-                                <form class="space-y-4">
-                                    <div><label for="profile-email"
-                                            class="block text-sm font-medium text-gray-400 mb-1">Email</label><input
-                                            type="email" id="profile-email" value="usuario@ejemplo.com" disabled
-                                            class="w-full md:w-1/2 p-2 bg-gray-800 border-dark rounded-md text-gray-400 cursor-not-allowed">
+                                <h3 class="text-xl font-bold text-white mb-4">Mi Perfil</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="profile-email"
+                                            class="block text-sm font-medium text-gray-400 mb-1">Email
+                                            Registrado</label>
+                                        <input type="email" id="profile-email" value="" disabled
+                                            class="w-full md:w-1/2 p-2 bg-gray-800 border-dark rounded-md text-gray-500 cursor-not-allowed">
                                     </div>
-                                    <button type="submit"
-                                        class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">Guardar
-                                        Cambios</button>
-                                </form>
-                            </div>
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-xl font-bold text-white">API Key</h3>
-                                    <button id="generate-new-key-btn"
-                                        class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">Generar
-                                        Nueva API Key</button>
+                                    <!-- "Guardar Cambios" BUTTON REMOVED -->
                                 </div>
-                                <ul id="api-keys-list" class="space-y-3">
-                                    <!-- API Keys se cargarán aquí -->
-                                </ul>
                             </div>
+
+                            <!-- API KEY SECTION HIDDEN FOR NON-DEVS -->
+                            <div class="hidden bg-surface-dark p-6 rounded-lg border border-dark">
+                                <h3 class="text-xl font-bold text-white mb-4">Credenciales Internas</h3>
+                                <ul id="api-keys-list" class="space-y-3"></ul>
+                                <button id="generate-new-key-btn" class="hidden"></button>
+                            </div>
+
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
                                 <h3 class="text-xl font-bold text-white mb-4">Plan y Facturación</h3>
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                                     <div class="mb-4 md:mb-0">
                                         <p class="text-gray-400">Plan actual: <span id="current-plan-name"
-                                                class="font-bold text-primary-green">Gratuito</span></p>
-                                        <p class="text-gray-400">¿Necesitas más potencia? Actualiza a nuestro plan
-                                            Profesional.</p>
+                                                class="font-bold text-primary-green">Cargando...</span></p>
+                                        <p class="text-gray-400 text-sm mt-1">Aumenta tu límite de emisiones contratando
+                                            un plan superior.</p>
                                     </div>
-                                    <a href="mailto:ventas@tuempresa.com?subject=Solicitud de Upgrade a Plan Profesional"
-                                        id="upgrade-plan-btn"
-                                        class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                    <a href="https://wa.me/56912345678?text=Hola,%20quisiera%20mejorar%20mi%20plan%20en%20BoletaPro"
+                                        target="_blank"
+                                        class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326z" />
+                                        </svg>
                                         Contactar para Upgrade
                                     </a>
                                 </div>
                             </div>
+
                             <div class="bg-surface-dark p-6 rounded-lg border border-red-500/30">
                                 <h3 class="text-xl font-bold text-red-500 mb-2">Zona de Peligro</h3>
-                                <p class="text-gray-400 mb-4">Estas acciones son permanentes y no se pueden deshacer.
-                                </p>
+                                <p class="text-gray-400 mb-4 text-sm">Eliminar tu cuenta borrará todo tu historial de
+                                    boletas emitidas.</p>
                                 <button id="delete-account-btn"
-                                    class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Eliminar mi
-                                    Cuenta</button>
+                                    class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold text-sm">Eliminar
+                                    mi Cuenta</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Footer for Dashboard -->
                 <footer class="bg-surface-dark border-t border-dark mt-auto">
                     <div class="container mx-auto px-6 py-4 text-center text-gray-400 text-sm">
-                        <p>&copy; 2025 APIBoletas. Todos los derechos reservados.</p>
+                        <p>&copy; 2025 BoletaPro.</p>
                     </div>
                 </footer>
             </div>
         </div>
     </main>
 
-    <!-- ======== GEMINI ERROR ANALYSIS MODAL ======== -->
+    <!-- ======== MODALS ======== -->
     <section id="error-modal-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="error-modal"
             class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-white">✨ Análisis de Error con IA</h2><button id="close-error-modal"
+                <h2 class="text-2xl font-bold text-white">Detalle del Error</h2><button id="close-error-modal"
                     class="text-gray-500 hover:text-white text-2xl">&times;</button>
             </div>
-            <div id="error-analysis-content" class="text-gray-300 space-y-4"></div>
+            <div id="error-analysis-content-modal" class="text-gray-300 space-y-4 max-h-96 overflow-y-auto"></div>
         </div>
     </section>
 
-    <!-- ======== DELETE ACCOUNT CONFIRMATION MODAL ======== -->
     <section id="delete-confirm-modal-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="delete-confirm-modal"
             class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
             <h2 class="text-2xl font-bold text-red-500 mb-4">¿Estás seguro?</h2>
-            <p class="text-gray-400 mb-6">Esta acción no se puede deshacer. Se eliminarán permanentemente tu cuenta, tus
-                claves de API y todo tu historial de consumo.</p>
+            <p class="text-gray-400 mb-6">Esta acción es irreversible.</p>
             <div class="flex justify-end space-x-4">
                 <button id="cancel-delete-btn"
                     class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
                 <button id="confirm-delete-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí,
-                    eliminar mi cuenta</button>
+                    eliminar</button>
             </div>
         </div>
     </section>
 
-    <!-- ======== REVOKE API KEY CONFIRMATION MODAL ======== -->
-    <section id="revoke-key-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
-        <div id="revoke-key-modal"
-            class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
-            <h2 class="text-2xl font-bold text-amber-500 mb-4">Confirmar Revocación</h2>
-            <p class="text-gray-400 mb-6">¿Estás seguro de que quieres revocar esta API key? Cualquier aplicación o
-                script que la esté utilizando dejará de funcionar inmediatamente. Esta acción no se puede deshacer.</p>
-            <div class="flex justify-end space-x-4">
-                <button id="cancel-revoke-btn"
-                    class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
-                <button id="confirm-revoke-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí,
-                    revocar clave</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======== NEW API KEY MODAL ======== -->
-    <section id="new-api-key-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
-        <div id="new-api-key-modal"
-            class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
-            <h2 class="text-2xl font-bold text-primary-green mb-4">Nueva API Key Generada</h2>
-            <p class="text-gray-400 mb-4">Esta es la única vez que verás esta clave. Cópiala y guárdala en un lugar
-                seguro.</p>
-            <div class="flex items-center bg-gray-900 border border-dark rounded-md p-2 mb-6">
-                <input type="text" readonly id="new-api-key-display"
-                    class="flex-grow bg-transparent text-gray-400 font-mono focus:outline-none">
-                <button id="copy-new-key-btn"
-                    class="ml-4 px-4 py-1.5 bg-primary-green text-white text-sm font-semibold rounded-md bg-primary-green-hover">Copiar</button>
-            </div>
-            <div class="flex justify-end">
-                <button id="close-new-key-modal-btn"
-                    class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cerrar</button>
-            </div>
-        </div>
-    </section>
-    <!-- MODAL ANALIZAR ERRORES -->
-    <section id="error-analysis-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
-        <div id="error-analysis-modal"
-            class="bg-surface-dark w-full max-w-2xl p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-amber-500">Detalles del Error</h2>
-                <button id="close-error-modal-btn" class="text-gray-500 hover:text-white text-2xl">&times;</button>
-            </div>
-            <p class="text-gray-400 mb-6">Se encontraron los siguientes errores al procesar tu archivo. Por favor,
-                corrígelos y vuelve a intentarlo.</p>
-            <div id="error-analysis-content"
-                class="space-y-3 bg-gray-900 border border-dark rounded-md p-4 max-h-80 overflow-y-auto">
-                <!-- Los detalles del error se cargarán aquí -->
-            </div>
-            <div class="flex justify-end mt-6">
-                <button id="close-error-modal-btn-bottom"
-                    class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cerrar</button>
-            </div>
-        </div>
-    </section>
-    <!-- FIN DEL BLOQUE A PEGAR -->
-
-
+    <!-- Placeholder for JS env -->
     <script src="env.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Supabase Client Initialization ---
+            // --- Supabase Init ---
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            let isDashboardInitialized = false;
+            let loadDashboardData = null;
 
-
-            let isDashboardInitialized = false; // <-- AÑADE ESTA LÍNEA
-            let loadDashboardData = null; // Variable global para recargar datos del dashboard
-            // --- DOM Element Selection ---
+            // --- DOM Elements ---
             const landingPage = document.getElementById('landing-page');
             const authSection = document.getElementById('auth-section');
             const dashboardSection = document.getElementById('dashboard-section');
             const loginBtn = document.getElementById('login-btn');
             const signupBtn = document.getElementById('signup-btn');
             const closeAuthModalBtn = document.getElementById('close-auth-modal-btn');
-
             const loginView = document.getElementById('login-view');
             const signupView = document.getElementById('signup-view');
             const showSignupViewBtn = document.getElementById('show-signup-view');
             const showLoginViewBtn = document.getElementById('show-login-view');
-
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
 
-            // --- UI Logic Functions ---
+            // Tutorial Modal Elements
+            const tutorialModalSection = document.getElementById('tutorial-modal-section');
+            const closeTutorialModalBtn = document.getElementById('close-tutorial-modal-btn');
+            const finishTutorialBtn = document.getElementById('finish-tutorial-btn');
+
+            // --- UI Helper Functions ---
             const showAuthModal = (view = 'login') => {
                 authSection.classList.remove('opacity-0', 'pointer-events-none');
                 authSection.querySelector('#auth-modal').classList.remove('scale-95');
@@ -939,62 +1382,39 @@
                 }
             };
 
-            // --- Lógica de UI ---
-            const showCopyConfirmation = (button) => {
-                const originalText = button.textContent;
-                button.textContent = '¡Copiado!';
-                button.classList.add('bg-primary-green-hover');
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.classList.remove('bg-primary-green-hover');
-                }, 2000);
-            };
-
-
-            // --- New API Key Modal Logic ---
-            const newApiKeyModalSection = document.getElementById('new-api-key-modal-section');
-            const newApiKeyDisplay = document.getElementById('new-api-key-display');
-            const copyNewKeyBtn = document.getElementById('copy-new-key-btn');
-            const closeNewKeyModalBtn = document.getElementById('close-new-key-modal-btn');
-
-            const showNewApiKeyModal = (apiKey) => {
-                newApiKeyDisplay.value = apiKey;
-                newApiKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.remove('scale-95');
-            };
-
-            const hideNewApiKeyModal = () => {
-                newApiKeyModalSection.classList.add('opacity-0');
-                newApiKeyModalSection.querySelector('#new-api-key-modal').classList.add('scale-95');
-                setTimeout(() => newApiKeyModalSection.classList.add('pointer-events-none'), 300);
-            };
-
-            copyNewKeyBtn.addEventListener('click', (e) => {
-                navigator.clipboard.writeText(newApiKeyDisplay.value);
-                showCopyConfirmation(e.target);
-            });
-
-            closeNewKeyModalBtn.addEventListener('click', hideNewApiKeyModal);
-
-
             const hideAuthModal = () => {
                 authSection.classList.add('opacity-0');
                 authSection.querySelector('#auth-modal').classList.add('scale-95');
                 setTimeout(() => authSection.classList.add('pointer-events-none'), 300);
             };
 
+            const showTutorialModal = () => {
+                // Check if user has seen tutorial in this session
+                if (!sessionStorage.getItem('tutorialSeen')) {
+                    tutorialModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                    tutorialModalSection.querySelector('#tutorial-modal').classList.remove('scale-95');
+                    sessionStorage.setItem('tutorialSeen', 'true');
+                }
+            };
+
+            const hideTutorialModal = () => {
+                tutorialModalSection.classList.add('opacity-0');
+                tutorialModalSection.querySelector('#tutorial-modal').classList.add('scale-95');
+                setTimeout(() => tutorialModalSection.classList.add('pointer-events-none'), 300);
+            };
+
             const showDashboard = (user) => {
                 landingPage.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 dashboardSection.classList.add('fade-in');
+
                 if (!isDashboardInitialized) {
                     initializeDashboard(user);
                     isDashboardInitialized = true;
+                    // Show Tutorial on first dashboard load
+                    setTimeout(showTutorialModal, 1000);
                 } else {
-                    // Recargar datos del dashboard si ya está inicializado
-                    if (typeof loadDashboardData === 'function') {
-                        loadDashboardData();
-                    }
+                    if (typeof loadDashboardData === 'function') loadDashboardData();
                 }
             };
 
@@ -1006,12 +1426,13 @@
 
             const showLoadingState = (button, text) => {
                 button.disabled = true;
-                button.innerHTML = `<div class="spinner"></div><span class="ml-2">${text}</span>`;
+                button.dataset.originalText = button.innerHTML;
+                button.innerHTML = `<div class="spinner inline-block mr-2"></div>${text}`;
             };
 
-            const hideLoadingState = (button, originalText) => {
+            const hideLoadingState = (button) => {
                 button.disabled = false;
-                button.innerHTML = originalText;
+                button.innerHTML = button.dataset.originalText;
             };
 
             const showMessage = (elementId, message, isError = true) => {
@@ -1019,47 +1440,46 @@
                 element.textContent = message;
                 element.classList.remove('hidden');
                 if (isError) {
-                    element.classList.add('text-red-400', 'bg-red-900/50');
                     element.classList.remove('text-green-400', 'bg-green-900/50');
+                    element.classList.add('text-red-400', 'bg-red-900/50');
                 } else {
                     element.classList.remove('text-red-400', 'bg-red-900/50');
                     element.classList.add('text-green-400', 'bg-green-900/50');
                 }
             };
 
-            const hideMessage = (elementId) => {
-                document.getElementById(elementId).classList.add('hidden');
-            };
-
-            // --- Event Listeners (Landing Page) ---
+            // --- Landing Event Listeners ---
             loginBtn.addEventListener('click', () => showAuthModal('login'));
             signupBtn.addEventListener('click', () => showAuthModal('signup'));
             closeAuthModalBtn.addEventListener('click', hideAuthModal);
             document.querySelectorAll('.close-auth-modal-btn').forEach(btn => btn.addEventListener('click', hideAuthModal));
-
             showSignupViewBtn.addEventListener('click', () => showAuthModal('signup'));
             showLoginViewBtn.addEventListener('click', () => showAuthModal('login'));
 
-            // --- Real Auth Logic ---
+            // Tutorial Events
+            closeTutorialModalBtn.addEventListener('click', hideTutorialModal);
+            finishTutorialBtn.addEventListener('click', hideTutorialModal);
+
+            // --- Auth Logic ---
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('login-email').value;
                 const password = document.getElementById('login-password').value;
-                const submitButton = loginForm.querySelector('button[type="submit"]');
-                const originalButtonText = submitButton.innerHTML;
+                const btn = loginForm.querySelector('button[type="submit"]');
 
-                hideMessage('login-error-message');
-                showLoadingState(submitButton, 'Ingresando...');
+                showMessage('login-error-message', '', true);
+                document.getElementById('login-error-message').classList.add('hidden');
+                showLoadingState(btn, 'Ingresando...');
 
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
                 if (error) {
-                    showMessage('login-error-message', error.message);
-                    hideLoadingState(submitButton, originalButtonText);
+                    showMessage('login-error-message', 'Error: Credenciales incorrectas');
+                    hideLoadingState(btn);
                 } else {
                     hideAuthModal();
                     loginForm.reset();
-                    hideLoadingState(submitButton, originalButtonText);
+                    hideLoadingState(btn);
                 }
             });
 
@@ -1068,572 +1488,885 @@
                 const email = document.getElementById('signup-email').value;
                 const password = document.getElementById('signup-password').value;
                 const confirmPassword = document.getElementById('signup-confirm-password').value;
-                const submitButton = signupForm.querySelector('button[type="submit"]');
-                const originalButtonText = submitButton.innerHTML;
+                const terms = document.getElementById('terms').checked;
+                const btn = signupForm.querySelector('button[type="submit"]');
 
-                hideMessage('signup-error-message');
-                hideMessage('signup-success-message');
+                document.getElementById('signup-error-message').classList.add('hidden');
+                document.getElementById('signup-success-message').classList.add('hidden');
 
                 if (password !== confirmPassword) {
                     showMessage('signup-error-message', 'Las contraseñas no coinciden.');
                     return;
                 }
+                if (!terms) {
+                    showMessage('signup-error-message', 'Debes aceptar los Términos y Condiciones.');
+                    return;
+                }
 
-                showLoadingState(submitButton, 'Creando cuenta...');
-
+                showLoadingState(btn, 'Creando cuenta...');
                 const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
                 if (error) {
                     showMessage('signup-error-message', error.message);
                 } else {
-                    showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar tu cuenta.', false);
+                    showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar.', false);
                     signupForm.reset();
                 }
-                hideLoadingState(submitButton, originalButtonText);
+                hideLoadingState(btn);
             });
 
-            // --- Session Management ---
+            // --- Session Monitor ---
             supabaseClient.auth.onAuthStateChange(async (event, session) => {
                 if (session) {
                     showDashboard(session.user);
                 } else {
                     showLanding();
+                    isDashboardInitialized = false;
                 }
             });
 
-            // --- Dashboard Initialization ---
-            // REEMPLAZA TU FUNCIÓN initializeDashboard CON ESTA VERSIÓN COMPLETA Y CORREGIDA
-            // REEMPLAZA TU FUNCIÓN initializeDashboard CON ESTA VERSIÓN COMPLETA Y CORREGIDA
+            // --- Dashboard Logic ---
             const initializeDashboard = (user) => {
-                // --- DOM Element Selection (Dashboard) ---
+                // Elements
                 const userEmailDisplay = document.getElementById('user-email-display');
                 const logoutBtn = document.getElementById('logout-btn');
                 const sidebar = document.getElementById('sidebar');
                 const menuToggleBtn = document.getElementById('menu-toggle-btn');
                 const sidebarLinks = document.querySelectorAll('.sidebar-link');
                 const dashboardViews = document.querySelectorAll('.dashboard-view');
-                const apiSelect = document.getElementById('api-select');
-                const formBht = document.getElementById('form-bht');
-                const formBhe = document.getElementById('form-bhe');
-                const formRcRv = document.getElementById('form-rc-rv');
-                const generateCodeBtn = document.getElementById('generate-code-btn');
-                const copyResponseBtn = document.getElementById('copy-response-btn');
-                const generateNewKeyBtn = document.getElementById('generate-new-key-btn');
-                const apiKeysList = document.getElementById('api-keys-list');
-                const deleteAccountBtn = document.getElementById('delete-account-btn');
-                const deleteConfirmModalSection = document.getElementById('delete-confirm-modal-section');
-                const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
-                const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-                const revokeKeyModalSection = document.getElementById('revoke-key-modal-section');
-                const cancelRevokeBtn = document.getElementById('cancel-revoke-btn');
-                const confirmRevokeBtn = document.getElementById('confirm-revoke-btn');
-                const newApiKeyModalSection = document.getElementById('new-api-key-modal-section');
-                const newApiKeyDisplay = document.getElementById('new-api-key-display');
-                const copyNewKeyBtn = document.getElementById('copy-new-key-btn');
-                const closeNewKeyModalBtn = document.getElementById('close-new-key-modal-btn');
+
+                // Pagination & History Elements
                 const pageSizeSelect = document.getElementById('page-size-select');
                 const prevPageBtn = document.getElementById('prev-page-btn');
                 const nextPageBtn = document.getElementById('next-page-btn');
                 const pageIndicator = document.getElementById('page-indicator');
                 const usageHistoryBody = document.getElementById('usage-history-body');
-                const errorAnalysisModalSection = document.getElementById('error-analysis-modal-section');
-                const errorAnalysisContent = document.getElementById('error-analysis-content');
-                const closeErrorModalBtn = document.getElementById('close-error-modal-btn');
-                const closeErrorModalBtnBottom = document.getElementById('close-error-modal-btn-bottom');
 
-                // --- State Variables for Pagination ---
+                // Error Modal Elements
+                const errorModalSection = document.getElementById('error-modal-section');
+                const closeErrorModal = document.getElementById('close-error-modal');
+                const errorContentModal = document.getElementById('error-analysis-content-modal');
+
+                // Delete Account
+                const deleteAccountBtn = document.getElementById('delete-account-btn');
+                const deleteConfirmModalSection = document.getElementById('delete-confirm-modal-section');
+                const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+                const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
                 let currentPage = 0;
                 let pageSize = parseInt(pageSizeSelect.value, 10) || 5;
                 let totalRecords = 0;
-                let keyElementToRevoke = null;
 
                 userEmailDisplay.textContent = user.email;
                 document.getElementById('profile-email').value = user.email;
 
-                // --- UI Functions ---
-                const showCopyConfirmation = (button) => {
-                    const originalText = button.textContent;
-                    button.textContent = '¡Copiado!';
-                    button.classList.add('bg-primary-green-hover');
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.classList.remove('bg-primary-green-hover');
-                    }, 2000);
+                // --- Helper Logic ---
+                const showErrorModal = (errors) => {
+                    errorContentModal.innerHTML = '';
+                    if (!errors || errors.length === 0) {
+                        errorContentModal.innerHTML = '<p>Error desconocido.</p>';
+                    } else {
+                        errors.forEach(err => {
+                            const div = document.createElement('div');
+                            div.className = 'bg-gray-900 p-3 rounded border border-dark';
+                            div.innerHTML = `<strong class="text-amber-500">Fila ${err.linea || '?'}:</strong> ${err.error}`;
+                            errorContentModal.appendChild(div);
+                        });
+                    }
+                    errorModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                    errorModalSection.querySelector('#error-modal').classList.remove('scale-95');
                 };
 
-                // --- Modals Logic ---
-                const showRevokeKeyModal = () => {
-                    revokeKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                    revokeKeyModalSection.querySelector('#revoke-key-modal').classList.remove('scale-95');
-                };
-                const hideRevokeKeyModal = () => {
-                    revokeKeyModalSection.classList.add('opacity-0');
-                    revokeKeyModalSection.querySelector('#revoke-key-modal').classList.add('scale-95');
-                    setTimeout(() => revokeKeyModalSection.classList.add('pointer-events-none'), 300);
-                };
-                const showNewApiKeyModal = (apiKey) => {
-                    newApiKeyDisplay.value = apiKey;
-                    newApiKeyModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                    newApiKeyModalSection.querySelector('#new-api-key-modal').classList.remove('scale-95');
-                };
-                const hideNewApiKeyModal = () => {
-                    newApiKeyModalSection.classList.add('opacity-0');
-                    newApiKeyModalSection.querySelector('#new-api-key-modal').classList.add('scale-95');
-                    setTimeout(() => newApiKeyModalSection.classList.add('pointer-events-none'), 300);
-                };
-                const showErrorModal = () => {
-                    errorAnalysisModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                    errorAnalysisModalSection.querySelector('#error-analysis-modal').classList.remove('scale-95');
-                };
                 const hideErrorModal = () => {
-                    errorAnalysisModalSection.classList.add('opacity-0');
-                    errorAnalysisModalSection.querySelector('#error-analysis-modal').classList.add('scale-95');
-                    setTimeout(() => errorAnalysisModalSection.classList.add('pointer-events-none'), 300);
+                    errorModalSection.classList.add('opacity-0');
+                    errorModalSection.querySelector('#error-modal').classList.add('scale-95');
+                    setTimeout(() => errorModalSection.classList.add('pointer-events-none'), 300);
                 };
 
-
-
-
-
-
-
-
-
-
-
-
-                // --- FUNCIÓN PROXY SEGURA PARA LLAMADAS AL API EXPLORER ---
+                // --- Api Proxy Handler ---
                 const handleApiProxySubmit = async (e) => {
                     e.preventDefault();
                     const form = e.target;
                     const submitButton = form.querySelector('button[type="submit"]');
-                    const originalButtonText = submitButton.innerHTML;
-                    showLoadingState(submitButton, 'Procesando...', true);
 
+                    showLoadingState(submitButton, 'Emitiendo Boletas...');
                     const apiResponseArea = document.getElementById('api-response-area');
-                    apiResponseArea.innerHTML = `<pre><code class="language-json"><span class="code-comment">// Enviando petición de forma segura...</span></code></pre>`;
+                    apiResponseArea.innerHTML = `<div class="flex items-center justify-center h-full text-green-400"><div class="spinner mr-2"></div>Conectando con SII...</div>`;
 
                     try {
-                        // 1. Obtener el token de sesión JWT de Supabase.
-                        const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
-                        if (sessionError || !session) {
-                            throw new Error("No se pudo obtener la sesión de usuario. Por favor, inicia sesión de nuevo.");
-                        }
-                        const supabaseToken = session.access_token;
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (!session) throw new Error("Sesión expirada");
 
-                        // 2. Construir el FormData a partir del formulario activo.
                         const formData = new FormData(form);
-
-                        // 3. Determinar la API de destino.
                         const selectedApi = document.getElementById('api-select').value;
+                        const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedApi}`;
 
-                        // URL del nuevo endpoint proxy en tu backend.
-                        // Le pasamos la API de destino como un query parameter.
-                        const proxyApiUrl = `https://bht-sii.onrender.com/api-proxy/call/${selectedApi}`;
-
-                        // 4. Realizar la llamada al endpoint proxy.
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
-                            headers: {
-                                // ¡Aquí está la magia! Enviamos el token de sesión, no la API key.
-                                'Authorization': `Bearer ${supabaseToken}`
-                            },
+                            headers: { 'Authorization': `Bearer ${session.access_token}` },
                             body: formData
                         });
 
-                        // 5. Procesar la respuesta del proxy.
                         const contentType = response.headers.get("content-type");
 
                         if (!response.ok) {
-                            // Si hay un error, el cuerpo será JSON.
                             const errorData = await response.json();
-                            const formattedError = JSON.stringify(errorData, null, 2);
-                            apiResponseArea.innerHTML = `<pre><code class="language-json">${formattedError}</code></pre>`;
-                            // No refrescar el historial si hay error.
-                            return;
-                        }
-
-                        // Si la respuesta es un archivo (ej. ZIP para BHT)
-                        if (contentType && contentType.includes("application/zip")) {
+                            apiResponseArea.innerHTML = `<div class="text-red-400 font-mono text-xs p-2 whitespace-pre-wrap">${JSON.stringify(errorData, null, 2)}</div>`;
+                        } else if (contentType && contentType.includes("application/zip")) {
                             const blob = await response.blob();
                             const url = window.URL.createObjectURL(blob);
                             const a = document.createElement('a');
-                            a.style.display = 'none';
                             a.href = url;
-                            a.download = 'boletas_emitidas.zip'; // Nombre del archivo
-                            document.body.appendChild(a);
+                            a.download = 'boletas_emitidas.zip';
                             a.click();
                             window.URL.revokeObjectURL(url);
-                            document.body.removeChild(a);
-                            apiResponseArea.innerHTML = `<pre><code class="language-json"><span class="code-comment">// Éxito: El archivo ZIP se ha descargado.</span></code></pre>`;
-                        } else { // Si la respuesta es JSON (ej. BHE)
+                            apiResponseArea.innerHTML = `<div class="text-green-400 text-center font-bold p-4">✅ ¡Proceso Exitoso!<br><span class="text-white font-normal text-sm">Tu archivo ZIP se ha descargado.</span></div>`;
+                            loadUsageHistory();
+                            loadDashboardData(); // Refresh consumption bars
+                        } else {
                             const result = await response.json();
-                            const formattedResult = JSON.stringify(result, null, 2);
-                            apiResponseArea.innerHTML = `<pre><code class="language-json">${formattedResult}</code></pre>`;
+                            apiResponseArea.innerHTML = `<div class="text-green-400 font-mono text-xs p-2 whitespace-pre-wrap">${JSON.stringify(result, null, 2)}</div>`;
+                            loadUsageHistory();
+                            loadDashboardData();
                         }
-
-                        // Si todo fue bien, refrescamos el historial.
-                        loadUsageHistory();
-
                     } catch (error) {
-                        const errorResult = JSON.stringify({ error: { message: error.message } }, null, 2);
-                        apiResponseArea.innerHTML = `<pre><code class="language-json">${errorResult}</code></pre>`;
+                        apiResponseArea.innerHTML = `<div class="text-red-500 p-4">Error de conexión: ${error.message}</div>`;
                     } finally {
-                        hideLoadingState(submitButton, originalButtonText);
+                        hideLoadingState(submitButton);
                     }
                 };
 
-
-
-
-
-                // --- Data Loading and Rendering ---
-                const addRevokeListeners = () => {
-                    document.querySelectorAll('.revoke-key-btn').forEach(button => {
-                        button.onclick = (e) => {
-                            keyElementToRevoke = e.target.closest('li');
-                            showRevokeKeyModal();
-                        };
-                    });
-                };
-
-                const renderApiKeys = (keys) => {
-                    apiKeysList.innerHTML = '';
-                    if (!keys || keys.length === 0) {
-                        apiKeysList.innerHTML = '<p class="text-gray-400 text-sm">No tienes claves de API. ¡Genera una para empezar!</p>';
-                        return;
-                    }
-                    keys.forEach(key => {
-                        const li = document.createElement('li');
-                        li.className = 'flex justify-between items-center p-3 bg-gray-900 rounded-md border border-dark';
-                        li.dataset.keyId = key.id;
-                        li.innerHTML = `<div class="font-mono text-sm text-gray-300">${key.prefijo_clave}</div><button class="revoke-key-btn text-sm text-red-500 hover:underline">Revocar</button>`;
-                        apiKeysList.appendChild(li);
-                    });
-                    addRevokeListeners();
-                };
-
-
-                // <-- AÑADE ESTA FUNCIÓN COMPLETA DENTRO DE initializeDashboard -->
+                // --- Render Functions ---
                 const renderConsumption = (usageData, planLimit) => {
                     const container = document.getElementById('consumption-container');
-                    container.innerHTML = ''; // Limpiar contenido anterior
+                    container.innerHTML = '';
 
                     const services = [
-                        { key: 'bht_usage', name: 'API BHT (Boletas Honorarios)' },
-                        { key: 'bhe_usage', name: 'API BHE (Boletas Electrónicas)' }
+                        { key: 'bht_usage', name: 'Boletas de Terceros' },
+                        { key: 'bhe_usage', name: 'Boletas Propias' }
                     ];
 
-                    const limit = planLimit > 0 ? planLimit : 'Ilimitado';
+                    // Calc total usage
+                    const safeUsage = usageData || { bht_usage: 0, bhe_usage: 0 };
+                    const totalUsed = (safeUsage.bht_usage || 0) + (safeUsage.bhe_usage || 0);
+                    const limitDisplay = planLimit > 99999 ? 'Ilimitado' : planLimit;
 
-                    // Asegurarse de que usageData sea un objeto, incluso si la RPC devuelve null o undefined.
-                    const safeUsageData = usageData || { bht_usage: 0, bhe_usage: 0 };
+                    // Total Bar
+                    const percentage = planLimit > 0 ? Math.min(100, (totalUsed / planLimit) * 100) : 0;
 
-                    services.forEach(service => {
-                        const usage = safeUsageData[service.key] || 0;
-                        const percentage = (limit !== 'Ilimitado' && limit > 0) ? (usage / limit) * 100 : 0;
-
-                        const consumptionHTML = `
+                    const html = `
                         <div> 
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-medium text-gray-300">${service.name}</span>
-                                <span class="text-sm text-gray-400">${usage} / ${limit}</span>
+                                <span class="text-sm font-bold text-white">Total Emitido</span>
+                                <span class="text-sm text-primary-green">${totalUsed} / ${limitDisplay}</span>
                             </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2">
-                                <div class="bg-primary-green h-2 rounded-full" style="width: ${percentage}%"></div>
+                            <div class="w-full bg-gray-700 rounded-full h-4">
+                                <div class="bg-primary-green h-4 rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
                             </div>
+                            <p class="text-xs text-gray-500 mt-2">Renovación de cupo: 1 de cada mes.</p>
                         </div>
                     `;
-                        container.insertAdjacentHTML('beforeend', consumptionHTML);
-                    });
+                    container.innerHTML = html;
                 };
 
+                const renderHistory = (logs) => {
+                    usageHistoryBody.innerHTML = '';
+                    if (!logs || logs.length === 0) {
+                        usageHistoryBody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">No has realizado emisiones aún.</td></tr>`;
+                        return;
+                    }
 
+                    logs.forEach(log => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'border-b border-dark hover:bg-surface-dark transition';
 
+                        const statusBadge = log.fue_exitoso
+                            ? `<span class="px-2 py-1 text-xs font-semibold text-green-300 bg-green-900/50 rounded-full border border-green-800">Exitoso</span>`
+                            : `<span class="px-2 py-1 text-xs font-semibold text-red-300 bg-red-900/50 rounded-full border border-red-800">Error</span>`;
 
-                const updatePaginationControls = () => {
+                        const downloadLink = log.resultado_url
+                            ? `<a href="${log.resultado_url}" target="_blank" class="text-primary-green hover:underline flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> ZIP</a>`
+                            : '<span class="text-gray-600">-</span>';
+
+                        const errorBtn = (!log.fue_exitoso && log.detalles_error)
+                            ? `<button class="text-amber-500 hover:text-amber-400 text-sm font-semibold error-btn">Ver Error</button>`
+                            : '';
+
+                        const displayId = log.task_id ? log.task_id : String(log.id).substring(0, 8);
+                        const idTitle = log.task_id ? `Cloud Task ID: ${log.task_id}` : `ID Interno: ${log.id}`;
+
+                        tr.innerHTML = `
+                            <td class="p-4 font-mono text-xs text-gray-500" title="${idTitle}">${displayId}${log.task_id ? '' : '...'}</td>
+                            <td class="p-4 text-sm">${new Date(log.fecha_registro).toLocaleDateString('es-CL')}</td>
+                            <td class="p-4 text-sm font-semibold text-white">${log.servicio_api.toUpperCase()}</td>
+                            <td class="p-4 text-sm">${log.cantidad_procesada}</td>
+                            <td class="p-4">${statusBadge}</td>
+                            <td class="p-4 text-sm">${downloadLink}</td>
+                            <td class="p-4">${errorBtn}</td>
+                        `;
+
+                        // Attach error data to button
+                        if (errorBtn) {
+                            const btn = tr.querySelector('.error-btn');
+                            btn.onclick = () => showErrorModal(log.detalles_error);
+                        }
+
+                        usageHistoryBody.appendChild(tr);
+                    });
+
+                    // Pagination state update
                     const totalPages = Math.ceil(totalRecords / pageSize);
                     pageIndicator.textContent = `Página ${currentPage + 1} de ${totalPages || 1}`;
                     prevPageBtn.disabled = currentPage === 0;
                     nextPageBtn.disabled = (currentPage + 1) * pageSize >= totalRecords;
                 };
 
-                const renderErrorDetails = (errors) => {
-                    errorAnalysisContent.innerHTML = '';
-                    if (!errors || errors.length === 0) {
-                        errorAnalysisContent.innerHTML = '<p class="text-gray-400">No se encontraron detalles específicos del error.</p>';
-                        return;
-                    }
-                    errors.forEach(err => {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'text-sm';
-                        errorDiv.innerHTML = `<p><strong class="text-amber-500">Línea ${err.linea}:</strong> <span class="text-gray-300">${err.error}</span></p>`;
-                        errorAnalysisContent.appendChild(errorDiv);
-                    });
-                };
-
-                const renderUsageHistory = (logs) => {
-                    usageHistoryBody.innerHTML = '';
-
-                    if (!logs || logs.length === 0) {
-                        usageHistoryBody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-400">No hay registros de uso todavía.</td></tr>`;
-                    } else {
-                        logs.forEach(log => {
-                            const tr = document.createElement('tr');
-                            tr.className = 'border-b border-dark';
-
-                            const statusBadge = log.fue_exitoso
-                                ? `<span class="px-2 py-1 text-xs font-semibold text-green-300 bg-green-800 bg-opacity-50 rounded-full">Completado</span>`
-                                : `<span class="px-2 py-1 text-xs font-semibold text-red-300 bg-red-800 bg-opacity-50 rounded-full">Error</span>`;
-
-                            const actionsCell = !log.fue_exitoso && log.detalles_error
-                                ? `<button class="analyze-error-btn text-sm text-primary-green hover:underline" data-error='${JSON.stringify(log.detalles_error)}'>✨ Analizar Error</button>`
-                                : '';
-
-                            const downloadCell = log.resultado_url
-                                ? `<a href="${log.resultado_url}" target="_blank" rel="noopener noreferrer" class="text-sm text-primary-green hover:underline">Descargar</a>`
-                                : '<span class="text-gray-500">N/A</span>';
-
-                            tr.innerHTML = `
-                            <td class="p-4 font-mono text-sm">${log.id}</td>
-                            <td class="p-4">${new Date(log.fecha_registro).toLocaleString('es-CL')}</td>
-                            <td class="p-4">${log.servicio_api.toUpperCase()}</td>
-                            <td class="p-4">${log.cantidad_procesada}</td>
-                            <td class="p-4">${statusBadge}</td>
-                            <td class="p-4">${downloadCell}</td>
-                            <td class="p-4">${actionsCell}</td>
-                        `;
-                            usageHistoryBody.appendChild(tr);
-                        });
-                    }
-                    updatePaginationControls();
-                };
-
                 const loadUsageHistory = async () => {
                     const from = currentPage * pageSize;
                     const to = from + pageSize - 1;
 
-                    const { count, error: countError } = await supabaseClient
-                        .from('registros_uso_api')
-                        .select('*', { count: 'exact', head: true });
+                    // Get Count
+                    const { count } = await supabaseClient.from('registros_uso_api').select('*', { count: 'exact', head: true });
+                    totalRecords = count || 0;
 
-                    if (countError) {
-                        console.error("Error al contar el historial:", countError);
-                        return;
-                    }
-                    totalRecords = count;
-
-                    const { data: usageData, error: usageError } = await supabaseClient
+                    // Get Data
+                    const { data, error } = await supabaseClient
                         .from('registros_uso_api')
                         .select('*')
                         .order('fecha_registro', { ascending: false })
                         .range(from, to);
 
-                    if (usageError) {
-                        console.error("Error al cargar el historial de uso:", usageError);
-                    } else if (usageData) {
-                        renderUsageHistory(usageData);
-                    }
+                    if (!error) renderHistory(data);
                 };
 
-                // <-- REEMPLAZA TU FUNCIÓN loadDashboardData CON ESTA -->
                 loadDashboardData = async () => {
-                    console.log("--- Iniciando carga de datos del dashboard ---");
-                    console.log("⏰ Timestamp:", new Date().toISOString());
+                    // 1. Get Plan & Profile
+                    const { data: profile } = await supabaseClient.from('perfiles').select('plan_id, planes(nombre, limite_llamadas_api)').eq('usuario_id', user.id).single();
 
-                    // 1. Cargar perfil y plan del usuario. Se intenta con un JOIN primero.
-                    const { data: profileData, error: profileError } = await supabaseClient
-                        .from('perfiles')
-                        .select('plan_id, planes (nombre, limite_llamadas_api)')
-                        .eq('usuario_id', user.id)
-                        .single();
+                    let planName = "Gratuito";
+                    let planLimit = 20; // Default Free
 
-                    console.log("Respuesta de 'perfiles' (con join):", { profileData, profileError });
-
-                    if (profileData) {
-                        console.log("📋 Datos del perfil:", JSON.stringify(profileData, null, 2));
+                    if (profile && profile.planes) {
+                        planName = profile.planes.nombre;
+                        planLimit = profile.planes.limite_llamadas_api;
                     }
 
-                    let planInfo = { nombre: "Gratuito (Fallback)", limite_llamadas_api: 70 };
+                    document.getElementById('current-plan-name').textContent = planName;
 
-                    if (profileError && profileError.code !== 'PGRST116') { // PGRST116 significa "cero filas retornadas"
-                        console.error("Error al cargar el perfil de usuario:", profileError);
-                    } else if (profileData && profileData.planes) {
-                        planInfo = profileData.planes;
-                        console.log("✅ Plan cargado desde JOIN:", planInfo);
-                    } else if (profileData && profileData.plan_id) {
-                        console.warn("El join de Perfil->Planes falló (posiblemente por RLS). Intentando cargar el plan por separado.");
-                        const { data: separatePlanData, error: separatePlanError } = await supabaseClient
-                            .from('planes')
-                            .select('nombre, limite_llamadas_api')
-                            .eq('id', profileData.plan_id)
-                            .single();
+                    // 2. Get Consumption
+                    const { data: usage } = await supabaseClient.rpc('get_monthly_consumption');
+                    renderConsumption(usage, planLimit);
 
-                        if (separatePlanError) {
-                            console.error("Error al cargar el plan por separado:", separatePlanError);
-                        } else if (separatePlanData) {
-                            planInfo = separatePlanData;
-                            console.log("✅ Plan cargado por separado:", planInfo);
-                        }
-                    }
-
-                    console.log("📊 LÍMITE FINAL DEL PLAN:", planInfo.limite_llamadas_api);
-                    document.getElementById('current-plan-name').textContent = planInfo.nombre;
-
-                    // 2. Llamar a la función RPC para el consumo.
-                    console.log("Llamando a la función RPC 'get_monthly_consumption'...");
-                    const { data: consumptionData, error: consumptionError } = await supabaseClient
-                        .rpc('get_monthly_consumption');
-
-                    console.log("Respuesta de RPC 'get_monthly_consumption':", { consumptionData, consumptionError });
-
-                    if (consumptionError) {
-                        console.error("Error al cargar el consumo desde la RPC:", consumptionError);
-                        renderConsumption({ bht_usage: 0, bhe_usage: 0 }, planInfo.limite_llamadas_api);
-                    } else {
-                        renderConsumption(consumptionData, planInfo.limite_llamadas_api);
-                    }
-
-                    // Cargar claves de API
-                    const { data: keysData, error: keysError } = await supabaseClient
-                        .from('claves_api')
-                        .select('id, prefijo_clave')
-                        .eq('esta_activa', true);
-
-                    console.log("Respuesta de 'claves_api':", { keysData, keysError });
-
-                    if (keysData) {
-                        renderApiKeys(keysData);
-                    }
+                    // 3. Load History
+                    loadUsageHistory();
                 };
 
-                // --- Attach Event Listeners ---
+                // --- Event Listeners Internal ---
                 logoutBtn.onclick = () => supabaseClient.auth.signOut();
                 menuToggleBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
+
                 sidebarLinks.forEach(link => {
                     link.onclick = (e) => {
                         e.preventDefault();
                         sidebarLinks.forEach(l => l.classList.remove('active'));
                         link.classList.add('active');
-                        const viewId = link.dataset.view;
-                        dashboardViews.forEach(view => view.classList.toggle('hidden', view.id !== viewId));
+                        dashboardViews.forEach(v => v.classList.add('hidden'));
+                        document.getElementById(link.dataset.view).classList.remove('hidden');
                         if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
                     };
                 });
-                copyResponseBtn.onclick = (e) => {
-                    const responseText = document.querySelector('#api-response-area pre code').innerText;
-                    navigator.clipboard.writeText(responseText);
-                    showCopyConfirmation(e.target);
-                };
-                apiSelect.onchange = () => {
-                    const selectedApi = apiSelect.value;
-                    formBht.classList.toggle('hidden', selectedApi !== 'bht');
-                    formBhe.classList.toggle('hidden', selectedApi !== 'bhe');
-                    // Asegurarse que el form de rc/rv se oculte si no está seleccionado.
-                    formRcRv.classList.toggle('hidden', selectedApi !== 'rc' && selectedApi !== 'rv');
-                };
-                generateCodeBtn.onclick = () => {
-                    const language = document.getElementById('language-select').value;
-                    const codeOutput = document.getElementById('code-generator-output');
-                    codeOutput.innerHTML = `<pre><code>// Código de ejemplo para ${language} y ${apiSelect.value.toUpperCase()}...</code></pre>`;
-                };
-                cancelRevokeBtn.onclick = hideRevokeKeyModal;
-                confirmRevokeBtn.onclick = async () => {
-                    if (keyElementToRevoke) {
-                        const keyId = keyElementToRevoke.dataset.keyId;
-                        const { error } = await supabaseClient.from('claves_api').update({ esta_activa: false, fecha_revocacion: new Date().toISOString() }).eq('id', keyId);
-                        if (error) {
-                            alert("Error al revocar la clave: " + error.message);
-                        } else {
-                            keyElementToRevoke.remove();
-                        }
-                        keyElementToRevoke = null;
-                    }
-                    hideRevokeKeyModal();
-                };
-                copyNewKeyBtn.onclick = (e) => {
-                    navigator.clipboard.writeText(newApiKeyDisplay.value);
-                    showCopyConfirmation(e.target);
-                };
-                closeNewKeyModalBtn.onclick = hideNewApiKeyModal;
-                closeErrorModalBtn.onclick = hideErrorModal;
-                closeErrorModalBtnBottom.onclick = hideErrorModal;
 
-                generateNewKeyBtn.onclick = async () => {
-                    const { data: { session } } = await supabaseClient.auth.getSession();
-                    if (!session) {
-                        alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
-                        return;
-                    }
-                    const originalText = generateNewKeyBtn.innerHTML;
-                    showLoadingState(generateNewKeyBtn, "Generando...");
+                // Pagination
+                prevPageBtn.onclick = () => { if (currentPage > 0) { currentPage--; loadUsageHistory(); } };
+                nextPageBtn.onclick = () => { if ((currentPage + 1) * pageSize < totalRecords) { currentPage++; loadUsageHistory(); } };
+                pageSizeSelect.onchange = (e) => { pageSize = parseInt(e.target.value); currentPage = 0; loadUsageHistory(); };
 
-                    const { data, error } = await supabaseClient.functions.invoke('create-api-key', {
-                        headers: { 'Authorization': `Bearer ${session.access_token}` },
-                        body: JSON.stringify({ key_name: 'Nueva Clave' })
+                // Modals
+                closeErrorModal.onclick = hideErrorModal;
+                deleteAccountBtn.onclick = () => {
+                    deleteConfirmModalSection.classList.remove('opacity-0', 'pointer-events-none');
+                    deleteConfirmModalSection.querySelector('div').classList.remove('scale-95');
+                };
+                cancelDeleteBtn.onclick = () => {
+                    deleteConfirmModalSection.classList.add('opacity-0');
+                    setTimeout(() => deleteConfirmModalSection.classList.add('pointer-events-none'), 300);
+                };
+                confirmDeleteBtn.onclick = async () => {
+                    // Logic to delete account via Supabase Edge Function or similar would go here
+                    alert("Funcionalidad de borrado contactando soporte.");
+                    // Usually users can't delete their own auth record directly without backend function
+                };
+
+                // ============================================
+                // WIZARD LOGIC - Emisión de Boletas (4 Pasos)
+                // ============================================
+
+                // Wizard State
+                let currentWizardStep = 1;
+                let selectedTipoBoleta = null;
+                let uploadedFile = null;
+                let excelData = null;
+                let validationErrors = [];
+
+                // Wizard Elements
+                const wizardSteps = document.querySelectorAll('.wizard-step');
+                const wizardContents = [
+                    document.getElementById('wizard-step-1'),
+                    document.getElementById('wizard-step-2'),
+                    document.getElementById('wizard-step-3'),
+                    document.getElementById('wizard-step-4')
+                ];
+
+                // Step 1 Elements
+                const radioCards = document.querySelectorAll('.radio-card');
+                const tipoBheRadio = document.getElementById('tipo-bhe');
+                const tipoBhetRadio = document.getElementById('tipo-bhet');
+                const btnStep1Next = document.getElementById('btn-step1-next');
+
+                // Step 2 Elements
+                const dropZone = document.getElementById('drop-zone');
+                const fileInput = document.getElementById('file-input');
+                const fileInfo = document.getElementById('file-info');
+                const fileName = document.getElementById('file-name');
+                const fileSize = document.getElementById('file-size');
+                const btnRemoveFile = document.getElementById('btn-remove-file');
+                const plantillaBheInfo = document.getElementById('plantilla-bhe-info');
+                const btnStep2Back = document.getElementById('btn-step2-back');
+                const btnStep2Next = document.getElementById('btn-step2-next');
+
+                // Step 3 Elements
+                const validationStatus = document.getElementById('validation-status');
+                const previewTable = document.getElementById('preview-table');
+                const btnStep3Back = document.getElementById('btn-step3-back');
+                const btnStep3Next = document.getElementById('btn-step3-next');
+
+                // Step 4 Elements
+                const wizardFinalForm = document.getElementById('wizard-final-form');
+                const wizardTipoRetencionContainer = document.getElementById('wizard-tipo-retencion-container');
+                const btnStep4Back = document.getElementById('btn-step4-back');
+                const btnEmitNow = document.getElementById('btn-emit-now');
+                const emissionResult = document.getElementById('emission-result');
+
+                // Utility Functions
+                const showToast = (message, type = 'success') => {
+                    const toast = document.createElement('div');
+                    toast.className = `toast ${type}`;
+                    toast.textContent = message;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                };
+
+                const formatFileSize = (bytes) => {
+                    if (bytes < 1024) return bytes + ' B';
+                    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+                };
+
+                const updateWizardUI = (step) => {
+                    // Update stepper
+                    wizardSteps.forEach((ws, index) => {
+                        const stepNum = index + 1;
+                        ws.classList.remove('active', 'completed');
+                        if (stepNum < step) ws.classList.add('completed');
+                        if (stepNum === step) ws.classList.add('active');
                     });
 
-                    hideLoadingState(generateNewKeyBtn, originalText);
+                    // Update content
+                    wizardContents.forEach((content, index) => {
+                        content.classList.toggle('hidden', index + 1 !== step);
+                    });
 
-                    if (error) {
-                        alert(`Error al generar la clave: ${error.message}`);
-                    } else {
-                        showNewApiKeyModal(data.rawApiKey);
-                        loadDashboardData();
+                    currentWizardStep = step;
+                };
+
+                // ===== STEP 1: Tipo de Boleta =====
+                const handleTipoBoletaChange = () => {
+                    const selected = document.querySelector('input[name="tipo-boleta"]:checked');
+                    selectedTipoBoleta = selected ? selected.value : null;
+
+                    // Update radio card styles
+                    radioCards.forEach(card => {
+                        const input = card.querySelector('input[type="radio"]');
+                        card.classList.toggle('selected', input.checked);
+                    });
+
+                    // Enable/disable next button
+                    if (selectedTipoBoleta) {
+                        btnStep1Next.disabled = false;
+                        btnStep1Next.classList.remove('bg-gray-600', 'cursor-not-allowed');
+                        btnStep1Next.classList.add('bg-primary-green', 'bg-primary-green-hover');
                     }
                 };
 
-                prevPageBtn.onclick = () => {
-                    if (currentPage > 0) {
-                        currentPage--;
-                        loadUsageHistory();
-                    }
-                };
-                nextPageBtn.onclick = () => {
-                    if ((currentPage + 1) * pageSize < totalRecords) {
-                        currentPage++;
-                        loadUsageHistory();
-                    }
-                };
-                pageSizeSelect.onchange = (e) => {
-                    pageSize = parseInt(e.target.value, 10);
-                    currentPage = 0; // Reset to first page
-                    loadUsageHistory();
-                };
+                tipoBheRadio.addEventListener('change', handleTipoBoletaChange);
+                tipoBhetRadio.addEventListener('change', handleTipoBoletaChange);
 
-
-                // ... (después de los otros event listeners como pageSizeSelect.onchange)
-
-
-
-
-                usageHistoryBody.addEventListener('click', (e) => {
-                    if (e.target && e.target.classList.contains('analyze-error-btn')) {
-                        try {
-                            const errorData = JSON.parse(e.target.dataset.error);
-                            renderErrorDetails(errorData);
-                            showErrorModal();
-                        } catch (parseError) {
-                            console.error("No se pudo parsear el JSON del error:", parseError);
-                            renderErrorDetails([{ linea: 'N/A', error: 'No se pudieron cargar los detalles del error.' }]);
-                            showErrorModal();
-                        }
+                btnStep1Next.addEventListener('click', () => {
+                    if (selectedTipoBoleta) {
+                        // Show plantilla info only for BHE
+                        plantillaBheInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        updateWizardUI(2);
                     }
                 });
 
+                // ===== STEP 2: Carga de Archivo =====
+                const handleFileSelect = (file) => {
+                    // Validate file type
+                    const validExtensions = ['.csv', '.xlsx', '.xls'];
+                    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
 
-                formBht.addEventListener('submit', handleApiProxySubmit);
-                formBhe.addEventListener('submit', handleApiProxySubmit);
-                // --- FIN DEL BLOQUE A AÑADIR ---
+                    if (!validExtensions.includes(fileExtension)) {
+                        showToast('Formato de archivo no válido. Usa .csv o .xlsx', 'error');
+                        return;
+                    }
+
+                    // Validate file size (5MB max)
+                    const maxSize = 5 * 1024 * 1024;
+                    if (file.size > maxSize) {
+                        showToast('El archivo excede el límite de 5MB', 'error');
+                        return;
+                    }
+
+                    uploadedFile = file;
+
+                    // Show file info
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    fileInfo.classList.remove('hidden');
+                    dropZone.classList.add('hidden');
+
+                    // Enable next button
+                    btnStep2Next.disabled = false;
+                    btnStep2Next.classList.remove('bg-gray-600', 'cursor-not-allowed');
+                    btnStep2Next.classList.add('bg-primary-green', 'bg-primary-green-hover');
+                };
+
+                // Drag & Drop handlers
+                dropZone.addEventListener('click', () => fileInput.click());
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('drag-over');
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drag-over');
+                    const file = e.dataTransfer.files[0];
+                    if (file) handleFileSelect(file);
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) handleFileSelect(file);
+                });
+
+                btnRemoveFile.addEventListener('click', () => {
+                    uploadedFile = null;
+                    excelData = null;
+                    fileInput.value = '';
+                    fileInfo.classList.add('hidden');
+                    dropZone.classList.remove('hidden');
+                    btnStep2Next.disabled = true;
+                    btnStep2Next.classList.add('bg-gray-600', 'cursor-not-allowed');
+                    btnStep2Next.classList.remove('bg-primary-green', 'bg-primary-green-hover');
+                });
+
+                btnStep2Back.addEventListener('click', () => updateWizardUI(1));
+
+                btnStep2Next.addEventListener('click', async () => {
+                    if (!uploadedFile) return;
+
+                    // Read Excel file
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            excelData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                            if (excelData.length === 0) {
+                                showToast('El archivo está vacío', 'error');
+                                return;
+                            }
+
+                            // Render preview and validate
+                            renderPreview();
+                            validateData();
+                            updateWizardUI(3);
+                        } catch (error) {
+                            showToast('Error al leer el archivo: ' + error.message, 'error');
+                        }
+                    };
+                    reader.readAsArrayBuffer(uploadedFile);
+                });
+
+                // ===== STEP 3: Previsualización y Validación =====
+                const renderPreview = () => {
+                    if (!excelData || excelData.length === 0) return;
+
+                    const headers = excelData[0];
+                    const rows = excelData.slice(1, 6); // First 5 rows
+
+                    // Render headers
+                    const thead = previewTable.querySelector('thead');
+                    thead.innerHTML = '<tr>' + headers.map(h => `<th class="p-3 text-left font-semibold text-gray-400">${h || ''}</th>`).join('') + '</tr>';
+
+                    // Render rows
+                    const tbody = previewTable.querySelector('tbody');
+                    tbody.innerHTML = rows.map(row =>
+                        '<tr class="border-b border-dark">' +
+                        headers.map((_, i) => `<td class="p-3">${row[i] !== undefined ? row[i] : ''}</td>`).join('') +
+                        '</tr>'
+                    ).join('');
+                };
+
+                const validateData = () => {
+                    validationErrors = [];
+
+                    if (selectedTipoBoleta === 'bhe') {
+                        // Validación para BHE
+                        validationErrors = validateBHE(excelData);
+                    } else {
+                        // Para BHT, validación básica (el servidor hace la validación completa)
+                        if (excelData.length < 2) {
+                            validationErrors.push({ linea: 0, error: 'El archivo debe contener al menos una fila de datos' });
+                        }
+                    }
+
+                    // Render validation status
+                    if (validationErrors.length === 0) {
+                        validationStatus.innerHTML = `
+                            <div class="p-4 bg-green-900/20 border border-green-800 rounded-lg flex items-center gap-3">
+                                <svg class="w-6 h-6 text-primary-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="font-semibold text-primary-green">✓ Validación Exitosa</p>
+                                    <p class="text-sm text-gray-400">Todos los datos son correctos. Puedes continuar.</p>
+                                </div>
+                            </div>
+                        `;
+                        validationStatus.classList.remove('hidden');
+                        btnStep3Next.disabled = false;
+                        btnStep3Next.classList.remove('bg-gray-600', 'cursor-not-allowed');
+                        btnStep3Next.classList.add('bg-primary-green', 'bg-primary-green-hover');
+                    } else {
+                        validationStatus.innerHTML = `
+                            <div class="p-4 bg-red-900/20 border border-red-800 rounded-lg">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <svg class="w-6 h-6 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="font-semibold text-red-400">✗ Errores Encontrados</p>
+                                        <p class="text-sm text-gray-400">Corrige los siguientes errores antes de continuar:</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 max-h-60 overflow-y-auto">
+                                    ${validationErrors.map(err => `
+                                        <div class="bg-gray-900 p-2 rounded text-sm">
+                                            <span class="text-amber-500 font-semibold">Fila ${err.linea}:</span>
+                                            <span class="text-gray-300"> ${err.error}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                        validationStatus.classList.remove('hidden');
+                        btnStep3Next.disabled = true;
+                        btnStep3Next.classList.add('bg-gray-600', 'cursor-not-allowed');
+                        btnStep3Next.classList.remove('bg-primary-green', 'bg-primary-green-hover');
+                    }
+                };
+
+                // Validación BHE (Mejorada con Mapeo de Columnas)
+                const validateBHE = (data) => {
+                    const errors = [];
+                    let headers = data[0].map(h => String(h).trim()); // Headers originales limpios
+                    const rows = data.slice(1);
+
+                    // Mapa de alias aceptados para cada columna estándar
+                    const columnMapping = {
+                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario'],
+                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social'],
+                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle'],
+                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad'],
+                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta'],
+                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios'],
+                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion']
+                    };
+
+                    // Normalizar headers
+                    const normalizedHeaders = headers.map(header => {
+                        const headerLower = header.toLowerCase();
+                        for (const [standardName, aliases] of Object.entries(columnMapping)) {
+                            if (standardName.toLowerCase() === headerLower || aliases.includes(headerLower)) {
+                                return standardName;
+                            }
+                        }
+                        return header; // Si no coincide, dejar original
+                    });
+
+                    // Reemplazar headers en la data original (para referencia posterior si fuera necesario)
+                    data[0] = normalizedHeaders;
+                    headers = normalizedHeaders;
+
+                    // Verificar columnas requeridas
+                    const requiredColumns = ['RUT Receptor', 'Razón Social', 'Dirección', 'Comuna', 'Fecha Emisión', 'Monto Honorarios', 'Descripción'];
+                    const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+
+                    if (missingColumns.length > 0) {
+                        errors.push({ linea: 0, error: `Faltan columnas requeridas o no se reconocen: ${missingColumns.join(', ')}` });
+                        return errors;
+                    }
+
+                    // Validar cada fila
+                    rows.forEach((row, index) => {
+                        const lineNum = index + 2;
+
+                        // Ignorar filas completamente vacías
+                        const isEmptyRow = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || String(cell).trim() === '');
+                        if (isEmptyRow) return;
+
+                        // Crear objeto de la fila usando headers normalizados
+                        const rowData = {};
+                        headers.forEach((header, i) => {
+                            rowData[header] = row[i];
+                        });
+
+                        // Validar RUT
+                        const rut = rowData['RUT Receptor'];
+                        if (!rut || !validateRUT(String(rut))) {
+                            errors.push({ linea: lineNum, error: `RUT Receptor inválido (${rut || 'vacío'})` });
+                        }
+
+                        // Validar Razón Social
+                        if (!rowData['Razón Social'] || String(rowData['Razón Social']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Razón Social es requerida' });
+                        }
+
+                        // Validar Fecha
+                        const fecha = rowData['Fecha Emisión'];
+                        if (!fecha || !validateFecha(fecha)) {
+                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY` });
+                        }
+
+                        // Validar Monto
+                        const monto = rowData['Monto Honorarios'];
+                        if (!monto || isNaN(Number(monto)) || Number(monto) <= 0) {
+                            errors.push({ linea: lineNum, error: 'Monto Honorarios debe ser un número positivo' });
+                        }
+
+                        // Validar Descripción
+                        if (!rowData['Descripción'] || String(rowData['Descripción']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Descripción es requerida' });
+                        }
+                    });
+
+                    return errors;
+                };
+
+                // Validar RUT chileno
+                const validateRUT = (rut) => {
+                    if (!rut) return false;
+
+                    // Limpiar RUT
+                    const cleanRut = rut.replace(/[.-]/g, '');
+                    if (cleanRut.length < 2) return false;
+
+                    const body = cleanRut.slice(0, -1);
+                    const dv = cleanRut.slice(-1).toUpperCase();
+
+                    // Calcular dígito verificador
+                    let sum = 0;
+                    let multiplier = 2;
+
+                    for (let i = body.length - 1; i >= 0; i--) {
+                        sum += parseInt(body[i]) * multiplier;
+                        multiplier = multiplier === 7 ? 2 : multiplier + 1;
+                    }
+
+                    const expectedDV = 11 - (sum % 11);
+                    const calculatedDV = expectedDV === 11 ? '0' : expectedDV === 10 ? 'K' : String(expectedDV);
+
+                    return dv === calculatedDV;
+                };
+
+                // Validar fecha DD-MM-YYYY
+                const validateFecha = (fecha) => {
+                    if (!fecha) return false;
+
+                    // Si es un número de Excel, convertirlo
+                    if (typeof fecha === 'number') {
+                        const excelEpoch = new Date(1899, 11, 30);
+                        const date = new Date(excelEpoch.getTime() + fecha * 86400000);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        fecha = `${day}-${month}-${year}`;
+                    }
+
+                    const regex = /^(\d{2})-(\d{2})-(\d{4})$/;
+                    const match = String(fecha).match(regex);
+
+                    if (!match) return false;
+
+                    const day = parseInt(match[1]);
+                    const month = parseInt(match[2]);
+                    const year = parseInt(match[3]);
+
+                    if (month < 1 || month > 12) return false;
+                    if (day < 1 || day > 31) return false;
+                    if (year < 2000 || year > 2100) return false;
+
+                    return true;
+                };
+
+                btnStep3Back.addEventListener('click', () => updateWizardUI(2));
+
+                btnStep3Next.addEventListener('click', () => {
+                    if (validationErrors.length === 0) {
+                        // Show tipo_retencion only for BHE
+                        wizardTipoRetencionContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        updateWizardUI(4);
+                    }
+                });
+
+                // ===== STEP 4: Emisión Final =====
+                btnStep4Back.addEventListener('click', () => updateWizardUI(3));
+
+                wizardFinalForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const rut = document.getElementById('wizard-rut').value;
+                    const clave = document.getElementById('wizard-clave').value;
+                    const tipoRetencion = selectedTipoBoleta === 'bhe' ? document.getElementById('wizard-tipo-retencion').value : null;
+
+                    // Show loading state
+                    showLoadingState(btnEmitNow, 'Procesando...');
+                    emissionResult.classList.add('hidden');
+
+                    try {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (!session) throw new Error("Sesión expirada");
+
+                        // Prepare FormData
+                        const formData = new FormData();
+                        formData.append('rut', rut);
+                        formData.append('clave', clave);
+                        formData.append('csv_file', uploadedFile);
+                        if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
+
+                        const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedTipoBoleta}/emitir-csv`;
+
+                        const response = await fetch(proxyApiUrl, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${session.access_token}` },
+                            body: formData
+                        });
+
+                        const contentType = response.headers.get("content-type");
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Error en la emisión');
+                        } else if (contentType && contentType.includes("application/zip")) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'boletas_emitidas.zip';
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+
+                            emissionResult.innerHTML = `
+                                <div class="text-center">
+                                    <svg class="w-16 h-16 mx-auto mb-4 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <h4 class="text-2xl font-bold text-primary-green mb-2">¡Emisión Exitosa!</h4>
+                                    <p class="text-gray-400">Tu archivo ZIP se ha descargado automáticamente.</p>
+                                </div>
+                            `;
+                            emissionResult.classList.remove('hidden', 'border-red-800', 'bg-red-900/20');
+                            emissionResult.classList.add('border-green-800', 'bg-green-900/20');
+
+                            showToast('¡Boletas emitidas exitosamente!', 'success');
+                            loadUsageHistory();
+                            loadDashboardData();
+                        } else {
+                            const result = await response.json();
+                            const taskId = result.task_id ? result.task_id.split('/').pop() : 'N/A';
+
+                            showToast('¡Proceso iniciado!', 'success');
+
+                            emissionResult.innerHTML = `
+                                <div class="text-center p-4">
+                                    <div class="w-16 h-16 bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500">
+                                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white mb-2">¡Solicitud Recibida!</h4>
+                                    <p class="text-sm text-gray-400 mb-6">${result.mensaje || 'Tu proceso se está ejecutando en segundo plano.'}</p>
+                                    
+                                    <div class="bg-gray-900 border border-dark rounded-lg p-3 text-left">
+                                        <p class="text-[10px] uppercase tracking-wider text-gray-500 mb-1 font-bold">ID de Seguimiento (Cloud Task)</p>
+                                        <div class="flex items-center justify-between gap-2">
+                                            <code class="text-xs text-primary-green break-all">${taskId}</code>
+                                            <button onclick="navigator.clipboard.writeText('${taskId}'); showToast('ID Copiado', 'success')" 
+                                                    class="p-2 hover:bg-gray-800 rounded-md transition-colors text-gray-400 hover:text-white" title="Copiar ID">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-4 leading-relaxed">
+                                        Puedes cerrar esta ventana. El proceso continuará automáticamente y aparecerá en tu historial cuando termine.
+                                    </p>
+                                </div>
+                            `;
+                            emissionResult.classList.remove('hidden', 'border-red-800', 'bg-red-900/20');
+                            emissionResult.classList.add('border-blue-800', 'bg-blue-900/10');
+                        }
+                    } catch (error) {
+                        let errorMessage = error.message;
+
+                        // Intentar extraer detalle estructurado si es un error del servidor (p.ej. 402)
+                        const detailMsg = error.detail?.mensaje || error.detail?.detalle || error.detail;
+                        if (detailMsg) errorMessage = detailMsg;
+
+                        emissionResult.innerHTML = `
+                            <div class="text-center p-4">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <h4 class="text-2xl font-bold text-red-400 mb-2">Error en la Emisión</h4>
+                                <p class="text-gray-300 bg-red-900/10 p-3 rounded border border-red-900/30 text-sm leading-relaxed">${errorMessage}</p>
+                            </div>
+                        `;
+                        emissionResult.classList.remove('hidden', 'border-green-800', 'bg-green-900/20');
+                        emissionResult.classList.add('border-red-800', 'bg-red-900/20');
+                        showToast('Error: ' + errorMessage, 'error');
+                    } finally {
+                        hideLoadingState(btnEmitNow);
+                    }
+                });
+
+                // ============================================
+                // END WIZARD LOGIC
+                // ============================================
 
 
-
-                // Carga inicial de datos
+                // Init
                 loadDashboardData();
-
-                // Forzar la carga inicial del historial disparando el evento 'change'.
-                // Esto asegura que se use el mismo código que cuando el usuario interactúa.
-                pageSizeSelect.dispatchEvent(new Event('change'));
             };
 
         });
