@@ -420,7 +420,7 @@
 <body class="antialiased">
 
     <!-- ======== WHATSAPP FLOATING BUTTON ======== -->
-    <a href="https://wa.me/56912345678" class="whatsapp-float" target="_blank" title="Contactar por WhatsApp">
+    <a href="https://wa.me/56938859332" class="whatsapp-float" target="_blank" title="Contactar por WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
             <path
                 d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
@@ -623,7 +623,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>Historial de 3 meses</li>
                             </ul>
-                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Básico" target="_blank"
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Básico" target="_blank"
                                 class="w-full btn bg-primary-green text-white py-2 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
                         </div>
 
@@ -651,7 +651,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>Historial de 1 año</li>
                             </ul>
-                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Avanzado"
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Avanzado"
                                 target="_blank"
                                 class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center">Contratar</a>
                         </div>
@@ -680,7 +680,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>Historial Ilimitado</li>
                             </ul>
-                            <a href="https://wa.me/56912345678?text=Hola,%20quiero%20el%20Plan%20Premium"
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Premium"
                                 target="_blank"
                                 class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center border-primary-amber text-primary-amber hover:bg-amber-900/20">Contratar</a>
                         </div>
@@ -925,18 +925,30 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Consumo Mensual</h3>
+                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Límite Total Plan</h3>
                                 <div id="consumption-container" class="space-y-4">
                                     <!-- Datos de consumo se cargarán aquí -->
                                 </div>
                             </div>
+
+                            <!-- NUEVA TARJETA BHE -->
+                            <div
+                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-between">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Propias (BHE)</h3>
+                                <div class="mt-auto">
+                                    <span id="bhe-count-display" class="text-4xl font-bold text-primary-green">0</span>
+                                    <span class="text-gray-500 text-sm ml-2">este mes</span>
+                                </div>
+                                <div class="mt-2 text-xs text-gray-500">Consumo acumulado actual</div>
+                            </div>
+
                             <div
                                 class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
                                 <h3 class="text-lg font-semibold text-white mb-2">¿Necesitas ayuda?</h3>
                                 <p class="text-gray-400 text-sm mb-4">Contacta a nuestro soporte especializado.</p>
-                                <a href="https://wa.me/56912345678" target="_blank"
+                                <a href="https://wa.me/56938859332" target="_blank"
                                     class="btn bg-primary-green text-white px-6 py-2 rounded-md font-semibold bg-primary-green-hover">
                                     Chat Soporte WhatsApp
                                 </a>
@@ -1263,12 +1275,7 @@
                                 </div>
                             </div>
 
-                            <!-- API KEY SECTION HIDDEN FOR NON-DEVS -->
-                            <div class="hidden bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-xl font-bold text-white mb-4">Credenciales Internas</h3>
-                                <ul id="api-keys-list" class="space-y-3"></ul>
-                                <button id="generate-new-key-btn" class="hidden"></button>
-                            </div>
+                            <!-- API KEY SECTION REMOVED FOR USER PRIVACY -->
 
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
                                 <h3 class="text-xl font-bold text-white mb-4">Plan y Facturación</h3>
@@ -1279,7 +1286,7 @@
                                         <p class="text-gray-400 text-sm mt-1">Aumenta tu límite de emisiones contratando
                                             un plan superior.</p>
                                     </div>
-                                    <a href="https://wa.me/56912345678?text=Hola,%20quisiera%20mejorar%20mi%20plan%20en%20BoletaPro"
+                                    <a href="https://wa.me/56938859332?text=Hola,%20quisiera%20mejorar%20mi%20plan%20en%20BoletaPro"
                                         target="_blank"
                                         class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center gap-2">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
@@ -1639,17 +1646,19 @@
                 // --- Render Functions ---
                 const renderConsumption = (usageData, planLimit) => {
                     const container = document.getElementById('consumption-container');
+                    const bheDisplay = document.getElementById('bhe-count-display');
                     container.innerHTML = '';
 
-                    const services = [
-                        { key: 'bht_usage', name: 'Boletas de Terceros' },
-                        { key: 'bhe_usage', name: 'Boletas Propias' }
-                    ];
-
-                    // Calc total usage
                     const safeUsage = usageData || { bht_usage: 0, bhe_usage: 0 };
-                    const totalUsed = (safeUsage.bht_usage || 0) + (safeUsage.bhe_usage || 0);
+                    const bheCount = safeUsage.bhe_usage || 0;
+                    const bhtCount = safeUsage.bht_usage || 0;
+                    const totalUsed = bheCount + bhtCount;
                     const limitDisplay = planLimit > 99999 ? 'Ilimitado' : planLimit;
+
+                    // Update additional BHE card
+                    if (bheDisplay) {
+                        bheDisplay.textContent = bheCount;
+                    }
 
                     // Total Bar
                     const percentage = planLimit > 0 ? Math.min(100, (totalUsed / planLimit) * 100) : 0;
@@ -1667,6 +1676,43 @@
                         </div>
                     `;
                     container.innerHTML = html;
+                };
+
+                // --- RUT Validation & Formatting ---
+                const formatAndValidateRUT = (input) => {
+                    let rut = input.value.trim();
+                    if (!rut) return { valid: false, formatted: '' };
+
+                    // Limpiar puntos y guiones intermedios, mantener solo números y K
+                    let clean = rut.replace(/[^0-9kK]/g, '');
+                    if (clean.length < 2) return { valid: false, formatted: clean };
+
+                    const cuerpo = clean.slice(0, -1);
+                    const dv = clean.slice(-1).toUpperCase();
+
+                    // Validar DV
+                    let suma = 0;
+                    let multiplo = 2;
+                    for (let i = cuerpo.length - 1; i >= 0; i--) {
+                        suma += parseInt(cuerpo.charAt(i)) * multiplo;
+                        multiplo = multiplo < 7 ? multiplo + 1 : 2;
+                    }
+                    const dvEsperado = 11 - (suma % 11);
+                    const dvCalculado = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
+
+                    const isValid = dvCalculado === dv;
+                    const formatted = `${cuerpo}-${dv}`;
+
+                    if (isValid) {
+                        input.value = formatted;
+                        input.classList.remove('border-red-500');
+                        input.classList.add('border-primary-green');
+                    } else {
+                        input.classList.remove('border-primary-green');
+                        input.classList.add('border-red-500');
+                    }
+
+                    return { valid: isValid, formatted };
                 };
 
                 const renderHistory = (logs) => {
@@ -2241,24 +2287,38 @@
                 // ===== STEP 4: Emisión Final =====
                 btnStep4Back.addEventListener('click', () => updateWizardUI(3));
 
+                const wizardRutInput = document.getElementById('wizard-rut');
+
+                // RUT auto-formatting on blur
+                wizardRutInput.addEventListener('blur', () => {
+                    formatAndValidateRUT(wizardRutInput);
+                });
+
                 wizardFinalForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-
-                    const rut = document.getElementById('wizard-rut').value;
-                    const clave = document.getElementById('wizard-clave').value;
-                    const tipoRetencion = selectedTipoBoleta === 'bhe' ? document.getElementById('wizard-tipo-retencion').value : null;
-
-                    // Show loading state
-                    showLoadingState(btnEmitNow, 'Procesando...');
-                    emissionResult.classList.add('hidden');
 
                     try {
                         const { data: { session } } = await supabaseClient.auth.getSession();
                         if (!session) throw new Error("Sesión expirada");
 
+                        // Double check RUT before emit
+                        const rutValidation = formatAndValidateRUT(wizardRutInput);
+                        if (!rutValidation.valid) {
+                            showToast('El RUT ingresado no es válido', 'error');
+                            return;
+                        }
+
+                        const cleanRut = rutValidation.formatted;
+                        const clave = document.getElementById('wizard-clave').value;
+                        const tipoRetencion = selectedTipoBoleta === 'bhe' ? document.getElementById('wizard-tipo-retencion').value : null;
+
+                        // Show loading state
+                        showLoadingState(btnEmitNow, 'Procesando...');
+                        emissionResult.classList.add('hidden');
+
                         // Prepare FormData
                         const formData = new FormData();
-                        formData.append('rut', rut);
+                        formData.append('rut', cleanRut);
                         formData.append('clave', clave);
                         formData.append('csv_file', uploadedFile);
                         if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
