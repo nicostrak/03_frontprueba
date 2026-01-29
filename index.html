@@ -758,6 +758,11 @@
                         <input type="password" id="login-password" required
                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                     </div>
+                    <div class="flex justify-between items-center mb-6">
+                        <button type="button" id="show-forgot-password-view"
+                            class="text-xs text-gray-500 hover:text-primary-green underline">¿Olvidaste tu
+                            contraseña?</button>
+                    </div>
                     <button type="submit"
                         class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Ingresar</button>
                 </form>
@@ -813,6 +818,59 @@
                 </form>
                 <p class="text-center text-sm text-gray-400 mt-6">¿Ya tienes cuenta? <button id="show-login-view"
                         class="font-semibold text-primary-green hover:underline">Inicia Sesión</button></p>
+            </div>
+
+            <!-- Forgot Password View -->
+            <div id="forgot-password-view" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Recuperar Clave</h2>
+                    <button class="close-auth-modal-btn text-gray-500 hover:text-white text-2xl">&times;</button>
+                </div>
+                <p class="text-gray-400 mb-6">Te enviaremos un correo con un enlace para resetear tu contraseña.</p>
+                <form id="forgot-password-form">
+                    <div id="forgot-error-message"
+                        class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div id="forgot-success-message"
+                        class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
+                    <div class="mb-6">
+                        <label for="forgot-email" class="block text-sm font-medium text-gray-400 mb-2">Email de tu
+                            cuenta</label>
+                        <input type="email" id="forgot-email" required
+                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                    </div>
+                    <button type="submit"
+                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Enviar
+                        Enlace</button>
+                </form>
+                <p class="text-center text-sm text-gray-400 mt-6"><button id="back-to-login"
+                        class="font-semibold text-primary-green hover:underline">Volver al Login</button></p>
+            </div>
+
+            <!-- Update Password View (After Recovery) -->
+            <div id="update-password-view" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Nueva Contraseña</h2>
+                </div>
+                <p class="text-gray-400 mb-6">Ingresa tu nueva contraseña para acceder.</p>
+                <form id="update-password-form">
+                    <div id="update-error-message"
+                        class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div class="mb-4">
+                        <label for="new-password" class="block text-sm font-medium text-gray-400 mb-2">Nueva
+                            Contraseña</label>
+                        <input type="password" id="new-password" required minlength="6"
+                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                    </div>
+                    <div class="mb-6">
+                        <label for="confirm-new-password" class="block text-sm font-medium text-gray-400 mb-2">Confirmar
+                            Nueva Contraseña</label>
+                        <input type="password" id="confirm-new-password" required minlength="6"
+                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                    </div>
+                    <button type="submit"
+                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Actualizar
+                        y Entrar</button>
+                </form>
             </div>
         </div>
     </section>
@@ -1118,8 +1176,8 @@
                                 </div>
 
                                 <!-- Drag & Drop Zone -->
+                                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
                                 <div id="drop-zone" class="drop-zone">
-                                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
                                     <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1366,6 +1424,9 @@
             const closeAuthModalBtn = document.getElementById('close-auth-modal-btn');
             const loginView = document.getElementById('login-view');
             const signupView = document.getElementById('signup-view');
+            const forgotPasswordView = document.getElementById('forgot-password-view');
+            const updatePasswordView = document.getElementById('update-password-view');
+
             const showSignupViewBtn = document.getElementById('show-signup-view');
             const showLoginViewBtn = document.getElementById('show-login-view');
             const loginForm = document.getElementById('login-form');
@@ -1378,15 +1439,19 @@
 
             // --- UI Helper Functions ---
             const showAuthModal = (view = 'login') => {
-                authSection.classList.remove('opacity-0', 'pointer-events-none');
+                authSection.classList.remove('opacity-0', 'pointer-events-none', 'hidden');
+                authSection.classList.add('flex');
                 authSection.querySelector('#auth-modal').classList.remove('scale-95');
-                if (view === 'login') {
-                    loginView.classList.remove('hidden');
-                    signupView.classList.add('hidden');
-                } else {
-                    loginView.classList.add('hidden');
-                    signupView.classList.remove('hidden');
-                }
+
+                loginView.classList.add('hidden');
+                signupView.classList.add('hidden');
+                forgotPasswordView.classList.add('hidden');
+                updatePasswordView.classList.add('hidden');
+
+                if (view === 'login') loginView.classList.remove('hidden');
+                else if (view === 'signup') signupView.classList.remove('hidden');
+                else if (view === 'forgot') forgotPasswordView.classList.remove('hidden');
+                else if (view === 'update') updatePasswordView.classList.remove('hidden');
             };
 
             const hideAuthModal = () => {
@@ -1463,6 +1528,9 @@
             showSignupViewBtn.addEventListener('click', () => showAuthModal('signup'));
             showLoginViewBtn.addEventListener('click', () => showAuthModal('login'));
 
+            document.getElementById('show-forgot-password-view').addEventListener('click', () => showAuthModal('forgot'));
+            document.getElementById('back-to-login').addEventListener('click', () => showAuthModal('login'));
+
             // Tutorial Events
             closeTutorialModalBtn.addEventListener('click', hideTutorialModal);
             finishTutorialBtn.addEventListener('click', hideTutorialModal);
@@ -1516,15 +1584,69 @@
                 if (error) {
                     showMessage('signup-error-message', error.message);
                 } else {
-                    showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar.', false);
+                    showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar tu cuenta.', false);
                     signupForm.reset();
                 }
                 hideLoadingState(btn);
             });
 
+            // --- Forgot Password Logic ---
+            const forgotPasswordForm = document.getElementById('forgot-password-form');
+            forgotPasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('forgot-email').value;
+                const btn = forgotPasswordForm.querySelector('button[type="submit"]');
+
+                showMessage('forgot-error-message', '', true);
+                document.getElementById('forgot-error-message').classList.add('hidden');
+                document.getElementById('forgot-success-message').classList.add('hidden');
+
+                showLoadingState(btn, 'Enviando...');
+
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + window.location.pathname,
+                });
+
+                if (error) {
+                    showMessage('forgot-error-message', error.message);
+                } else {
+                    showMessage('forgot-success-message', '¡Enviado! Revisa tu email para el enlace de recuperación.', false);
+                    forgotPasswordForm.reset();
+                }
+                hideLoadingState(btn);
+            });
+
+            // --- Update Password Logic ---
+            const updatePasswordForm = document.getElementById('update-password-form');
+            updatePasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newPassword = document.getElementById('new-password').value;
+                const confirmNewPassword = document.getElementById('confirm-new-password').value;
+                const btn = updatePasswordForm.querySelector('button[type="submit"]');
+
+                if (newPassword !== confirmNewPassword) {
+                    showMessage('update-error-message', 'Las contraseñas no coinciden.');
+                    return;
+                }
+
+                showLoadingState(btn, 'Actualizando...');
+                const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+
+                if (error) {
+                    showMessage('update-error-message', error.message);
+                    hideLoadingState(btn);
+                } else {
+                    showToast('Contraseña actualizada correctamente', 'success');
+                    hideAuthModal();
+                    // Al actualizar clave con éxito, Supabase mantiene la sesión.
+                }
+            });
+
             // --- Session Monitor ---
             supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                if (session) {
+                if (event === 'PASSWORD_RECOVERY') {
+                    showAuthModal('update');
+                } else if (session) {
                     showDashboard(session.user);
                 } else {
                     showLanding();
@@ -2324,7 +2446,6 @@
                         if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
 
                         const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedTipoBoleta}/emitir-csv`;
-
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
                             headers: { 'Authorization': `Bearer ${session.access_token}` },
@@ -2334,16 +2455,28 @@
                         const contentType = response.headers.get("content-type");
 
                         if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Error en la emisión');
-                        } else if (contentType && contentType.includes("application/zip")) {
+                            let errorDetail = 'Error en la emisión';
+                            try {
+                                const errorData = await response.json();
+                                errorDetail = errorData.error || errorData.detail || errorDetail;
+                            } catch (e) {
+                                errorDetail = `Error ${response.status}: Servidor no disponible`;
+                            }
+                            throw new Error(errorDetail);
+                        }
+
+                        if (contentType && contentType.includes("application/zip")) {
                             const blob = await response.blob();
                             const url = window.URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = url;
-                            a.download = 'boletas_emitidas.zip';
+                            a.download = `boletas_${selectedTipoBoleta}_${new Date().getTime()}.zip`;
+                            document.body.appendChild(a);
                             a.click();
-                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+
+                            // Delayed revoke to allow download start
+                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
 
                             emissionResult.innerHTML = `
                                 <div class="text-center">
