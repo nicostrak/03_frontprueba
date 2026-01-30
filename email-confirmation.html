@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmado - BoletaPro</title>
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --surface-dark: #1a1a1a;
+            --primary-green: #00B37E;
+            --primary-green-hover: #00996A;
+            --border-dark: #2a2a2a;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .bg-surface-dark {
+            background-color: var(--surface-dark);
+        }
+
+        .border-dark {
+            border-color: var(--border-dark);
+        }
+
+        .text-primary-green {
+            color: var(--primary-green);
+        }
+
+        .bg-primary-green {
+            background-color: var(--primary-green);
+        }
+
+        .bg-primary-green-hover:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        .success-card {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen bg-[#121212]">
+    <div
+        class="success-card bg-surface-dark w-full max-w-md p-10 rounded-2xl border border-dark shadow-2xl text-center">
+        <div
+            class="mb-6 inline-flex items-center justify-center w-20 h-20 bg-green-900/20 rounded-full border border-green-800">
+            <svg class="w-10 h-10 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+
+        <h1 class="text-3xl font-extrabold text-white mb-4">¡Email Confirmado!</h1>
+        <p class="text-gray-400 mb-8 leading-relaxed">
+            Tu cuenta ha sido verificada exitosamente. Ahora puedes acceder a todas las funciones de BoletaPro.
+        </p>
+
+        <a href="index.html"
+            class="block w-full bg-primary-green text-white py-4 rounded-xl font-bold bg-primary-green-hover transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-900/20">
+            Ir a Iniciar Sesión
+        </a>
+
+        <p class="mt-8 text-sm text-gray-500">
+            ¿Necesitas ayuda? <a href="https://wa.me/56938859332" class="text-primary-green hover:underline">Contacta a
+                soporte</a>
+        </p>
+    </div>
+</body>
+
+</html>
