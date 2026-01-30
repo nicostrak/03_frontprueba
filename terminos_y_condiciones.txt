@@ -1,0 +1,78 @@
+📄 TÉRMINOS Y CONDICIONES DE USO
+BoletaPro
+Última actualización: 29-01-2026
+________________________________________
+1. Aceptación de los Términos
+El acceso y uso del sitio web y la aplicación BoletaPro (en adelante, “la Plataforma”) implica la aceptación expresa e íntegra de los presentes Términos y Condiciones por parte del usuario.
+Si el usuario no está de acuerdo con estos términos, deberá abstenerse de utilizar la Plataforma.
+________________________________________
+2. Descripción del Servicio
+BoletaPro es una plataforma tecnológica que asiste al en la emisión y gestión de sus boletas de honorarios electrónicas, actuando como herramienta de apoyo para el usuario.
+BoletaPro no reemplaza, no representa ni actúa en nombre del Servicio de Impuestos Internos (SII), ni mantiene relación contractual alguna con dicho organismo.
+________________________________________
+3. Responsabilidad del Usuario
+El usuario declara y acepta que:
+•	Es exclusivamente responsable del uso que haga de la Plataforma.
+•	Cuenta con las autorizaciones legales necesarias para operar con sus credenciales tributarias.
+•	Es responsable de la veracidad, legalidad y exactitud de los datos ingresados.
+•	Cumplirá la normativa tributaria chilena vigente.
+BoletaPro no valida ni fiscaliza el cumplimiento tributario del usuario.
+________________________________________
+4. Uso Permitido y Uso Prohibido
+✔ Uso permitido:
+•	Uso personal o comercial legítimo.
+•	Emisión y gestión razonable de procesos tributarios propios.
+❌ Uso prohibido:
+•	Uso abusivo y masivo que afecte la estabilidad de la Plataforma o del SII
+•	Uso para fines ilegales, fraudulentos o contrarios a la normativa vigente.
+•	Intentar vulnerar la seguridad del sistema.
+•	Compartir accesos o API Keys con terceros no autorizados.
+•	Reventa, sublicenciamiento o explotación comercial sin autorización expresa.
+BoletaPro se reserva el derecho de suspender o bloquear cuentas ante uso indebido, sin previo aviso.
+________________________________________
+5. Límites de Responsabilidad
+BoletaPro no será responsable por:
+•	Rechazos, errores, caídas o cambios en sistemas del SII.
+•	Sanciones, multas o consecuencias legales derivadas del uso de la Plataforma.
+•	Pérdida de datos causada por terceros o servicios externos.
+•	Errores derivados de información incorrecta proporcionada por el usuario.
+________________________________________
+6. Almacenamiento y Tratamiento de Datos
+🔐 Seguridad y privacidad
+BoletaPro NO almacena:
+•	RUT’s ni contraseñas del SII.
+•	Claves personales ni certificados digitales del usuario.
+•	Información confidencial de acceso a plataformas gubernamentales.
+•	Contenido detallado de boletas emitidas (más allá de metadatos técnicos mínimos).
+📦 Lo que sí se almacena:
+•	Identificadores técnicos necesarios para el funcionamiento del servicio.
+•	Metadatos operativos (fecha, estado, consumo).
+•	Archivos generados (PDF/ZIP) solo para descarga del usuario.
+Los archivos se almacenan de forma temporal o bajo políticas de retención definidas, en servicios externos seguros.
+________________________________________
+7. Servicios de Terceros
+La Plataforma utiliza servicios de terceros como infraestructura en la nube, almacenamiento y servicios de autenticación.
+BoletaPro no es responsable por interrupciones, fallas o modificaciones realizadas por dichos proveedores externos.
+________________________________________
+8. Suspensión del Servicio
+BoletaPro se reserva el derecho de:
+•	Suspender temporal o permanentemente el acceso a la Plataforma.
+•	Modificar límites de uso.
+•	Eliminar cuentas inactivas o que incumplan estos términos.
+Todo lo anterior sin obligación de indemnización.
+________________________________________
+9. Propiedad Intelectual
+Todos los derechos sobre la Plataforma, código, marca, diseño y contenidos pertenecen a BoletaPro.
+El usuario no adquiere derecho alguno sobre la propiedad intelectual por el uso del servicio.
+________________________________________
+10. Modificaciones de los Términos
+BoletaPro podrá modificar estos Términos y Condiciones en cualquier momento.
+Las modificaciones serán publicadas en el sitio web y entrarán en vigencia desde su publicación.
+________________________________________
+11. Legislación Aplicable y Jurisdicción
+Estos términos se rigen por las leyes de la República de Chile.
+Cualquier controversia será sometida a los tribunales ordinarios de justicia de Chile.
+________________________________________
+12. Contacto
+Para consultas legales o relacionadas con estos términos:
+📧 contacto@boletapro.cl
