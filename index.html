@@ -1376,7 +1376,11 @@
     </section>
 
     <!-- Placeholder for JS env -->
-    <script src="env.js"></script>
+    <script>
+        // Estos valores son reemplazados por el pipeline de GitHub Actions
+        const SUPABASE_URL = "SUPABASE_URL_PLACEHOLDER";
+        const SUPABASE_ANON_KEY = "SUPABASE_ANON_KEY_PLACEHOLDER";
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- Supabase Init ---
