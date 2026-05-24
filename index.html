@@ -902,9 +902,9 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Límite Total Plan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-surface-dark p-4 rounded-lg border border-dark">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Limite Total Plan</h3>
                                 <div id="consumption-container" class="space-y-4">
                                     <!-- Datos de consumo se cargarán aquí -->
                                 </div>
@@ -912,7 +912,7 @@
 
                             <!-- NUEVA TARJETA BHE -->
                             <div
-                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-between">
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Propias (BHE)</h3>
                                 <div class="mt-auto">
                                     <span id="bhe-count-display" class="text-4xl font-bold text-primary-green">0</span>
@@ -921,12 +921,23 @@
                                 <div class="mt-2 text-xs text-gray-500">Consumo acumulado actual</div>
                             </div>
 
+                            <!-- NUEVA TARJETA BHT -->
                             <div
-                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Terceros (BHT)</h3>
+                                <div class="mt-auto">
+                                    <span id="bht-count-display" class="text-4xl font-bold text-primary-green">0</span>
+                                    <span class="text-gray-500 text-sm ml-2">este mes</span>
+                                </div>
+                                <div class="mt-2 text-xs text-gray-500">Consumo acumulado actual</div>
+                            </div>
+
+                            <div
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
                                 <h3 class="text-lg font-semibold text-white mb-2">¿Necesitas ayuda?</h3>
-                                <p class="text-gray-400 text-sm mb-4">Contacta a nuestro soporte especializado.</p>
+                                <p class="text-gray-400 text-sm mb-2">Contacta a nuestro soporte especializado.</p>
                                 <a href="https://wa.me/56938859332" target="_blank"
-                                    class="btn bg-primary-green text-white px-6 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                    class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold bg-primary-green-hover">
                                     Chat Soporte WhatsApp
                                 </a>
                             </div>
@@ -1040,7 +1051,7 @@
                                     </label>
 
                                     <!-- Opción BHET -->
-                                    <label class="radio-card hidden" for="tipo-bhet">
+                                    <label class="radio-card" for="tipo-bhet">
                                         <input type="radio" name="tipo-boleta" id="tipo-bhet" value="bht">
                                         <div class="radio-card-content">
                                             <div class="text-primary-green">
@@ -1054,7 +1065,7 @@
                                             </div>
                                             <div>
                                                 <h4 class="text-lg font-bold text-white mb-1">Boleta de Honorarios de
-                                                    Terceros (BHET)</h4>
+                                                    Terceros (BHT)</h4>
                                                 <p class="text-sm text-gray-400">Emisión de boletas por cuenta de
                                                     terceros</p>
                                             </div>
@@ -1076,9 +1087,9 @@
 
                                 <!-- Plantilla de descarga (solo para BHE) -->
                                 <div id="plantilla-bhe-info"
-                                    class="hidden mb-6 bg-gray-900/50 p-4 rounded border border-dark">
+                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
                                     <div class="flex justify-between items-center mb-2">
-                                        <h4 class="text-sm font-medium text-white">Plantilla Requerida</h4>
+                                        <h4 class="text-sm font-medium text-white">Plantilla BHE</h4>
                                         <a href="plantilla_bhe.xlsx" download="Plantilla_Carga_BHE_BoletaPro.xlsx"
                                             class="text-xs text-primary-green hover:underline flex items-center">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -1094,8 +1105,28 @@
                                         formato.</p>
                                 </div>
 
+                                <!-- Plantilla de descarga (solo para BHT) -->
+                                <div id="plantilla-bht-info"
+                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="text-sm font-medium text-white">Plantilla BHT</h4>
+                                        <a href="plantilla_bht.xlsx" download="Plantilla_Carga_BHT_BoletaPro.xlsx"
+                                            class="text-xs text-primary-green hover:underline flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                                                </path>
+                                            </svg>
+                                            Descargar Excel
+                                        </a>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Usa la plantilla oficial para evitar errores de
+                                        formato.</p>
+                                </div>
+
                                 <!-- Drag & Drop Zone -->
-                                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
+                                <input type="file" id="file-input" accept=".csv,.xlsx,.xls,.xlsm" class="hidden">
                                 <div id="drop-zone" class="drop-zone">
                                     <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -1105,7 +1136,8 @@
                                     </svg>
                                     <p class="text-lg text-gray-400 mb-2">Arrastra tu Excel aquí</p>
                                     <p class="text-sm text-gray-600 mb-4">o haz clic para seleccionar</p>
-                                    <p class="text-xs text-gray-700">Formatos permitidos: .csv, .xlsx | Máximo 5MB</p>
+                                    <p class="text-xs text-gray-700">Formatos permitidos: .csv, .xlsx, .xls, .xlsm |
+                                        Máximo 5MB</p>
                                 </div>
 
                                 <!-- File Info (después de cargar) -->
@@ -1201,7 +1233,7 @@
                                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                                     </div>
 
-                                    <div>
+                                    <div id="wizard-muestra-glosa-container">
                                         <label class="block text-sm font-medium text-gray-400 mb-2">Mostrar descripción
                                             de
                                             actividades</label>
@@ -1662,6 +1694,12 @@
                         bheDisplay.textContent = bheCount;
                     }
 
+                    // Update BHT card
+                    const bhtDisplay = document.getElementById('bht-count-display');
+                    if (bhtDisplay) {
+                        bhtDisplay.textContent = bhtCount;
+                    }
+
                     // Total Bar
                     const percentage = planLimit > 0 ? Math.min(100, (totalUsed / planLimit) * 100) : 0;
 
@@ -1879,6 +1917,7 @@
                 const fileSize = document.getElementById('file-size');
                 const btnRemoveFile = document.getElementById('btn-remove-file');
                 const plantillaBheInfo = document.getElementById('plantilla-bhe-info');
+                const plantillaBhtInfo = document.getElementById('plantilla-bht-info');
                 const btnStep2Back = document.getElementById('btn-step2-back');
                 const btnStep2Next = document.getElementById('btn-step2-next');
 
@@ -1951,8 +1990,9 @@
 
                 btnStep1Next.addEventListener('click', () => {
                     if (selectedTipoBoleta) {
-                        // Show plantilla info only for BHE
+                        // Show plantilla info only for BHE/BHT (not applicable for other types)
                         plantillaBheInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        plantillaBhtInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bht');
                         updateWizardUI(2);
                     }
                 });
@@ -1960,11 +2000,11 @@
                 // ===== STEP 2: Carga de Archivo =====
                 const handleFileSelect = (file) => {
                     // Validate file type
-                    const validExtensions = ['.csv', '.xlsx', '.xls'];
+                    const validExtensions = ['.csv', '.xlsx', '.xls', '.xlsm'];
                     const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
 
                     if (!validExtensions.includes(fileExtension)) {
-                        showToast('Formato de archivo no válido. Usa .csv o .xlsx', 'error');
+                        showToast('Formato de archivo no válido. Usa .csv, .xlsx, .xls o .xlsm', 'error');
                         return;
                     }
 
@@ -2282,6 +2322,11 @@
                     if (validationErrors.length === 0) {
                         // Show tipo_retencion only for BHE
                         wizardTipoRetencionContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        // Show hdn_muestra_glosa only for BHE
+                        const wizardMuestraGlosaContainer = document.getElementById('wizard-muestra-glosa-container');
+                        if (wizardMuestraGlosaContainer) {
+                            wizardMuestraGlosaContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        }
                         updateWizardUI(4);
                     }
                 });
@@ -2324,8 +2369,10 @@
                         formData.append('rut', cleanRut);
                         formData.append('clave', clave);
                         formData.append('csv_file', uploadedFile);
-                        if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
-                        formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
+                        if (selectedTipoBoleta === 'bhe') {
+                            if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
+                            formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
+                        }
 
                         const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedTipoBoleta}/emitir-csv`;
                         const response = await fetch(proxyApiUrl, {
