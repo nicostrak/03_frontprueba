@@ -1,11 +1,13 @@
 User-agent: *
+Allow: /
 Allow: /index.html
 Allow: /terminos.html
+Allow: /privacidad.html
 Allow: /forgot-password.html
 Allow: /update-password.html
 Allow: /email-confirmation.html
 
-# Block AI training crawlers (Cloudflare also blocks these)
+# Block AI training crawlers
 User-agent: GPTBot
 Disallow: /
 

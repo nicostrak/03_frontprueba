@@ -59,6 +59,62 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es una Boleta de Honorarios Electrónica (BHE)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La Boleta de Honorarios Electrónica (BHE) es un documento tributario que emiten los trabajadores independientes en Chile por sus servicios profesionales. Se emite de forma electrónica ante el SII y permite a quien la recibe justificar un gasto y retener el 15,25% de impuesto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué diferencia hay entre BHE y BHT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La BHE la emite el profesional por sus propios servicios. La BHT (Boleta de Honorarios de Terceros) la emite una empresa por cuenta de un tercero que le prestó servicios. Por ejemplo, una consultora que emite boletas a nombre de sus consultores independientes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿BoletaPro almacena mi clave del SII?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. BoletaPro no almacena tu RUT, contraseña ni claves del SII. Las credenciales se envían directamente al SII solo para la emisión de boletas y nunca se guardan en nuestros servidores."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuántas boletas puedo emitir con cada plan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El Plan Gratuito permite 10 boletas/mes. El Básico permite 50 boletas/mes. El Avanzado permite 100 boletas/mes. El Premium permite 500 boletas/mes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formatos de archivo acepto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aceptamos archivos .csv, .xlsx, .xls y .xlsm. Puedes descargar nuestras plantillas oficiales para asegurar que los datos tengan el formato correcto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo funciona la emisión masiva?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sube un archivo Excel con todos los destinatarios (RUT, nombre, fecha, monto, descripción). Nuestra plataforma procesa cada fila, se conecta automáticamente al SII y emite todas las boletas. Al finalizar, descargas un ZIP con todos los comprobantes PDF."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "Organization",
       "name": "BoletaPro",
       "url": "https://www.boletapro.cl/",
@@ -254,6 +310,10 @@
         .whatsapp-float:hover {
             background-color: #1ebe57;
             transform: scale(1.1);
+        }
+
+        .faq-arrow.rotate-180 {
+            transform: rotate(180deg);
         }
 
         /* Video Modal */
@@ -510,6 +570,7 @@
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a>
                         <a href="#pricing" class="text-gray-400 hover:text-white transition">Planes</a>
+                        <a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="login-btn"
@@ -754,6 +815,84 @@
                 </div>
             </section>
 
+            <!-- FAQ Section -->
+            <section id="faq" class="py-20">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Resolvemos tus dudas sobre la emisión de boletas de honorarios.</p>
+                    </div>
+                    <div class="max-w-3xl mx-auto space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué es una Boleta de Honorarios Electrónica (BHE)?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La Boleta de Honorarios Electrónica (BHE) es un documento tributario que emiten los trabajadores independientes en Chile por sus servicios profesionales. Se emite de forma electrónica ante el SII y permite a quien la recibe justificar un gasto y retener el 15,25% de impuesto.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué diferencia hay entre BHE y BHT?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La <strong class="text-white">BHE</strong> la emite el profesional por sus propios servicios. La <strong class="text-white">BHT</strong> (Boleta de Honorarios de Terceros) la emite una empresa por cuenta de un tercero que le prestó servicios. Por ejemplo, una consultora que emite boletas a nombre de sus consultores independientes.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿BoletaPro almacena mi clave del SII?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text"><strong class="text-white">No.</strong> BoletaPro no almacena tu RUT, contraseña ni claves del SII. Las credenciales se envían directamente al SII solo para la emisión de boletas y nunca se guardan en nuestros servidores.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Cuántas boletas puedo emitir con cada plan?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">El <strong class="text-white">Plan Gratuito</strong> permite 10 boletas/mes. El <strong class="text-white">Básico</strong> permite 50 boletas/mes. El <strong class="text-white">Avanzado</strong> permite 100 boletas/mes. El <strong class="text-white">Premium</strong> permite 500 boletas/mes.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué formatos de archivo acepto?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">Aceptamos archivos <strong class="text-white">.csv, .xlsx, .xls y .xlsm</strong>. Puedes descargar nuestras plantillas oficiales para asegurar que los datos tengan el formato correcto.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Cómo funciona la emisión masiva?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">Sube un archivo Excel con todos los destinatarios (RUT, nombre, fecha, monto, descripción). Nuestra plataforma procesa cada fila, se conecta automáticamente al SII y emite todas las boletas. Al finalizar, descargas un ZIP con todos los comprobantes PDF.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
         <!-- Footer -->
         <footer class="bg-surface-dark border-t border-dark">
@@ -762,6 +901,7 @@
                 <div class="mt-4 flex justify-center space-x-6 text-sm">
                     <a href="terminos.html" class="hover:text-primary-green transition-colors">Términos y
                         Condiciones</a>
+                    <a href="privacidad.html" class="hover:text-primary-green transition-colors">Política de Privacidad</a>
                     <a href="https://wa.me/56938859332" target="_blank"
                         class="hover:text-primary-green transition-colors">Contacto</a>
                 </div>
@@ -2552,6 +2692,20 @@
                 // END WIZARD LOGIC
                 // ============================================
 
+                // ===== FAQ Toggle Logic =====
+                function toggleFaq(button) {
+                    const content = button.nextElementSibling;
+                    const arrow = button.querySelector('.faq-arrow');
+                    const isOpen = !content.classList.contains('hidden');
+
+                    if (isOpen) {
+                        content.classList.add('hidden');
+                        arrow.classList.remove('rotate-180');
+                    } else {
+                        content.classList.remove('hidden');
+                        arrow.classList.add('rotate-180');
+                    }
+                }
 
                 // Init
                 loadDashboardData();
