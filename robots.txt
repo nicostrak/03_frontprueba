@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /index.html
+Allow: /terminos.html
+Allow: /forgot-password.html
+Allow: /update-password.html
+Allow: /email-confirmation.html
+
+# Block AI training crawlers (Cloudflare also blocks these)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://www.boletapro.cl/sitemap.xml
