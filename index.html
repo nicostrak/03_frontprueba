@@ -967,6 +967,12 @@
     </section>
 
     <!-- ======== TUTORIAL MODAL (NEW) ======== -->
+    <!-- [VIDEO TUTORIAL MODAL - DESHABILITADO TEMPORALMENTE]
+         Para re-activar cuando se tenga el video:
+         1. Descomentar el section debajo
+         2. Descomentar la línea: setTimeout(showTutorialModal, 1000); en initializeDashboardAfterLogin()
+    -->
+    <!--
     <section id="tutorial-modal-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-90 z-[60] flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="tutorial-modal"
@@ -976,16 +982,7 @@
                 <button id="close-tutorial-modal-btn" class="text-gray-500 hover:text-white text-3xl">&times;</button>
             </div>
             <div class="video-container mb-6 bg-black rounded-lg border border-dark">
-                <!-- Placeholder for Video Tutorial -->
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
-                    <svg class="w-16 h-16 mb-4 text-primary-green opacity-80" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
-                    </svg>
-                    <p class="text-lg">Aquí se reproducirá el Video Tutorial</p>
-                    <p class="text-sm text-gray-600">(YouTube Embed)</p>
-                </div>
-                <!-- <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID" title="Tutorial BoletaPro" allowfullscreen></iframe> -->
+                <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID" title="Tutorial BoletaPro" allowfullscreen></iframe>
             </div>
             <div class="flex justify-end">
                 <button id="finish-tutorial-btn"
@@ -994,6 +991,7 @@
             </div>
         </div>
     </section>
+    -->
 
 
     <!-- ======== DASHBOARD SECTION ======== -->
@@ -1571,10 +1569,12 @@
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
 
-            // Tutorial Modal Elements
-            const tutorialModalSection = document.getElementById('tutorial-modal-section');
-            const closeTutorialModalBtn = document.getElementById('close-tutorial-modal-btn');
-            const finishTutorialBtn = document.getElementById('finish-tutorial-btn');
+            // [VIDEO TUTORIAL - DESHABILITADO TEMPORALMENTE]
+            // El modal del tutorial está comentado en el HTML.
+            // Las variables below return null y no se usan hasta que se descomente.
+            const tutorialModalSection = null; // document.getElementById('tutorial-modal-section');
+            const closeTutorialModalBtn = null; // document.getElementById('close-tutorial-modal-btn');
+            const finishTutorialBtn = null; // document.getElementById('finish-tutorial-btn');
 
             // --- UI Helper Functions ---
             const showAuthModal = (view = 'login') => {
@@ -1596,18 +1596,13 @@
             };
 
             const showTutorialModal = () => {
-                // Check if user has seen tutorial in this session
-                if (!sessionStorage.getItem('tutorialSeen')) {
-                    tutorialModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                    tutorialModalSection.querySelector('#tutorial-modal').classList.remove('scale-95');
-                    sessionStorage.setItem('tutorialSeen', 'true');
-                }
+                // [VIDEO TUTORIAL - DESHABILITADO]
+                // No-op until video is ready
             };
 
             const hideTutorialModal = () => {
-                tutorialModalSection.classList.add('opacity-0');
-                tutorialModalSection.querySelector('#tutorial-modal').classList.add('scale-95');
-                setTimeout(() => tutorialModalSection.classList.add('pointer-events-none'), 300);
+                // [VIDEO TUTORIAL - DESHABILITADO]
+                // No-op until video is ready
             };
 
             const showDashboard = (user) => {
@@ -1619,7 +1614,7 @@
                     initializeDashboard(user);
                     isDashboardInitialized = true;
                     // Show Tutorial on first dashboard load
-                    setTimeout(showTutorialModal, 1000);
+// setTimeout(showTutorialModal, 1000); // [VIDEO TUTORIAL - DESHABILITADO]
                 } else {
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                 }
@@ -1663,9 +1658,9 @@
             showSignupViewBtn.addEventListener('click', () => showAuthModal('signup'));
             showLoginViewBtn.addEventListener('click', () => showAuthModal('login'));
 
-            // Tutorial Events
-            closeTutorialModalBtn.addEventListener('click', hideTutorialModal);
-            finishTutorialBtn.addEventListener('click', hideTutorialModal);
+            // [VIDEO TUTORIAL - DESHABILITADO]
+            // closeTutorialModalBtn?.addEventListener('click', hideTutorialModal);
+            // finishTutorialBtn?.addEventListener('click', hideTutorialModal);
 
             // --- Auth Logic ---
             loginForm.addEventListener('submit', async (e) => {
