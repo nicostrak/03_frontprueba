@@ -1,0 +1,228 @@
+Private Sub Worksheet_Change(ByVal Target As Range)
+
+    If Target.Row < 2 Then Exit Sub
+    If Target.Cells.Count > 1 Then Exit Sub
+
+    Application.EnableEvents = False
+
+    Select Case Target.Column
+
+        ' =====================
+        ' COLUMNA A - FECHA ±3 MESES
+        ' =====================
+        Case 1
+            If Not FechaValidaRango(Target.Value) Then
+                MsgBox "La fecha debe ser válida y estar dentro del rango ±3 meses desde hoy.", _
+                       vbCritical, "Fecha inválida"
+                Target.ClearContents
+            End If
+
+        ' =====================
+        ' COLUMNA B - RUT
+        ' =====================
+        Case 2
+            ValidarRUT Target
+
+        ' =====================
+        ' COLUMNAS C, D, G - TEXTO SII
+        ' =====================
+        Case 3, 4, 7
+            If Not CaracteresValidos(Target.Value) Then
+                MsgBox "El texto contiene caracteres no permitidos según normativa.", _
+                       vbCritical, "Texto inválido"
+                Target.ClearContents
+            Else
+                Target.Value = Trim(Target.Value)
+            End If
+
+        ' =====================
+        ' COLUMNA E - COMUNA
+        ' =====================
+        Case 5
+            If Not ComunaValida(Target.Value) Then
+                MsgBox "Comuna no válida.", vbCritical, "Error comuna"
+                Target.ClearContents
+            Else
+                Target.Value = UCase(Trim(Target.Value))
+            End If
+
+        ' =====================
+        ' COLUMNA F - EMAIL
+        ' =====================
+        Case 6
+            If Not EmailValido(Target.Value) Then
+                MsgBox "Formato de correo electrónico inválido.", _
+                       vbCritical, "Email inválido"
+                Target.ClearContents
+            End If
+
+        ' =====================
+        ' COLUMNA H - SOLO NÚMEROS
+        ' =====================
+        Case 8
+            If Not IsNumeric(Target.Value) Or InStr(Target.Value, ".") > 0 Or InStr(Target.Value, ",") > 0 Then
+                MsgBox "Este campo solo admite números.", vbCritical, "Valor inválido"
+                Target.ClearContents
+            End If
+
+    End Select
+
+    Application.EnableEvents = True
+
+End Sub
+
+Private Function FechaValidaRango(ByVal valor As Variant) As Boolean
+
+    If Not IsDate(valor) Then Exit Function
+
+    Dim fecha As Date
+    fecha = DateValue(valor)
+
+    Dim hoy As Date
+    hoy = Date
+
+    Dim fechaMin As Date
+    Dim fechaMax As Date
+
+    fechaMin = DateAdd("m", -3, hoy)
+    fechaMax = DateAdd("m", 3, hoy)
+
+    If fecha < fechaMin Or fecha > fechaMax Then Exit Function
+
+    FechaValidaRango = True
+
+End Function
+
+Private Function CaracteresValidos(ByVal texto As String) As Boolean
+
+    Dim validos As String
+    Dim i As Long
+    Dim c As String
+
+    validos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    validos = validos & LCase(validos)
+    validos = validos & "0123456789 "
+
+    For i = 1 To Len(texto)
+        c = Mid(texto, i, 1)
+        If InStr(validos, c) = 0 Then Exit Function
+    Next i
+
+    If Len(texto) > 0 And Right(texto, 1) = " " Then Exit Function
+
+    CaracteresValidos = True
+
+End Function
+
+Private Function EmailValido(ByVal email As String) As Boolean
+
+    If email = "" Then Exit Function
+    If Not CaracteresValidosMail(email) Then Exit Function
+
+    Dim arr As Long, pto As Long
+    arr = InStr(email, "@")
+    pto = InStrRev(email, ".")
+
+    If arr <= 1 Then Exit Function
+    If pto <= arr + 1 Then Exit Function
+    If pto >= Len(email) Then Exit Function
+    If InStr(email, "..") > 0 Then Exit Function
+    If InStr(email, " ") > 0 Then Exit Function
+
+    EmailValido = True
+
+End Function
+
+Private Function CaracteresValidosMail(ByVal texto As String) As Boolean
+
+    Dim validos As String
+    Dim i As Long
+
+    validos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    validos = validos & LCase(validos)
+    validos = validos & "0123456789.-_@"
+
+    For i = 1 To Len(texto)
+        If InStr(validos, Mid(texto, i, 1)) = 0 Then Exit Function
+    Next i
+
+    CaracteresValidosMail = True
+
+End Function
+
+Private Sub ValidarRUT(ByVal celda As Range)
+
+    Dim rut As String, cuerpo As String
+    Dim dvIng As String, dvCalc As String
+
+    rut = UCase(celda.Value)
+    rut = Replace(rut, ".", "")
+    rut = Replace(rut, "-", "")
+    rut = Replace(rut, " ", "")
+    rut = Replace(rut, ",", "")
+
+    If Len(rut) < 8 Then GoTo ErrorRut
+
+    cuerpo = Left(rut, Len(rut) - 1)
+    dvIng = Right(rut, 1)
+
+    If Not IsNumeric(cuerpo) Then GoTo ErrorRut
+
+    dvCalc = CalcularDV(cuerpo)
+
+    If dvIng <> dvCalc Then GoTo ErrorRut
+
+    celda.Value = cuerpo & "-" & dvCalc
+    Exit Sub
+
+ErrorRut:
+    MsgBox "RUT inválido.", vbCritical, "Error RUT"
+    celda.ClearContents
+
+End Sub
+
+Private Function CalcularDV(ByVal rut As String) As String
+
+    Dim suma As Long, m As Integer, i As Long
+    suma = 0
+    m = 2
+
+    For i = Len(rut) To 1 Step -1
+        suma = suma + Val(Mid(rut, i, 1)) * m
+        m = IIf(m = 7, 2, m + 1)
+    Next i
+
+    Select Case 11 - (suma Mod 11)
+        Case 11: CalcularDV = "0"
+        Case 10: CalcularDV = "K"
+        Case Else: CalcularDV = CStr(11 - (suma Mod 11))
+    End Select
+
+End Function
+
+Private Function ComunaValida(ByVal comuna As String) As Boolean
+
+    Dim comunas As Variant
+    comunas = Array( _
+"ALGARROBO", "CABILDO", "CALLE LARGA", "CARTAGENA", "CASABLANCA", "CATEMU", "CON CON", "EL QUISCO", "EL TABO", "HIJUELAS", "ISLA DE PASCUA", "JUAN FERNANDEZ", "LA CALERA", "LA CRUZ", "LA LIGUA", "LIMACHE", "LLAY-LLAY", "LOS ANDES", "NOGALES", "OLMUE", "PANQUEHUE", "PAPUDO", "PETORCA", "PUCHUNCAVI", "PUTAENDO", "QUILLOTA", "QUILPUE", "QUINTERO", "RINCONADA", "SAN ANTONIO", "SAN ESTEBAN", "SAN FELIPE", "SANTA MARIA", "SANTO DOMINGO", "VALPARAISO", "VILLA ALEMANA", "VINA DEL MAR", "ZAPALLAR", "CHEPICA", "CHIMBARONGO", "CODEGUA", "COINCO", "COLTAUCO", "DONIHUE", "GRANEROS", "LA ESTRELLA", "LAS CABRAS", "LITUECHE", "LOLOL", "MACHALI", "MALLOA", "MARCHIGUE", "NANCAGUA", "NAVIDAD", "OLIVAR", "PALMILLA", "PAREDONES", "PERALILLO", "PEUMO", "PICHIDEGUA", "PICHILEMU", "PLACILLA", "PUMANQUE", "QUINTA TILCOCO", "RANCAGUA", "RENGO", "REQUINOA", "SAN FERNANDO", "SAN FRANCISCO DE MOSTAZAL", "SAN VICENTE", "SANTA CRUZ", "CAUQUENES", "CHANCO", "COLBUN", "CONSTITUCION", "CUREPTO", "CURICO", "EMPEDRADO", "HUALANE", _
+"LICANTEN", "LINARES", "LONGAVI", "MAULE", "MOLINA", "PARRAL", "PELARCO", "PELLUHUE", "PENCAHUE", "RAUCO", "RETIRO", "RIO CLARO", "ROMERAL", "SAGRADA FAMILIA", "SAN CLEMENTE", "SAN JAVIER", "SAN RAFAEL", "TALCA", "TENO", "VICHUQUEN", "VILLA ALEGRE", "YERBAS BUENAS", "ALTO BIO BIO", "ANTUCO", "ARAUCO", "CABRERO", "CANETE", "CHIGUAYANTE", "CONCEPCION", "CONTULMO", "CORONEL", "CURANILAHUE", "FLORIDA", "HUALPEN", "HUALQUI", "LAJA", "LEBU", "LOS ALAMOS", "LOS ANGELES", "LOTA", "MULCHEN", "NACIMIENTO", "NEGRETE", "PENCO", "QUILACO", "QUILLECO", "SAN PEDRO DE LA PAZ", "SAN ROSENDO", "SANTA BARBARA", "SANTA JUANA", "TALCAHUANO", "TIRUA", "TOME", "TUCAPEL", "YUMBEL", "ANGOL", "CARAHUE", "CHOLCHOL", "COLLIPULLI", "CUNCO", "CURACAUTIN", "CURARREHUE", "ERCILLA", "FREIRE", "GALVARINO", "GORBEA", "LAUTARO", "LONCOCHE", "LONQUIMAY", "LOS SAUCES", "LUMACO", "MELIPEUCO", "NUEVA IMPERIAL", "PADRE LAS CASAS", "PERQUENCO", "PITRUFQUEN", "PUCON", "PUREN", "RENAICO", "SAAVEDRA", "TEMUCO", "TEODORO SCHMIDT", "TOLTEN", _
+"TRAIGUEN", "VICTORIA", _
+"VILCUN", "VILLARRICA", "ANCUD", "CALBUCO", "CASTRO", "CHAITEN", "CHONCHI", "COCHAMO", "CURACO DE VELEZ", "DALCAHUE", "FRESIA", "FRUTILLAR", "FUTALEUFU", "HUALAIHUE", "LLANQUIHUE", "LOS MUERMOS", "MAULLIN", "OSORNO", "PALENA", "PUERTO MONTT", "PUERTO OCTAY", "PUERTO VARAS", "PUQUELDON", "PURRANQUE", "PUYEHUE", "QUEILEN", "QUELLON", "QUEMCHI", "QUINCHAO", "RIO NEGRO", "SAN JUAN DE LA COSTA", "SAN PABLO", "AYSEN", "CHILE CHICO", "CISNES", "COCHRANE", "COYHAIQUE", "GUAITECAS", "LAGO VERDE", "O'HIGGINS", "RIO IBANEZ", "TORTEL", "ANTARTIDA", "CABO DE HORNOS", "LAGUNA BLANCA", "PORVENIR", "PRIMAVERA", "PUERTO NATALES", "PUNTA ARENAS", "RIO VERDE", "SAN GREGORIO", "TIMAUKEL", "TORRES DE PAINE", "ALHUE", "BUIN", "CALERA DE TANGO", "CERRILLOS", "CERRO NAVIA", "COLINA", "CONCHALI", "CURACAVI", "EL BOSQUE", "EL MONTE", "EST CENTRAL", "HUECHURABA", "INDEPENDENCIA", "ISLA DE MAIPO", "LA CISTERNA", "LA FLORIDA", "LA GRANJA", "LA PINTANA", "LA REINA", "LAMPA", "LAS CONDES", "LO BARNECHEA", "LO ESPEJO", "LO PRADO", _
+"MACUL", _
+ "MAIPU", "MARIA PINTO", "MELIPILLA", "NUNOA", "P AGUIRRE CERDA", "PADRE HURTADO", "PAINE", "PENAFLOR", "PENALOLEN", "PIRQUE", "PROVIDENCIA", "PUDAHUEL", "PUENTE ALTO", "QUILICURA", "QUINTA NORMAL", "RECOLETA", "RENCA", "SAN BERNARDO", "SAN JOAQUIN", "SAN JOSE MAIPO", "SAN MIGUEL", "SAN PEDRO DE MELIPILLA", "SAN RAMON", "SANTIAGO", "TALAGANTE", "TIL-TIL", "VITACURA", "CORRAL", "FUTRONO", "LA UNION", "LAGO RANCO", "LANCO", "LOS LAGOS", "MAFIL", "MARIQUINA", "PAILLACO", "PANGUIPULLI", "RIO BUENO", "VALDIVIA", "ARICA", "CAMARONES", "GENERAL LAGOS", "PUTRE", "BULNES", "CHILLAN VIEJO", "CHILLAN", "COBQUECURA", "COELEMU", "COIHUECO", "EL CARMEN", "NINHUE", "PEMUCO", "PINTO", "PORTEZUELO", "QUILLON", "QUIRIHUE", "RANQUIL", "SAN CARLOS", "SAN FABIAN", "SAN GREG NIQUEN", "SAN IGNACIO", "SAN NICOLAS", "TREHUACO", "YUNGAY", "ALTO HOSPICIO", "CAMINA", "COLCHANE", "HUARA", "IQUIQUE", "PICA", "POZO ALMONTE", "ANTOFAGASTA", "CALAMA", "MARIA ELENA", "MEJILLONES", "OLLAGUE", "SAN PEDRO DE ATACAMA", "SIERRA GORDA", _
+ "TALTAL", _
+"TOCOPILLA", "ALTO DEL CARMEN", "CALDERA", "CHANARAL", "COPIAPO", "DIEGO DE ALMAGRO", "FREIRINA", "HUASCO", "TIERRA AMARILLA", "VALLENAR", "ANDACOLLO", "CANELA", "COMBARBALA", "COQUIMBO", "ILLAPEL", "LA HIGUERA", "LA SERENA", "LOS VILOS", "MONTE PATRIA", "OVALLE", "PAIHUANO", "PUNITAQUI", "RIO HURTADO", "SALAMANCA", "VICUNA" _
+    )
+
+    Dim i As Long
+    comuna = UCase(Trim(comuna))
+
+    For i = LBound(comunas) To UBound(comunas)
+        If comuna = comunas(i) Then
+            ComunaValida = True
+            Exit Function
+        End If
+    Next i
+
+End Function
+
