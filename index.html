@@ -2065,6 +2065,7 @@
                 let uploadedFile = null;
                 let excelData = null;
                 let validationErrors = [];
+                let isSubmitting = false;
 
                 // Wizard Elements
                 const wizardSteps = document.querySelectorAll('.wizard-step');
@@ -2516,6 +2517,14 @@
                 wizardFinalForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
 
+                    // Prevenir doble submit inmediato
+                    if (isSubmitting) return;
+                    isSubmitting = true;
+
+                    // Deshabilitar botón ANTES de cualquier operación async
+                    showLoadingState(btnEmitNow, 'Procesando...');
+                    emissionResult.classList.add('hidden');
+
                     try {
                         const { data: { session } } = await supabaseClient.auth.getSession();
                         if (!session) throw new Error("Sesión expirada");
@@ -2524,6 +2533,8 @@
                         const rutValidation = formatAndValidateRUT(wizardRutInput);
                         if (!rutValidation.valid) {
                             showToast('El RUT ingresado no es válido', 'error');
+                            hideLoadingState(btnEmitNow);
+                            isSubmitting = false;
                             return;
                         }
 
@@ -2531,10 +2542,6 @@
                         const clave = document.getElementById('wizard-clave').value;
                         const tipoRetencion = selectedTipoBoleta === 'bhe' ? document.getElementById('wizard-tipo-retencion').value : null;
                         const hdnMuestraGlosa = document.querySelector('input[name="hdn_muestra_glosa"]:checked')?.value || "si";
-
-                        // Show loading state
-                        showLoadingState(btnEmitNow, 'Procesando...');
-                        emissionResult.classList.add('hidden');
 
                         // Prepare FormData
                         const formData = new FormData();
@@ -2651,6 +2658,7 @@
                         showToast('Error: ' + errorMessage, 'error');
                     } finally {
                         hideLoadingState(btnEmitNow);
+                        isSubmitting = false;
                     }
                 });
 
