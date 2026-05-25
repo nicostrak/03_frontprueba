@@ -2353,13 +2353,13 @@
 
                     // Mapa de alias aceptados para cada columna estándar
                     const columnMapping = {
-                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario'],
-                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social'],
-                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle'],
-                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad'],
-                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta'],
-                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios'],
-                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion']
+                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario', 'rut_completo_tercero', 'RUT'],
+                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social', 'NOMBRE_COMPLETO', 'nombre_completo', 'NOMBRE_TERC', 'NOMBRE_TERCERO'],
+                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle', 'DOMICILIO', 'domicilio_tercero'],
+                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad', 'COMUNA', 'comuna_tercero'],
+                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta', 'FECHA_BOLETA'],
+                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios', 'MONTO_BRUTO', 'monto_bruto', 'MONTO'],
+                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion', 'PRESTACION']
                     };
 
                     // Normalizar headers
