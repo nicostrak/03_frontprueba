@@ -2158,17 +2158,17 @@
                     }
                 };
 
-                tipoBheRadio.addEventListener('change', handleTipoBoletaChange);
-                tipoBhetRadio.addEventListener('change', handleTipoBoletaChange);
+                tipoBheRadio.onchange = handleTipoBoletaChange;
+                tipoBhetRadio.onchange = handleTipoBoletaChange;
 
-                btnStep1Next.addEventListener('click', () => {
+                btnStep1Next.onclick = () => {
                     if (selectedTipoBoleta) {
                         // Show plantilla info only for BHE/BHT (not applicable for other types)
                         plantillaBheInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
                         plantillaBhtInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bht');
                         updateWizardUI(2);
                     }
-                });
+                };
 
                 // ===== STEP 2: Carga de Archivo =====
                 const handleFileSelect = (file) => {
@@ -2203,30 +2203,30 @@
                 };
 
                 // Drag & Drop handlers
-                dropZone.addEventListener('click', () => fileInput.click());
+                dropZone.onclick = () => fileInput.click();
 
-                dropZone.addEventListener('dragover', (e) => {
+                dropZone.ondragover = (e) => {
                     e.preventDefault();
                     dropZone.classList.add('drag-over');
-                });
+                };
 
-                dropZone.addEventListener('dragleave', () => {
+                dropZone.ondragleave = () => {
                     dropZone.classList.remove('drag-over');
-                });
+                };
 
-                dropZone.addEventListener('drop', (e) => {
+                dropZone.ondrop = (e) => {
                     e.preventDefault();
                     dropZone.classList.remove('drag-over');
                     const file = e.dataTransfer.files[0];
                     if (file) handleFileSelect(file);
-                });
+                };
 
-                fileInput.addEventListener('change', (e) => {
+                fileInput.onchange = (e) => {
                     const file = e.target.files[0];
                     if (file) handleFileSelect(file);
-                });
+                };
 
-                btnRemoveFile.addEventListener('click', () => {
+                btnRemoveFile.onclick = () => {
                     uploadedFile = null;
                     excelData = null;
                     fileInput.value = '';
@@ -2235,11 +2235,11 @@
                     btnStep2Next.disabled = true;
                     btnStep2Next.classList.add('bg-gray-600', 'cursor-not-allowed');
                     btnStep2Next.classList.remove('bg-primary-green', 'bg-primary-green-hover');
-                });
+                };
 
-                btnStep2Back.addEventListener('click', () => updateWizardUI(1));
+                btnStep2Back.onclick = () => updateWizardUI(1);
 
-                btnStep2Next.addEventListener('click', async () => {
+                btnStep2Next.onclick = async () => {
                     if (!uploadedFile) return;
 
                     // Read Excel file
@@ -2265,7 +2265,7 @@
                         }
                     };
                     reader.readAsArrayBuffer(uploadedFile);
-                });
+                };
 
                 // ===== STEP 3: Previsualización y Validación =====
                 const renderPreview = () => {
@@ -2489,9 +2489,9 @@
                     return true;
                 };
 
-                btnStep3Back.addEventListener('click', () => updateWizardUI(2));
+                btnStep3Back.onclick = () => updateWizardUI(2);
 
-                btnStep3Next.addEventListener('click', () => {
+                btnStep3Next.onclick = () => {
                     if (validationErrors.length === 0) {
                         // Show tipo_retencion only for BHE
                         wizardTipoRetencionContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
@@ -2502,19 +2502,19 @@
                         }
                         updateWizardUI(4);
                     }
-                });
+                };
 
                 // ===== STEP 4: Emisión Final =====
-                btnStep4Back.addEventListener('click', () => updateWizardUI(3));
+                btnStep4Back.onclick = () => updateWizardUI(3);
 
                 const wizardRutInput = document.getElementById('wizard-rut');
 
                 // RUT auto-formatting on blur
-                wizardRutInput.addEventListener('blur', () => {
+                wizardRutInput.onblur = () => {
                     formatAndValidateRUT(wizardRutInput);
-                });
+                };
 
-                wizardFinalForm.addEventListener('submit', async (e) => {
+                wizardFinalForm.onsubmit = async (e) => {
                     e.preventDefault();
 
                     // Prevenir doble submit inmediato
@@ -2660,7 +2660,7 @@
                         hideLoadingState(btnEmitNow);
                         isSubmitting = false;
                     }
-                });
+                };
 
                 // ============================================
                 // END WIZARD LOGIC
