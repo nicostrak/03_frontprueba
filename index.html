@@ -2024,6 +2024,15 @@
                     pageIndicator.textContent = `Página ${currentPage + 1} de ${totalPages || 1}`;
                     prevPageBtn.disabled = currentPage === 0;
                     nextPageBtn.disabled = (currentPage + 1) * pageSize >= totalRecords;
+
+                    // Polling: auto-refresh if there are rows with fue_exitoso=null (Procesando)
+                    if (window.historyPollingInterval) clearInterval(window.historyPollingInterval);
+                    const hasProcessing = logs.some(log => log.fue_exitoso == null);
+                    if (hasProcessing) {
+                        window.historyPollingInterval = setInterval(() => {
+                            loadUsageHistory();
+                        }, 15000);
+                    }
                 };
 
                 const loadUsageHistory = async () => {
@@ -2653,6 +2662,8 @@
                             const taskId = result.task_id ? result.task_id.split('/').pop() : 'N/A';
 
                             showToast('¡Proceso iniciado!', 'success');
+                            loadUsageHistory();
+                            loadDashboardData();
 
                             emissionResult.innerHTML = `
                                 <div class="text-center p-4">
