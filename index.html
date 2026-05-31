@@ -1997,7 +1997,7 @@
                             ? `<button class="text-amber-500 hover:text-amber-400 text-sm font-semibold error-btn">Ver Error</button>`
                             : '';
 
-                        const displayId = log.task_id ? log.task_id : String(log.id).substring(0, 8);
+                        const displayId = log.task_id ? log.task_id.split('/').pop() : String(log.id).substring(0, 8);
                         const idTitle = log.task_id ? `Cloud Task ID: ${log.task_id}` : `ID Interno: ${log.id}`;
 
                         tr.innerHTML = `
