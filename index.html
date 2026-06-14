@@ -1157,7 +1157,18 @@
                             </div>
                         </div>
 
-                        <h3 class="text-2xl font-bold text-white mb-4">Historial de Boletas</h3>
+                        <div class="flex items-center gap-3 mb-4">
+                            <h3 class="text-2xl font-bold text-white">Historial de Boletas</h3>
+                            <button id="refresh-history-btn" type="button" title="Actualizar historial"
+                                class="btn flex items-center gap-2 bg-primary-green text-white px-3 py-1.5 rounded-md font-semibold text-sm bg-primary-green-hover shadow-md shadow-green-900/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                                <span>Actualizar</span>
+                            </button>
+                        </div>
                         <div class="bg-surface-dark rounded-lg border border-dark overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left">
@@ -2094,6 +2105,18 @@
                 nextPageBtn.onclick = () => { if ((currentPage + 1) * pageSize < totalRecords) { currentPage++; loadUsageHistory(); } };
                 pageSizeSelect.onchange = (e) => { pageSize = parseInt(e.target.value); currentPage = 0; loadUsageHistory(); };
 
+                // Refresh history button
+                const refreshHistoryBtn = document.getElementById('refresh-history-btn');
+                if (refreshHistoryBtn) {
+                    refreshHistoryBtn.onclick = () => {
+                        const icon = refreshHistoryBtn.querySelector('svg');
+                        if (icon) icon.classList.add('animate-spin');
+                        loadUsageHistory().finally(() => {
+                            setTimeout(() => { if (icon) icon.classList.remove('animate-spin'); }, 400);
+                        });
+                    };
+                }
+
                 // Modals
                 closeErrorModal.onclick = hideErrorModal;
                 deleteAccountBtn.onclick = () => {
@@ -2569,6 +2592,21 @@
                     formatAndValidateRUT(wizardRutInput);
                 };
 
+                // Ir al Historial: navega al dashboard view y refresca la tabla
+                const attachGoToHistoryHandler = () => {
+                    const goHistoryBtn = document.getElementById('btn-go-to-history');
+                    if (!goHistoryBtn) return;
+                    goHistoryBtn.onclick = () => {
+                        dashboardViews.forEach(v => v.classList.add('hidden'));
+                        document.getElementById('dashboard-view').classList.remove('hidden');
+                        sidebarLinks.forEach(l => l.classList.remove('active'));
+                        const dashLink = document.querySelector('.sidebar-link[data-view="dashboard-view"]');
+                        if (dashLink) dashLink.classList.add('active');
+                        if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
+                        loadUsageHistory();
+                    };
+                };
+
                 wizardFinalForm.onsubmit = async (e) => {
                     e.preventDefault();
 
@@ -2648,6 +2686,13 @@
                                     </svg>
                                     <h4 class="text-2xl font-bold text-primary-green mb-2">¡Emisión Exitosa!</h4>
                                     <p class="text-gray-400">Tu archivo ZIP se ha descargado automáticamente.</p>
+                                    <button type="button" id="btn-go-to-history"
+                                        class="btn w-full mt-6 bg-primary-green text-white py-4 px-6 rounded-md font-bold text-base bg-primary-green-hover flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                        </svg>
+                                        Ir al Historial de boletas emitidas
+                                    </button>
                                 </div>
                             `;
                             emissionResult.classList.remove('hidden', 'border-red-800', 'bg-red-900/20');
@@ -2656,6 +2701,7 @@
                             showToast('¡Boletas emitidas exitosamente!', 'success');
                             loadUsageHistory();
                             loadDashboardData();
+                            attachGoToHistoryHandler();
                         } else {
                             const result = await response.json();
                             const taskId = result.task_id ? result.task_id.split('/').pop() : 'N/A';
@@ -2689,10 +2735,18 @@
                                     <p class="text-xs text-gray-500 mt-4 leading-relaxed">
                                         Puedes cerrar esta ventana. El proceso continuará automáticamente y aparecerá en tu historial cuando termine.
                                     </p>
+                                    <button type="button" id="btn-go-to-history"
+                                        class="btn w-full mt-6 bg-primary-green text-white py-4 px-6 rounded-md font-bold text-base bg-primary-green-hover flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                        </svg>
+                                        Ir al Historial de boletas emitidas
+                                    </button>
                                 </div>
                             `;
                             emissionResult.classList.remove('hidden', 'border-red-800', 'bg-red-900/20');
                             emissionResult.classList.add('border-blue-800', 'bg-blue-900/10');
+                            attachGoToHistoryHandler();
                         }
                     } catch (error) {
                         let errorMessage = error.message;
