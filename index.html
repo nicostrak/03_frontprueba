@@ -2427,6 +2427,19 @@
                 };
 
                 // ===== STEP 3: Previsualización y Validación =====
+                // Helper: detecta columnas de fecha por nombre (case-insensitive) para aplicar
+                // formato legible en el preview. No afecta el formato canónico DD-MM-YYYY
+                // que viaja al backend.
+                const isDateColumn = (header) => /fecha|date/i.test(String(header || ''));
+
+                const formatPreviewCell = (value, header) => {
+                    if (value === undefined || value === null || value === '') return '';
+                    if (isDateColumn(header) && typeof value === 'number') {
+                        return excelSerialToDateString(value, '/');
+                    }
+                    return value;
+                };
+
                 const renderPreview = () => {
                     if (!excelData || excelData.length === 0) return;
 
@@ -2437,11 +2450,11 @@
                     const thead = previewTable.querySelector('thead');
                     thead.innerHTML = '<tr>' + headers.map(h => `<th class="p-3 text-left font-semibold text-gray-400">${h || ''}</th>`).join('') + '</tr>';
 
-                    // Render rows
+                    // Render rows (con formato de fecha legible DD/MM/YYYY en preview)
                     const tbody = previewTable.querySelector('tbody');
                     tbody.innerHTML = rows.map(row =>
                         '<tr class="border-b border-dark">' +
-                        headers.map((_, i) => `<td class="p-3">${row[i] !== undefined ? row[i] : ''}</td>`).join('') +
+                        headers.map((h, i) => `<td class="p-3">${formatPreviewCell(row[i], h)}</td>`).join('') +
                         '</tr>'
                     ).join('');
                 };
@@ -2449,14 +2462,25 @@
                 const validateData = () => {
                     validationErrors = [];
 
-                    if (selectedTipoBoleta === 'bhe') {
+                    // Check común BHE + BHT: el archivo debe tener al menos 1 fila con datos
+                    // (además del encabezado). Aplica a XLSM, XLSX y CSV.
+                    const dataRows = (excelData || []).slice(1);
+                    const hasDataRows = dataRows.some(row =>
+                        row && row.length > 0 && !row.every(cell =>
+                            cell === undefined || cell === null || String(cell).trim() === ''
+                        )
+                    );
+
+                    if (!hasDataRows) {
+                        validationErrors.push({
+                            linea: 0,
+                            error: 'La plantilla no contiene datos. Carga un archivo (.xlsm, .xlsx o .csv) con al menos 1 boleta además del encabezado.'
+                        });
+                    } else if (selectedTipoBoleta === 'bhe') {
                         // Validación para BHE
                         validationErrors = validateBHE(excelData);
                     } else {
-                        // Para BHT, validación básica (el servidor hace la validación completa)
-                        if (excelData.length < 2) {
-                            validationErrors.push({ linea: 0, error: 'El archivo debe contener al menos una fila de datos' });
-                        }
+                        // Para BHT con datos presentes, la validación completa la hace el servidor.
                     }
 
                     // Render validation status
@@ -2618,18 +2642,25 @@
                     return dv === calculatedDV;
                 };
 
+                // Helper: convertir serial numérico de Excel a string de fecha.
+                // separator='-' formato canónico DD-MM-YYYY (validación/envío backend).
+                // separator='/' formato legible DD/MM/YYYY (preview del Paso 3).
+                const excelSerialToDateString = (serial, separator = '-') => {
+                    const excelEpoch = new Date(1899, 11, 30);
+                    const date = new Date(excelEpoch.getTime() + serial * 86400000);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}${separator}${month}${separator}${year}`;
+                };
+
                 // Validar fecha DD-MM-YYYY
                 const validateFecha = (fecha) => {
                     if (!fecha) return false;
 
-                    // Si es un número de Excel, convertirlo
+                    // Si es un número de Excel, convertirlo a formato canónico DD-MM-YYYY
                     if (typeof fecha === 'number') {
-                        const excelEpoch = new Date(1899, 11, 30);
-                        const date = new Date(excelEpoch.getTime() + fecha * 86400000);
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const year = date.getFullYear();
-                        fecha = `${day}-${month}-${year}`;
+                        fecha = excelSerialToDateString(fecha, '-');
                     }
 
                     const regex = /^(\d{2})-(\d{2})-(\d{4})$/;
