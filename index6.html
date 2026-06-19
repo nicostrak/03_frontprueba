@@ -143,6 +143,19 @@
             --text-primary: #f5f5f5;
             --text-secondary: #a0a0a0;
             --whatsapp-color: #25D366;
+
+            /* Premium refinement tokens */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+            --radius-2xl: 24px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 14px rgba(0,0,0,0.28), 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.34), 0 4px 8px rgba(0,0,0,0.16);
+            --shadow-glow: 0 0 20px rgba(0, 179, 126, 0.15);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
         }
 
         html {
@@ -153,6 +166,9 @@
             font-family: 'Manrope', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
         /* Utility Classes */
@@ -194,7 +210,6 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -206,42 +221,112 @@
         }
 
         @keyframes pulse-soft {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         /* Buttons */
         .btn {
-            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+                        box-shadow 0.2s ease,
+                        background-color 0.2s ease,
+                        border-color 0.2s ease;
+            will-change: transform;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green) 0%, #00D494 100%);
+            box-shadow: 0 4px 14px rgba(0, 179, 126, 0.35), 0 1px 2px rgba(0,0,0,0.16);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-green-hover) 0%, var(--primary-green) 100%);
+            box-shadow: 0 6px 20px rgba(0, 179, 126, 0.45), 0 2px 4px rgba(0,0,0,0.16);
         }
 
         .btn-secondary {
-            border: 1px solid var(--border-dark);
+            border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.03);
         }
 
         .btn-secondary:hover {
-            background-color: var(--surface-dark);
-            border-color: var(--text-secondary);
+            background-color: rgba(255,255,255,0.08);
+            border-color: var(--border-hover);
         }
 
         #logout-btn:hover {
             background-color: var(--primary-red) !important;
             border-color: var(--primary-red) !important;
+            color: white !important;
+        }
+
+        /* Inputs */
+        input:not([type="checkbox"]):not([type="radio"]),
+        select,
+        textarea {
+            background-color: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):hover,
+        select:hover,
+        textarea:hover {
+            border-color: var(--border-hover);
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(0, 179, 126, 0.15);
+            background-color: rgba(0,0,0,0.35);
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: var(--primary-green);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
         }
 
         /* Modals */
         .modal-container {
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(10px);
             transition: opacity 0.3s ease-in-out;
         }
 
-        .modal-container>div {
+        .modal-container > div {
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             transition: transform 0.3s ease-in-out;
         }
 
@@ -256,65 +341,101 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Sidebar */
         .sidebar-link {
-            transition: background-color 0.2s, color 0.2s;
+            position: relative;
+            border-radius: var(--radius-md);
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
-        .sidebar-link.active,
-        .sidebar-link:hover {
-            background-color: var(--surface-dark);
+        .sidebar-link.active {
+            background: rgba(0, 179, 126, 0.1);
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .sidebar-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 22px;
+            background: var(--primary-green);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-link:hover:not(.active) {
+            background-color: rgba(255,255,255,0.05);
             color: var(--text-primary);
-            border-left: 3px solid var(--primary-green);
         }
 
         /* WhatsApp Button */
         .whatsapp-float {
             position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 30px;
-            right: 30px;
+            width: 56px;
+            height: 56px;
+            bottom: 24px;
+            right: 24px;
             background-color: var(--whatsapp-color);
             color: #FFF;
-            border-radius: 50px;
+            border-radius: 50%;
             text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 3px #999;
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(0,0,0,0.2);
             z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            animation: pulse-soft 2s infinite;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            animation: pulse-whatsapp 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-whatsapp {
+            0%, 100% {
+                box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(0,0,0,0.2);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 8px 28px rgba(37, 211, 102, 0.5), 0 2px 8px rgba(0,0,0,0.2);
+                transform: scale(1.03);
+            }
         }
 
         .whatsapp-float:hover {
             background-color: #1ebe57;
-            transform: scale(1.1);
+            transform: scale(1.08);
+            box-shadow: 0 10px 28px rgba(37, 211, 102, 0.5), 0 4px 10px rgba(0,0,0,0.25);
+        }
+
+        .faq-arrow {
+            transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
         }
 
         .faq-arrow.rotate-180 {
             transform: rotate(180deg);
         }
 
+        .faq-toggle {
+            transition: background-color 0.2s ease;
+        }
+
+        .faq-toggle:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+
         /* Video Modal */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
-            /* 16:9 */
             height: 0;
             overflow: hidden;
-            border-radius: 0.5rem;
+            border-radius: var(--radius-lg);
             background: #000;
         }
 
@@ -337,15 +458,15 @@
         }
 
         .wizard-step-circle {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            border: 2px solid var(--border-dark);
-            background-color: var(--surface-dark);
+            border: 2px solid var(--border-subtle);
+            background-color: rgba(255,255,255,0.03);
             color: var(--text-secondary);
             z-index: 2;
             transition: all 0.3s ease;
@@ -354,6 +475,7 @@
         .wizard-step.active .wizard-step-circle {
             border-color: var(--primary-green);
             color: var(--primary-green);
+            background-color: rgba(0, 179, 126, 0.08);
             box-shadow: 0 0 0 4px rgba(0, 179, 126, 0.1);
         }
 
@@ -382,11 +504,11 @@
 
         .wizard-step-connector {
             position: absolute;
-            top: 24px;
+            top: 22px;
             left: 50%;
             width: 100%;
             height: 2px;
-            background-color: var(--border-dark);
+            background-color: var(--border-subtle);
             z-index: 1;
             transition: background-color 0.3s ease;
         }
@@ -398,33 +520,27 @@
         /* Radio Card Styles */
         .radio-card {
             display: block;
-            /* Asegurar comportamiento de bloque */
             width: 100%;
             position: relative;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
             padding: 24px;
-            background-color: rgba(255, 255, 255, 0.03);
+            background-color: rgba(255, 255, 255, 0.025);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .radio-card:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-hover);
         }
 
         .radio-card.selected {
             border-color: var(--primary-green);
-            background-color: rgba(0, 179, 126, 0.08);
-            /* Fondo más sutil */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            /* Sombra mejorada */
+            background-color: rgba(0, 179, 126, 0.06);
+            box-shadow: 0 0 0 1px var(--primary-green), var(--shadow-glow);
             transform: translateY(-2px);
-            /* Pequeña elevación */
         }
-
-
 
         .radio-card-content {
             display: flex;
@@ -433,22 +549,21 @@
             position: relative;
         }
 
-        /* Radio indicator (círculo) */
         .radio-card-content::before {
             content: '';
             flex-shrink: 0;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            border: 2px solid var(--border-dark);
+            border: 2px solid var(--border-subtle);
             background-color: var(--bg-dark);
             transition: all 0.3s ease;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         .radio-card.selected .radio-card-content::before {
-            border-color: #00a3e0;
-            background-color: #00a3e0;
+            border-color: var(--primary-green);
+            background-color: var(--primary-green);
             box-shadow: inset 0 0 0 4px var(--surface-dark);
         }
 
@@ -458,27 +573,26 @@
             cursor: pointer;
         }
 
-
-
         /* Drag and Drop Zone */
         .drop-zone {
-            border: 2px dashed var(--border-dark);
-            border-radius: 12px;
-            padding: 40px 20px;
+            border: 2px dashed var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 48px 24px;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
-            background-color: var(--surface-dark);
+            background-color: rgba(255,255,255,0.02);
         }
 
         .drop-zone:hover,
         .drop-zone.drag-over {
             border-color: var(--primary-green);
             background-color: rgba(0, 179, 126, 0.05);
+            box-shadow: var(--shadow-glow);
         }
 
         .drop-zone.drag-over {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         /* Step Content Animation */
@@ -491,7 +605,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -501,15 +614,15 @@
         /* Toast Notification */
         .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            border-radius: 8px;
+            top: 24px;
+            right: 24px;
+            padding: 14px 22px;
+            border-radius: var(--radius-lg);
             color: white;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-lg);
             z-index: 1000;
-            animation: slideInRight 0.3s ease-out;
+            animation: slideInRight 0.35s cubic-bezier(0.2, 0, 0, 1);
         }
 
         .toast.success {
@@ -522,21 +635,35 @@
 
         @keyframes slideInRight {
             from {
-                transform: translateX(400px);
+                transform: translateX(120%);
                 opacity: 0;
             }
-
             to {
                 transform: translateX(0);
                 opacity: 1;
             }
         }
 
+        /* Tables */
+        table {
+            border-collapse: collapse;
+        }
+        table th, table td {
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        table tbody tr:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
         /* Neon Glow Pulse - Video Tutorial Button */
         @keyframes pulse-glow-neon {
-
-            0%,
-            100% {
+            0%, 100% {
                 box-shadow:
                     0 0 4px 1px rgba(0, 179, 126, 0.55),
                     0 0 12px 3px rgba(0, 179, 126, 0.35),
@@ -544,14 +671,13 @@
                 transform: scale(1);
                 filter: brightness(1);
             }
-
             50% {
                 box-shadow:
                     0 0 6px 2px rgba(0, 179, 126, 0.85),
                     0 0 22px 6px rgba(0, 179, 126, 0.55),
                     0 0 38px 12px rgba(0, 179, 126, 0.3);
-                transform: scale(1.025);
-                filter: brightness(1.1);
+                transform: scale(1.02);
+                filter: brightness(1.08);
             }
         }
 
@@ -566,7 +692,7 @@
             font-weight: 800;
             letter-spacing: 0.02em;
             border: 1px solid rgba(0, 179, 126, 0.6);
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             padding: 12px 16px;
             width: 100%;
             text-decoration: none;
@@ -587,7 +713,7 @@
 
         .btn-video-tutorial:hover {
             background: linear-gradient(135deg, #00996A 0%, #00B37E 100%);
-            transform: scale(1.04);
+            transform: scale(1.03);
             box-shadow:
                 0 0 8px 2px rgba(0, 179, 126, 0.9),
                 0 0 28px 8px rgba(0, 179, 126, 0.55);
@@ -604,6 +730,31 @@
 
         .btn-video-tutorial svg {
             flex-shrink: 0;
+        }
+
+        /* Hero subtle glow */
+        .hero-glow {
+            background: radial-gradient(circle at 50% 30%, rgba(0, 179, 126, 0.10), transparent 60%);
+        }
+
+        /* Subtle section dividers */
+        .section-divider {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* Focus rings for accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -622,7 +773,7 @@
     <main id="landing-page" class="w-full flex flex-col min-h-screen">
         <div class="flex-grow">
             <!-- Header -->
-            <header class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-lg border-b border-dark">
+            <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
                 <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
                     <a href="#" class="text-2xl font-bold text-white flex items-center gap-2">
                         <svg class="w-8 h-8 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -633,23 +784,23 @@
                         Boleta<span class="text-primary-green">Pro</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-8">
-                        <a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a>
+                        <a href="#features" class="text-gray-400 hover:text-white transition-colors">Funcionalidades</a>
 
-                        <a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
+                        <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="login-btn"
-                            class="btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Iniciar
+                            class="btn btn-secondary text-white px-4 py-2 rounded-lg font-semibold text-sm">Iniciar
                             Sesión</button>
                         <button id="signup-btn"
-                            class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold text-sm bg-primary-green-hover">Crear
+                            class="btn btn-primary text-white px-4 py-2 rounded-lg font-semibold text-sm">Crear
                             Cuenta</button>
                     </div>
                 </nav>
             </header>
 
             <!-- Hero Section -->
-            <section class="container mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
+            <section class="container mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center hero-glow">
                 <div class="max-w-4xl mx-auto">
                     <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 fade-in">
                         Automatiza tus Boletas de Honorarios <span class="text-primary-green">Sin Estrés</span>
@@ -659,9 +810,9 @@
                         boletas ante el SII en segundos. Sin códigos complejos, solo resultados.
                     </p>
                     <div class="flex justify-center space-x-4 fade-in">
-                        <!-- <a href="#pricing" class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover transform hover:-translate-y-1 transition duration-300">Empieza Gratis</a> -->
+                        <!-- <a href="#pricing" class="btn btn-primary text-white px-8 py-3 rounded-lg font-bold text-lg">Empieza Gratis</a> -->
                         <a href="#features"
-                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-gray-800">¿Cómo
+                            class="btn btn-secondary text-white px-8 py-3 rounded-lg font-bold text-lg">¿Cómo
                             Funciona?</a>
                     </div>
                 </div>
@@ -669,7 +820,7 @@
                 <div class="mt-16 fade-in relative max-w-4xl mx-auto">
                     <div class="absolute inset-0 bg-primary-green opacity-10 blur-3xl rounded-full"></div>
                     <div
-                        class="relative bg-surface-dark border border-dark rounded-xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-around gap-8">
+                        class="relative bg-surface-dark border border-white/5 rounded-2xl p-8 shadow-2xl shadow-black/40 flex flex-col md:flex-row items-center justify-around gap-8">
                         <div class="text-center md:text-left">
                             <h3 class="text-2xl font-bold text-white mb-2">1. Carga tu Excel</h3>
                             <p class="text-gray-400">Sube tus destinatarios en un archivo simple.</p>
@@ -706,9 +857,9 @@
                         Enfócate en tu trabajo mientras nosotros gestionamos la burocracia.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="card p-8 hover:border-primary-green/50">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                class="text-primary-green mb-5 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-inner shadow-black/20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -720,9 +871,9 @@
                                 café.</p>
                         </div>
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="card p-8 hover:border-primary-green/50">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                class="text-primary-green mb-5 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-inner shadow-black/20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -734,9 +885,9 @@
                                 digitación.</p>
                         </div>
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="card p-8 hover:border-primary-green/50">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                                class="text-primary-green mb-5 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-inner shadow-black/20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -781,7 +932,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>Soporte por WhatsApp</li>
                             </ul>
-                            <button class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm"
+                            <button class="w-full btn btn-secondary text-white py-2 rounded-lg font-bold text-sm"
                                 onclick="document.getElementById('signup-btn').click()">Crear Cuenta</button>
                         </div> -->
 
@@ -813,7 +964,7 @@
                                     </svg>Historial de 3 meses</li>
                             </ul>
                             <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Básico" target="_blank"
-                                class="w-full btn bg-primary-green text-white py-2 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
+                                class="w-full btn btn-primary text-white py-2 rounded-lg font-bold text-sm text-center">Contratar</a>
                         </div> -->
 
             <!-- Plan Avanzado -->
@@ -888,7 +1039,7 @@
                         boletas de honorarios.</p>
                 </div>
                 <div class="max-w-3xl mx-auto space-y-4" itemscope itemtype="https://schema.org/FAQPage">
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
+                    <div class="card overflow-hidden" itemprop="mainEntity"
                         itemscope itemtype="https://schema.org/Question">
                         <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
                             onclick="toggleFaq(this)">
@@ -908,7 +1059,7 @@
                                 la recibe justificar un gasto y retener el 15,25% de impuesto.</p>
                         </div>
                     </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
+                    <div class="card overflow-hidden" itemprop="mainEntity"
                         itemscope itemtype="https://schema.org/Question">
                         <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
                             onclick="toggleFaq(this)">
@@ -929,7 +1080,7 @@
                                 consultora que emite boletas a nombre de sus consultores independientes.</p>
                         </div>
                     </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
+                    <div class="card overflow-hidden" itemprop="mainEntity"
                         itemscope itemtype="https://schema.org/Question">
                         <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
                             onclick="toggleFaq(this)">
@@ -949,7 +1100,7 @@
                                 nuestros servidores.</p>
                         </div>
                     </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
+                    <div class="card overflow-hidden" itemprop="mainEntity"
                         itemscope itemtype="https://schema.org/Question">
                         <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
                             onclick="toggleFaq(this)">
@@ -975,7 +1126,7 @@
 
         </div>
         <!-- Footer -->
-        <footer class="bg-surface-dark border-t border-dark">
+        <footer class="bg-surface-dark border-t border-white/5">
             <div class="container mx-auto px-6 py-8 text-center text-gray-400">
                 <p>&copy; 2026 BoletaPro. Todos los derechos reservados.</p>
                 <div class="mt-4 flex justify-center space-x-6 text-sm">
@@ -992,9 +1143,9 @@
 
     <!-- ======== LOGIN/SIGNUP SECTION ======== -->
     <section id="auth-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        class="modal-container fixed inset-0 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="auth-modal"
-            class="bg-surface-dark w-full max-w-md p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            class="bg-surface-dark w-full max-w-md p-8 rounded-xl border border-white/10 shadow-2xl transform scale-95">
             <!-- Login View -->
             <div id="login-view">
                 <div class="flex justify-between items-center mb-6">
@@ -1008,13 +1159,13 @@
                     <div class="mb-4">
                         <label for="login-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label>
                         <input type="email" id="login-email" required
-                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            class="w-full p-3 text-white">
                     </div>
                     <div class="mb-6">
                         <label for="login-password"
                             class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label>
                         <input type="password" id="login-password" required
-                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            class="w-full p-3 text-white">
                     </div>
                     <div class="flex justify-between items-center mb-6">
                         <a href="forgot-password.html"
@@ -1022,7 +1173,7 @@
                             contraseña?</a>
                     </div>
                     <button type="submit"
-                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Ingresar</button>
+                        class="w-full btn btn-primary text-white py-3 rounded-lg font-bold flex justify-center items-center">Ingresar</button>
                 </form>
                 <p class="text-center text-sm text-gray-400 mt-6">¿No tienes cuenta? <button id="show-signup-view"
                         class="font-semibold text-primary-green hover:underline">Regístrate</button></p>
@@ -1043,25 +1194,25 @@
                     <div class="mb-4">
                         <label for="signup-email" class="block text-sm font-medium text-gray-400 mb-2">Email</label>
                         <input type="email" id="signup-email" required
-                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            class="w-full p-3 text-white">
                     </div>
                     <div class="mb-4">
                         <label for="signup-password"
                             class="block text-sm font-medium text-gray-400 mb-2">Contraseña</label>
                         <input type="password" id="signup-password" required
-                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            class="w-full p-3 text-white">
                     </div>
                     <div class="mb-4">
                         <label for="signup-confirm-password"
                             class="block text-sm font-medium text-gray-400 mb-2">Confirmar Contraseña</label>
                         <input type="password" id="signup-confirm-password" required
-                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            class="w-full p-3 text-white">
                     </div>
                     <!-- T&C Checkbox -->
                     <div class="mb-6 flex items-start">
                         <div class="flex items-center h-5">
                             <input id="terms" name="terms" type="checkbox" required
-                                class="w-4 h-4 bg-gray-900 border border-dark rounded focus:ring-primary-green text-primary-green">
+                                class="w-4 h-4 rounded focus:ring-primary-green text-primary-green">
                         </div>
                         <div class="ml-3 text-sm">
                             <label for="terms" class="font-medium text-gray-400">Acepto los <a href="terminos.html"
@@ -1072,7 +1223,7 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Crear
+                        class="w-full btn btn-primary text-white py-3 rounded-lg font-bold flex justify-center items-center">Crear
                         Cuenta</button>
                 </form>
                 <p class="text-center text-sm text-gray-400 mt-6">¿Ya tienes cuenta? <button id="show-login-view"
@@ -1083,14 +1234,14 @@
 
     <!-- ======== TUTORIAL MODAL (NEW) ======== -->
     <section id="tutorial-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-90 z-[60] flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        class="modal-container fixed inset-0 z-[60] flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="tutorial-modal"
-            class="bg-surface-dark w-full max-w-4xl p-6 rounded-lg border border-dark shadow-2xl transform scale-95 flex flex-col">
+            class="bg-surface-dark w-full max-w-4xl p-6 rounded-xl border border-white/10 shadow-2xl transform scale-95 flex flex-col">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-white">🎬 Video Tutorial - Aprende a usar BoletaPro</h2>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2"><svg class="w-6 h-6 text-primary-green" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52-.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg> Video Tutorial - Aprende a usar BoletaPro</h2>
                 <button id="close-tutorial-modal-btn" class="text-gray-500 hover:text-white text-3xl">&times;</button>
             </div>
-            <div class="video-container mb-6 bg-black rounded-lg border border-dark">
+            <div class="video-container mb-6 bg-black rounded-xl border border-white/5">
                 <iframe src="https://www.youtube.com/embed/uFF5wq_MXw8?rel=0&modestbranding=1"
                     title="Video Tutorial BoletaPro"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1098,7 +1249,7 @@
             </div>
             <div class="flex justify-end">
                 <button id="finish-tutorial-btn"
-                    class="btn bg-primary-green text-white px-6 py-2 rounded-md font-bold bg-primary-green-hover">¡Entendido,
+                    class="btn btn-primary text-white px-6 py-2 rounded-lg font-bold">¡Entendido,
                     vamos!</button>
             </div>
         </div>
@@ -1110,7 +1261,7 @@
         <div class="flex h-screen">
             <!-- Sidebar -->
             <aside id="sidebar"
-                class="bg-surface-dark w-64 flex-shrink-0 border-r border-dark p-4 flex flex-col fixed lg:relative h-full lg:h-auto -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+                class="bg-surface-dark w-64 flex-shrink-0 border-r border-white/5 p-4 flex flex-col fixed lg:relative h-full lg:h-auto -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
                 <a href="#" class="text-2xl font-bold text-white mb-8 block flex items-center gap-2">
                     <svg class="w-6 h-6 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1121,7 +1272,7 @@
                 </a>
                 <nav class="flex flex-col space-y-2">
                     <a href="#dashboard" data-view="dashboard-view"
-                        class="sidebar-link active flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        class="sidebar-link active flex items-center p-3 rounded-lg text-gray-400 font-semibold">
                         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
@@ -1130,7 +1281,7 @@
                         Resumen
                     </a>
                     <a href="#api-explorer" data-view="api-explorer-view"
-                        class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        class="sidebar-link flex items-center p-3 rounded-lg text-gray-400 font-semibold">
                         <!-- ICONO ACTUALIZADO: Documento/Factura -->
                         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1140,7 +1291,7 @@
                         Emitir Boletas
                     </a>
                     <a href="#settings" data-view="settings-view"
-                        class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        class="sidebar-link flex items-center p-3 rounded-lg text-gray-400 font-semibold">
                         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
@@ -1163,7 +1314,7 @@
                         <span>Ver Video Tutorial</span>
                     </a>
                     <button id="logout-btn"
-                        class="w-full btn btn-secondary text-white px-4 py-2 rounded-md font-semibold">Cerrar
+                        class="w-full btn btn-secondary text-white px-4 py-2 rounded-lg font-semibold">Cerrar
                         Sesión</button>
                 </div>
             </aside>
@@ -1171,7 +1322,7 @@
             <!-- Main Content -->
             <div class="flex-1 flex flex-col">
                 <!-- Top bar -->
-                <header class="bg-surface-dark border-b border-dark flex justify-between items-center p-4 lg:hidden">
+                <header class="bg-surface-dark/95 backdrop-blur border-b border-white/5 flex justify-between items-center p-4 lg:hidden">
                     <button id="menu-toggle-btn" class="text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1194,7 +1345,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                            <div class="bg-surface-dark p-4 rounded-lg border border-dark">
+                            <div class="card p-4">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-4">Limite Total Plan</h3>
                                 <div id="consumption-container" class="space-y-4">
                                     <!-- Datos de consumo se cargarán aquí -->
@@ -1203,7 +1354,7 @@
 
                             <!-- NUEVA TARJETA BHE -->
                             <div
-                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
+                                class="card p-4 flex flex-col justify-between">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Propias (BHE)</h3>
                                 <div class="mt-auto">
                                     <span id="bhe-count-display" class="text-4xl font-bold text-primary-green">0</span>
@@ -1214,7 +1365,7 @@
 
                             <!-- NUEVA TARJETA BHT -->
                             <div
-                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
+                                class="card p-4 flex flex-col justify-between">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Terceros (BHT)</h3>
                                 <div class="mt-auto">
                                     <span id="bht-count-display" class="text-4xl font-bold text-primary-green">0</span>
@@ -1224,11 +1375,11 @@
                             </div>
 
                             <div
-                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
+                                class="card p-4 flex flex-col justify-center items-center text-center">
                                 <h3 class="text-lg font-semibold text-white mb-2">¿Necesitas ayuda?</h3>
                                 <p class="text-gray-400 text-sm mb-2">Contacta a nuestro soporte especializado.</p>
                                 <a href="https://wa.me/56938859332" target="_blank"
-                                    class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                    class="btn btn-primary text-white px-4 py-2 rounded-lg font-semibold">
                                     Chat Soporte WhatsApp
                                 </a>
                             </div>
@@ -1237,7 +1388,7 @@
                         <div class="flex items-center gap-3 mb-4">
                             <h3 class="text-2xl font-bold text-white">Historial de Boletas</h3>
                             <button id="refresh-history-btn" type="button" title="Actualizar historial"
-                                class="btn flex items-center gap-2 bg-primary-green text-white px-3 py-1.5 rounded-md font-semibold text-sm bg-primary-green-hover shadow-md shadow-green-900/30">
+                                class="btn btn-primary flex items-center gap-2 text-white px-3 py-1.5 rounded-lg font-semibold text-sm shadow-md shadow-green-900/30">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -1246,9 +1397,9 @@
                                 <span>Actualizar</span>
                             </button>
                         </div>
-                        <div class="bg-surface-dark rounded-lg border border-dark overflow-hidden">
+                        <div class="card overflow-hidden">
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left">
+                                <table class="w-full text-left border-collapse">
                                     <thead>
                                         <tr class="border-b border-dark">
                                             <th class="p-4 font-semibold text-gray-400"
@@ -1267,11 +1418,11 @@
                                 </table>
                             </div>
                             <div id="pagination-controls"
-                                class="flex items-center justify-between p-4 border-t border-dark">
+                                class="flex items-center justify-between p-4 border-t border-white/5">
                                 <div class="flex items-center space-x-2">
                                     <label for="page-size-select" class="text-sm text-gray-400">Mostrar:</label>
                                     <select id="page-size-select"
-                                        class="bg-gray-900 border border-dark rounded-md p-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                        class="p-1 text-sm text-white">
                                         <option value="5">5</option>
                                         <option value="10">10</option>
                                         <option value="20">20</option>
@@ -1279,10 +1430,10 @@
                                 </div>
                                 <div class="flex items-center space-x-4">
                                     <button id="prev-page-btn"
-                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Anterior</button>
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-lg font-semibold text-sm">Anterior</button>
                                     <span id="page-indicator" class="text-sm text-gray-400"></span>
                                     <button id="next-page-btn"
-                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Siguiente</button>
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-lg font-semibold text-sm">Siguiente</button>
                                 </div>
                             </div>
                         </div>
@@ -1324,7 +1475,7 @@
                         </div>
 
                         <!-- Wizard Content Container -->
-                        <div class="bg-surface-dark rounded-xl border border-dark p-8 max-w-4xl mx-auto">
+                        <div class="bg-surface-dark rounded-2xl border border-white/5 p-8 max-w-4xl mx-auto shadow-xl shadow-black/40">
 
                             <!-- PASO 1: Tipo de Boleta -->
                             <div id="wizard-step-1" class="wizard-content">
@@ -1377,7 +1528,7 @@
 
                                 <div class="flex justify-end mt-8">
                                     <button id="btn-step1-next" disabled
-                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
+                                        class="btn bg-gray-700 text-white px-8 py-3 rounded-lg font-bold cursor-not-allowed opacity-70">
                                         Siguiente
                                     </button>
                                 </div>
@@ -1389,7 +1540,7 @@
 
                                 <!-- Plantilla de descarga (solo para BHE) -->
                                 <div id="plantilla-bhe-info"
-                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
+                                    class="hidden mb-4 bg-black/20 p-4 rounded-lg border border-white/5">
                                     <div class="flex justify-between items-center mb-2">
                                         <h4 class="text-sm font-medium text-white">Plantilla BHE</h4>
                                         <a href="Plantillas_boletas_honorarios_propias.xlsm"
@@ -1410,7 +1561,7 @@
 
                                 <!-- Plantilla de descarga (solo para BHT) -->
                                 <div id="plantilla-bht-info"
-                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
+                                    class="hidden mb-4 bg-black/20 p-4 rounded-lg border border-white/5">
                                     <div class="flex justify-between items-center mb-2">
                                         <h4 class="text-sm font-medium text-white">Plantilla BHT</h4>
                                         <a href="Plantilla_honorarios_de_terceros.xlsm"
@@ -1470,11 +1621,11 @@
 
                                 <div class="flex justify-between mt-8">
                                     <button id="btn-step2-back"
-                                        class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                        class="btn btn-secondary text-white px-8 py-3 rounded-lg font-bold">
                                         Atrás
                                     </button>
                                     <button id="btn-step2-next" disabled
-                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
+                                        class="btn bg-gray-700 text-white px-8 py-3 rounded-lg font-bold cursor-not-allowed opacity-70">
                                         Siguiente
                                     </button>
                                 </div>
@@ -1490,7 +1641,7 @@
                                 </div>
 
                                 <!-- Preview Table -->
-                                <div class="overflow-x-auto mb-6 border border-dark rounded-lg">
+                                <div class="overflow-x-auto mb-6 border border-white/5 rounded-xl">
                                     <table id="preview-table" class="w-full text-left text-sm">
                                         <thead class="bg-gray-900/50">
                                             <!-- Headers se llenarán dinámicamente -->
@@ -1506,11 +1657,11 @@
 
                                 <div class="flex justify-between">
                                     <button id="btn-step3-back"
-                                        class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                        class="btn btn-secondary text-white px-8 py-3 rounded-lg font-bold">
                                         Atrás
                                     </button>
                                     <button id="btn-step3-next" disabled
-                                        class="btn bg-gray-600 text-white px-8 py-3 rounded-md font-bold cursor-not-allowed">
+                                        class="btn bg-gray-700 text-white px-8 py-3 rounded-lg font-bold cursor-not-allowed opacity-70">
                                         Confirmar
                                     </button>
                                 </div>
@@ -1526,7 +1677,7 @@
                                             Emisor</label>
                                         <input type="text" id="wizard-rut" name="rut" placeholder="11.111.111-1"
                                             required
-                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                            class="w-full p-3 text-white">
                                     </div>
 
                                     <div>
@@ -1534,7 +1685,7 @@
                                             class="block text-sm font-medium text-gray-400 mb-2">Clave SII</label>
                                         <input type="password" id="wizard-clave" name="clave" placeholder="••••••••"
                                             required
-                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                            class="w-full p-3 text-white">
                                     </div>
 
                                     <div id="wizard-muestra-glosa-container">
@@ -1544,12 +1695,12 @@
                                         <div class="flex gap-4">
                                             <label class="flex items-center cursor-pointer">
                                                 <input type="radio" name="hdn_muestra_glosa" value="si" checked
-                                                    class="w-4 h-4 bg-gray-900 border border-dark rounded focus:ring-primary-green text-primary-green">
+                                                    class="w-4 h-4 rounded focus:ring-primary-green text-primary-green">
                                                 <span class="ml-2 text-sm text-gray-300">Si</span>
                                             </label>
                                             <label class="flex items-center cursor-pointer">
                                                 <input type="radio" name="hdn_muestra_glosa" value="no"
-                                                    class="w-4 h-4 bg-gray-900 border border-dark rounded focus:ring-primary-green text-primary-green">
+                                                    class="w-4 h-4 rounded focus:ring-primary-green text-primary-green">
                                                 <span class="ml-2 text-sm text-gray-300">No</span>
                                             </label>
                                         </div>
@@ -1561,7 +1712,7 @@
                                             class="block text-sm font-medium text-gray-400 mb-2">Tipo de
                                             Retención</label>
                                         <select id="wizard-tipo-retencion" name="tipo_retencion"
-                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                            class="w-full p-3 text-white">
                                             <option value="Receptor" selected>Retiene el Receptor (Empresa)</option>
                                             <option value="Emisor">Retiene el Emisor (Yo)</option>
                                         </select>
@@ -1569,11 +1720,11 @@
 
                                     <div class="flex justify-between items-center pt-4">
                                         <button type="button" id="btn-step4-back"
-                                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold">
+                                            class="btn btn-secondary text-white px-8 py-3 rounded-lg font-bold">
                                             Atrás
                                         </button>
                                         <button type="submit" id="btn-emit-now"
-                                            class="btn bg-primary-green text-white px-12 py-3 rounded-md font-bold text-lg bg-primary-green-hover shadow-lg shadow-green-900/50">
+                                            class="btn btn-primary text-white px-12 py-3 rounded-lg font-bold text-lg shadow-lg shadow-green-900/40">
                                             EMITIR AHORA
                                         </button>
                                     </div>
@@ -1592,7 +1743,7 @@
                     <div id="settings-view" class="dashboard-view hidden">
                         <h2 class="text-4xl font-bold text-white mb-8">Configuración</h2>
                         <div class="space-y-8">
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                            <div class="card p-6">
                                 <h3 class="text-xl font-bold text-white mb-4">Mi Perfil</h3>
                                 <div class="space-y-4">
                                     <div>
@@ -1600,7 +1751,7 @@
                                             class="block text-sm font-medium text-gray-400 mb-1">Email
                                             Registrado</label>
                                         <input type="email" id="profile-email" value="" disabled
-                                            class="w-full md:w-1/2 p-2 bg-gray-800 border-dark rounded-md text-gray-500 cursor-not-allowed">
+                                            class="w-full md:w-1/2 p-2 text-gray-500 cursor-not-allowed">
                                     </div>
                                     <!-- "Guardar Cambios" BUTTON REMOVED -->
                                 </div>
@@ -1608,7 +1759,7 @@
 
                             <!-- API KEY SECTION REMOVED FOR USER PRIVACY -->
 
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                            <div class="card p-6">
                                 <h3 class="text-xl font-bold text-white mb-4">Plan y Facturación</h3>
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                                     <div class="mb-4 md:mb-0">
@@ -1619,7 +1770,7 @@
                                     </div>
                                     <a href="https://wa.me/56938859332?text=Hola,%20quisiera%20mejorar%20mi%20plan%20en%20BoletaPro"
                                         target="_blank"
-                                        class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center gap-2">
+                                        class="btn btn-primary text-white px-5 py-2 rounded-lg font-semibold flex items-center gap-2">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
                                             <path
                                                 d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326z" />
@@ -1629,12 +1780,12 @@
                                 </div>
                             </div>
 
-                            <div class="bg-surface-dark p-6 rounded-lg border border-red-500/30">
+                            <div class="bg-surface-dark p-6 rounded-xl border border-red-500/30 shadow-sm">
                                 <h3 class="text-xl font-bold text-red-500 mb-2">Zona de Peligro</h3>
                                 <p class="text-gray-400 mb-4 text-sm">Eliminar tu cuenta borrará todo tu historial de
                                     boletas emitidas.</p>
                                 <button id="delete-account-btn"
-                                    class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold text-sm">Eliminar
+                                    class="btn btn-danger text-white px-5 py-2 rounded-lg font-semibold text-sm">Eliminar
                                     mi Cuenta</button>
                             </div>
                         </div>
@@ -1642,7 +1793,7 @@
                 </div>
 
                 <!-- Footer for Dashboard -->
-                <footer class="bg-surface-dark border-t border-dark mt-auto">
+                <footer class="bg-surface-dark border-t border-white/5 mt-auto">
                     <div class="container mx-auto px-6 py-4 text-center text-gray-400 text-sm">
                         <p>&copy; 2026 BoletaPro.</p>
                     </div>
@@ -1653,9 +1804,9 @@
 
     <!-- ======== MODALS ======== -->
     <section id="error-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        class="modal-container fixed inset-0 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="error-modal"
-            class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            class="bg-surface-dark w-full max-w-lg p-8 rounded-xl border border-white/10 shadow-2xl transform scale-95">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-white">Detalle del Error</h2><button id="close-error-modal"
                     class="text-gray-500 hover:text-white text-2xl">&times;</button>
@@ -1665,15 +1816,15 @@
     </section>
 
     <section id="delete-confirm-modal-section"
-        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        class="modal-container fixed inset-0 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="delete-confirm-modal"
-            class="bg-surface-dark w-full max-w-lg p-8 rounded-lg border border-dark shadow-2xl transform scale-95">
+            class="bg-surface-dark w-full max-w-lg p-8 rounded-xl border border-white/10 shadow-2xl transform scale-95">
             <h2 class="text-2xl font-bold text-red-500 mb-4">¿Estás seguro?</h2>
             <p class="text-gray-400 mb-6">Esta acción es irreversible.</p>
             <div class="flex justify-end space-x-4">
                 <button id="cancel-delete-btn"
-                    class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
-                <button id="confirm-delete-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí,
+                    class="btn btn-secondary text-white px-5 py-2 rounded-lg font-semibold">Cancelar</button>
+                <button id="confirm-delete-btn" class="btn btn-danger text-white px-5 py-2 rounded-lg font-semibold">Sí,
                     eliminar</button>
             </div>
         </div>
@@ -2795,7 +2946,7 @@
                                     <h4 class="text-2xl font-bold text-primary-green mb-2">¡Emisión Exitosa!</h4>
                                     <p class="text-gray-400">Tu archivo ZIP se ha descargado automáticamente.</p>
                                     <button type="button" id="btn-go-to-history"
-                                        class="btn w-full mt-6 bg-primary-green text-white py-4 px-6 rounded-md font-bold text-base bg-primary-green-hover flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
+                                        class="btn btn-primary w-full mt-6 text-white py-4 px-6 rounded-lg font-bold text-base flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                                         </svg>
@@ -2844,7 +2995,7 @@
                                         Puedes cerrar esta ventana. El proceso continuará automáticamente y aparecerá en tu historial cuando termine.
                                     </p>
                                     <button type="button" id="btn-go-to-history"
-                                        class="btn w-full mt-6 bg-primary-green text-white py-4 px-6 rounded-md font-bold text-base bg-primary-green-hover flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
+                                        class="btn btn-primary w-full mt-6 text-white py-4 px-6 rounded-lg font-bold text-base flex items-center justify-center gap-3 shadow-lg shadow-green-900/40">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                                         </svg>
