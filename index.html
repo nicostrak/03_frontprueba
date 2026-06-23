@@ -56,10 +56,10 @@
       "inLanguage": "es-CL",
       "offers": {
         "@type": "AggregateOffer",
-        "lowPrice": "0",
-        "highPrice": "34990",
-        "priceCurrency": "CLP",
-        "offerCount": "4"
+      "lowPrice": "0",
+      "highPrice": "44990",
+      "priceCurrency": "CLP",
+      "offerCount": "5"
       }
     }
     </script>
@@ -68,6 +68,14 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cómo funcionan los planes de BoletaPro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los planes son mensuales y consideran un cierto número de boletas para emitir que se renueva cada mes. No hay contratos ni ataduras de por medio."
+          }
+        },
         {
           "@type": "Question",
           "name": "¿Qué es una Boleta de Honorarios Electrónica (BHE)?",
@@ -119,10 +127,12 @@
     }
     </script>
 
-    <!-- Google Fonts: Manrope -->
+    <!-- Google Fonts: Manrope + Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -143,6 +153,10 @@
             --text-primary: #f5f5f5;
             --text-secondary: #a0a0a0;
             --whatsapp-color: #25D366;
+            --accent-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --gradient-hero: radial-gradient(ellipse 80% 50% at 75% 20%, rgba(0, 179, 126, 0.18), transparent 60%);
+            --gradient-cta: linear-gradient(135deg, rgba(0, 179, 126, 0.12) 0%, rgba(0, 179, 126, 0.04) 100%);
+            --gradient-sii-band: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%);
         }
 
         html {
@@ -605,6 +619,584 @@
         .btn-video-tutorial svg {
             flex-shrink: 0;
         }
+
+        /* ===== NEW: Landing v7 styles ===== */
+
+        .font-mono-accent {
+            font-family: var(--accent-mono);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .heading-balance {
+            text-wrap: balance;
+            letter-spacing: -0.025em;
+        }
+
+        /* Hero background with grid + gradient */
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 32px 32px;
+            mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000 30%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-hero);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-bg>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Reveal animations (IntersectionObserver) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0, 0, 1), transform 0.8s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger>* {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s cubic-bezier(0.2, 0, 0, 1), transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .reveal-stagger.in-view>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger.in-view>*:nth-child(1) {
+            transition-delay: 0ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(2) {
+            transition-delay: 100ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(3) {
+            transition-delay: 200ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(4) {
+            transition-delay: 300ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(5) {
+            transition-delay: 400ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(6) {
+            transition-delay: 500ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(7) {
+            transition-delay: 600ms;
+        }
+
+        .reveal-stagger.in-view>*:nth-child(8) {
+            transition-delay: 700ms;
+        }
+
+        /* SII badge pill */
+        .sii-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px 6px 8px;
+            background: rgba(0, 179, 126, 0.08);
+            border: 1px solid rgba(0, 179, 126, 0.25);
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #d4f4e6;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .sii-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            box-shadow: 0 0 0 0 rgba(0, 179, 126, 0.6);
+            animation: dot-pulse 2s infinite;
+        }
+
+        @keyframes dot-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 179, 126, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 179, 126, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 179, 126, 0);
+            }
+        }
+
+        /* Boleta mockup card */
+        .boleta-mockup {
+            position: relative;
+            background: linear-gradient(160deg, #1f1f1f 0%, #161616 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+            animation: drop-in 0.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+            opacity: 0;
+        }
+
+        @keyframes drop-in {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .boleta-mockup::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(0, 179, 126, 0.4), transparent 40%, transparent 60%, rgba(0, 179, 126, 0.2));
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .boleta-emitida-badge {
+            position: absolute;
+            top: -14px;
+            right: 24px;
+            background: var(--primary-green);
+            color: #061a13;
+            font-family: var(--accent-mono);
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+            box-shadow: 0 0 20px rgba(0, 179, 126, 0.5);
+            animation: pulse-soft 2.4s infinite;
+        }
+
+        /* Step cards (3-step "Cómo funciona") */
+        .step-card {
+            position: relative;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 28px 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 179, 126, 0.4);
+            box-shadow: 0 20px 40px -20px rgba(0, 179, 126, 0.2);
+        }
+
+        .step-card .step-number {
+            font-family: var(--accent-mono);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            line-height: 1;
+            transition: color 0.3s ease, background 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            border: 1px solid var(--border-dark);
+            background: var(--bg-dark);
+        }
+
+        .step-card:hover .step-number {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        /* Step icon containers (logos for steps 1-3) */
+        .step-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            width: 96px;
+            height: 96px;
+            margin: 0 auto;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .step-card:hover .step-icon {
+            transform: scale(1.08);
+            filter: drop-shadow(0 8px 24px rgba(0, 179, 126, 0.45));
+        }
+
+        .step-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 40px;
+            height: 2px;
+            background: var(--border-dark);
+            z-index: 1;
+            transform: translateY(-50%);
+            overflow: hidden;
+        }
+
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.8s ease 0.3s;
+        }
+
+        .step-card.in-view .step-connector::after,
+        .reveal-stagger.in-view .step-card .step-connector::after {
+            transform: translateX(100%);
+        }
+
+        @media (max-width: 768px) {
+            .step-connector {
+                display: none;
+            }
+        }
+
+        /* SII institutional band */
+        .sii-band {
+            background: var(--gradient-sii-band);
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* BHE/BHT flip cards */
+        .flip-card {
+            perspective: 1000px;
+            min-height: 320px;
+            cursor: pointer;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+            transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-inner {
+            transform: rotateY(5deg) rotateX(-2deg);
+        }
+
+        .flip-card.flipped .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front,
+        .flip-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 18px;
+            padding: 28px;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+        }
+
+        .flip-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(160deg, rgba(0, 179, 126, 0.06), var(--surface-dark));
+            border-color: rgba(0, 179, 126, 0.25);
+        }
+
+        /* Use case avatar cards */
+        .uc-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            text-align: center;
+        }
+
+        .uc-avatar:hover {
+            transform: translateY(-3px);
+            background: rgba(0, 179, 126, 0.05);
+            border-color: rgba(0, 179, 126, 0.25);
+        }
+
+        .uc-avatar .uc-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(160deg, rgba(0, 179, 126, 0.15), rgba(0, 179, 126, 0.04));
+            color: var(--primary-green);
+            border: 1px solid rgba(0, 179, 126, 0.2);
+        }
+
+        .uc-avatar .uc-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Terminal demo */
+        .terminal {
+            background: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            border-radius: 14px;
+            overflow: hidden;
+            font-family: var(--accent-mono);
+            font-size: 0.875rem;
+            line-height: 1.7;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #161616;
+            border-bottom: 1px solid #1f1f1f;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.r {
+            background: #ff5f57;
+        }
+
+        .terminal-dot.y {
+            background: #febc2e;
+        }
+
+        .terminal-dot.g {
+            background: #28c840;
+        }
+
+        .terminal-title {
+            color: #6a6a6a;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .terminal-body {
+            padding: 20px 22px;
+            color: #cfcfcf;
+        }
+
+        .terminal-line {
+            opacity: 0;
+            animation: terminal-fade 0.4s ease forwards;
+        }
+
+        .terminal-line .prompt {
+            color: var(--primary-green);
+        }
+
+        .terminal-line .ok {
+            color: var(--primary-green);
+        }
+
+        .terminal-line .muted {
+            color: #6a6a6a;
+        }
+
+        .terminal-line:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        .terminal-line:nth-child(2) {
+            animation-delay: 1.2s;
+        }
+
+        .terminal-line:nth-child(3) {
+            animation-delay: 2.1s;
+        }
+
+        .terminal-line:nth-child(4) {
+            animation-delay: 3.0s;
+        }
+
+        .terminal-line:nth-child(5) {
+            animation-delay: 3.8s;
+        }
+
+        @keyframes terminal-fade {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pricing */
+        .pricing-card {
+            position: relative;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 179, 126, 0.35);
+        }
+
+        .pricing-card-featured {
+            border-color: var(--primary-green);
+            box-shadow: 0 30px 60px -25px rgba(0, 179, 126, 0.4);
+            transform: translateY(-8px);
+        }
+
+        .pricing-card-featured:hover {
+            transform: translateY(-12px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-green);
+            color: #061a13;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 999px;
+            letter-spacing: 0.08em;
+            box-shadow: 0 0 20px rgba(0, 179, 126, 0.4);
+        }
+
+        .pricing-price {
+            font-family: var(--accent-mono);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Feature card with tick animation */
+        .feature-tick {
+            stroke-dasharray: 30;
+            stroke-dashoffset: 30;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .feature-card:hover .feature-tick {
+            stroke-dashoffset: 0;
+        }
+
+        /* CTA gradient section */
+        .cta-gradient {
+            background: var(--gradient-cta);
+            border-top: 1px solid rgba(0, 179, 126, 0.15);
+            border-bottom: 1px solid rgba(0, 179, 126, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0);
+            background-size: 24px 24px;
+            pointer-events: none;
+        }
+
+        /* Footer */
+        .footer-link {
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-green);
+        }
+
+        /* Scale on press for interactive feel */
+        button:not(:disabled):active,
+        a.btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+
+            .reveal,
+            .reveal-stagger>* {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -621,7 +1213,8 @@
     <!-- ======== LANDING PAGE SECTION ======== -->
     <main id="landing-page" class="w-full flex flex-col min-h-screen">
         <div class="flex-grow">
-            <!-- Header -->
+
+            <!-- ===== HEADER ===== -->
             <header class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-lg border-b border-dark">
                 <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
                     <a href="#" class="text-2xl font-bold text-white flex items-center gap-2">
@@ -633,14 +1226,15 @@
                         Boleta<span class="text-primary-green">Pro</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-8">
-                        <a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a>
-
+                        <a href="#proceso" class="text-gray-400 hover:text-white transition">C&oacute;mo funciona</a>
+                        <a href="#casos-uso" class="text-gray-400 hover:text-white transition">Casos de uso</a>
+                        <a href="#pricing" class="text-gray-400 hover:text-white transition">Planes</a>
                         <a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="login-btn"
                             class="btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Iniciar
-                            Sesión</button>
+                            Sesi&oacute;n</button>
                         <button id="signup-btn"
                             class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold text-sm bg-primary-green-hover">Crear
                             Cuenta</button>
@@ -648,343 +1242,795 @@
                 </nav>
             </header>
 
-            <!-- Hero Section -->
-            <section class="container mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
-                <div class="max-w-4xl mx-auto">
-                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 fade-in">
-                        Automatiza tus Boletas de Honorarios <span class="text-primary-green">Sin Estrés</span>
-                    </h1>
-                    <p class="text-lg md:text-xl text-gray-400 mb-10 fade-in max-w-2xl mx-auto">
-                        La solución definitiva para profesionales independientes. Carga tu planilla y emite miles de
-                        boletas ante el SII en segundos. Sin códigos complejos, solo resultados.
-                    </p>
-                    <div class="flex justify-center space-x-4 fade-in">
-                        <!-- <a href="#pricing" class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-lg bg-primary-green-hover transform hover:-translate-y-1 transition duration-300">Empieza Gratis</a> -->
-                        <a href="#features"
-                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-gray-800">¿Cómo
-                            Funciona?</a>
-                    </div>
-                </div>
-                <!-- Visual Element Instead of Code Block -->
-                <div class="mt-16 fade-in relative max-w-4xl mx-auto">
-                    <div class="absolute inset-0 bg-primary-green opacity-10 blur-3xl rounded-full"></div>
-                    <div
-                        class="relative bg-surface-dark border border-dark rounded-xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-around gap-8">
-                        <div class="text-center md:text-left">
-                            <h3 class="text-2xl font-bold text-white mb-2">1. Carga tu Excel</h3>
-                            <p class="text-gray-400">Sube tus destinatarios en un archivo simple.</p>
-                        </div>
-                        <div class="hidden md:block text-gray-600">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h3 class="text-2xl font-bold text-white mb-2">2. Procesa</h3>
-                            <p class="text-gray-400">Nuestra plataforma conecta con el SII automáticamente.</p>
-                        </div>
-                        <div class="hidden md:block text-gray-600">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h3 class="text-2xl font-bold text-primary-green mb-2">3. ¡Listo!</h3>
-                            <p class="text-gray-400">Descarga tus boletas emitidas al instante.</p>
+            <!-- ===== HERO ===== -->
+            <section class="hero-bg">
+                <div class="container mx-auto px-6 pt-20 pb-20 md:pt-28 md:pb-28">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7">
+                            <div class="sii-badge mb-6 fade-in">
+                                <span class="dot"></span>
+                                </svg>
+                                <span>Conectado con el SII de Chile</span>
+                            </div>
+                            <h1
+                                class="heading-balance text-4xl md:text-6xl font-extrabold text-white leading-[1.05] mb-6 fade-in">
+                                Automatiza tus boletas <span class="text-primary-green">ante el SII</span> en segundos.
+                            </h1>
+                            <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl fade-in">
+                                Carga una planilla Excel con RUT, monto y fecha &rarr; BoletaPro se conecta al portal
+                                del SII &rarr;
+                                descargas todas las boletas en un ZIP. Sin claves guardadas, sin planillas eternas, sin
+                                errores.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-4 fade-in">
+                                <button data-cta="signup"
+                                    class="btn bg-primary-green text-white px-7 py-3 rounded-md font-bold text-base bg-primary-green-hover inline-flex items-center justify-center gap-2">
+                                    Empezar gratis
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </button>
+                                <a href="#proceso"
+                                    class="btn btn-secondary text-white px-7 py-3 rounded-md font-bold text-base inline-flex items-center justify-center gap-2">
+                                    Ver c&oacute;mo funciona
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Features Section -->
-            <section id="features" class="py-20 bg-surface-dark">
+            <!-- ===== COMO FUNCIONA (3 PASOS) ===== -->
+            <section id="proceso" class="py-20 md:py-28 bg-surface-dark">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 reveal">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">El proceso
+                        </p>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Emite todas tus
+                            boletas de honorarios en 3 pasos</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Sin instalaciones. Sin contratos. Sin
+                            pelearte
+                            con el portal del SII.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal-stagger relative">
+                        <div class="step-card">
+                            <div class="step-number mb-5">01</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Carga tu planilla</h3>
+                            <p class="text-gray-400 mb-6">Rellena nuestra plantilla de Excel con la informaci&oacute;n
+                                de cada boleta de honorarios que desees emitir.</p>
+                            <div class="step-icon mt-auto">
+                                <img src="Microsoft_Office_Excel_(2019–2025).svg.png" alt="Microsoft Excel"
+                                    loading="lazy" />
+                            </div>
+                            <div class="step-connector"></div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number mb-5">02</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Conectamos con el SII</h3>
+                            <p class="text-gray-400 mb-6">Nuestra plataforma se conecta con el SII
+                                y
+                                emite cada boleta de forma automática.</p>
+                            <div class="step-icon mt-auto">
+                                <img src="Logotipo_Servicio_de_Impuestos_Internos.svg.png"
+                                    alt="Servicio de Impuestos Internos" loading="lazy" />
+                            </div>
+                            <div class="step-connector"></div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number mb-5">03</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Descarga tus Boletas</h3>
+                            <p class="text-gray-400 mb-6">Al finalizar, puedes descargar todas las boletas emitidas en
+                                un archivo comprimido.</p>
+                            <div class="step-icon mt-auto">
+                                <img src="downloading-png-24.png" alt="Descargar archivo ZIP" loading="lazy" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===== BHE vs BHT ===== -->
+            <section class="py-20 md:py-28">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-14 reveal">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Dos tipos,
+                            una plataforma</p>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">&iquest;Boletas
+                            de Honorarios Electrónicas o Boletas de Honorarios de Terceros?</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto"> En Boleta Pro puedes emitir ambas de forma
+                            masiva.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto reveal-stagger">
+                        <div class="flip-card" data-flip-target>
+                            <div class="flip-inner">
+                                <div class="flip-front">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-primary-green/15 border border-primary-green/30 flex items-center justify-center text-primary-green">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500 font-mono-accent uppercase tracking-widest">
+                                                BHE</p>
+                                            <h3 class="text-2xl font-bold text-white">Boleta de Honorarios
+                                                Electr&oacute;nica</h3>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 mb-4">La emite el <strong class="text-white">profesional
+                                            independiente</strong> por sus propios servicios.</p>
+                                    <ul class="space-y-2 text-sm text-gray-400">
+                                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span>
+                                            La retenci&oacute;n la puedes realizar tú o quien recibe la boleta.
+                                        </li>
+                                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Ej:
+                                            contador, abogado, dentista, veterinario, médico, etc.</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Pasa el mouse o toca para
+                                        m&aacute;s &rarr;</p>
+                                </div>
+                                <div class="flip-back flex flex-col justify-center">
+                                    <p
+                                        class="text-xs text-primary-green font-mono-accent uppercase tracking-widest mb-3">
+                                        Ideal para</p>
+                                    <p class="text-white text-lg leading-snug">Profesionales que emiten boletas por
+                                        cada servicio y desean ahorrar tiempo en emitir una por una.</p>
+                                    <p class="text-primary-green text-sm mt-4 font-bold">Retenci&oacute;n: 15.25% (2026)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card" data-flip-target>
+                            <div class="flip-inner">
+                                <div class="flip-front">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500 font-mono-accent uppercase tracking-widest">
+                                                BHT</p>
+                                            <h3 class="text-2xl font-bold text-white">Boleta de Honorarios de Terceros
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 mb-4">La emite una <strong
+                                            class="text-white">empresa</strong> por cuenta de un tercero que le
+                                        prest&oacute; servicios.</p>
+                                    <ul class="space-y-2 text-sm text-gray-400">
+                                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> La empresa
+                                            retiene y paga</li>
+                                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Ej:
+                                            consultora, agencia, retail, productoras, industriales, etc.</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Pasa el mouse o toca para
+                                        m&aacute;s &rarr;</p>
+                                </div>
+                                <div class="flip-back flex flex-col justify-center">
+                                    <p class="text-xs text-amber-400 font-mono-accent uppercase tracking-widest mb-3">
+                                        Ideal para</p>
+                                    <p class="text-white text-lg leading-snug">Empresas que necesitan emitir
+                                        boletas en nombre de sus prestadores externos, en una sola carga.
+                                    </p>
+                                    <p class="text-amber-400 text-sm mt-4 font-bold">Retenci&oacute;n: 15.25% (2026)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== CASOS DE USO ===== -->
+            <section id="casos-uso" class="py-20 md:py-28 bg-surface-dark">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-14 reveal">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Casos de
+                            uso</p>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">¿A quienes les
+                            sirve Boleta Pro?</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">M&aacute;s de 200 profesionales y empresas
+                            ya emiten sus boletas con BoletaPro.</p>
+                    </div>
+
+                    <div class="mb-16">
+                        <div class="flex items-center gap-3 mb-6 reveal">
+                            <span
+                                class="px-2.5 py-1 bg-primary-green/15 text-primary-green text-xs font-bold rounded font-mono-accent">BHE</span>
+                            <h3 class="text-xl font-bold text-white">Profesionales independientes</h3>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 reveal-stagger">
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 3v18M3 12h18M5 5l14 14M19 5L5 19" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Abogados</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 4v16m-8-8h16" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Kinesi&oacute;logos</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Psic&oacute;logos</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M8 3v2m8-2v2M4 7h16v4a4 4 0 01-4 4h-1l-2 4-2-4H8a4 4 0 01-4-4V7z" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Dentistas</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M4 12a8 8 0 1016 0 8 8 0 00-16 0zM12 8v4l3 2" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">M&eacute;dicos</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M6 4c0 2 1 3 3 3s3-1 3-3-1-3-3-3-3 1-3 3zM12 17c0 2 1 3 3 3s3-1 3-3-1-3-3-3-3 1-3 3z" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Veterinarios</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M4 20l8-16 8 16M8 14h8" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Arquitectos</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 4v16m8-8H4" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white leading-tight">Y muchos m&aacute;s</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-6 reveal">
+                            <span
+                                class="px-2.5 py-1 bg-amber-500/15 text-amber-400 text-xs font-bold rounded font-mono-accent">BHT</span>
+                            <h3 class="text-xl font-bold text-white">Empresas y organizaciones</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 reveal-stagger">
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M3 9l9-6 9 6v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9z" />
+                                    </svg></div>
+                                <p class="text-base font-bold text-white">Retail</p>
+                                <p class="text-xs text-gray-500 text-center">Tiendas, supermercados, e-commerce</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M4 21V8l8-5 8 5v13M9 21V12h6v9" />
+                                    </svg></div>
+                                <p class="text-base font-bold text-white">Productivas</p>
+                                <p class="text-xs text-gray-500 text-center">Manufactureras, agro, servicios</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 2l3 6 6 1-4.5 4 1 6L12 16l-5.5 3 1-6L3 9l6-1 3-6z" />
+                                    </svg></div>
+                                <p class="text-base font-bold text-white">Industriales</p>
+                                <p class="text-xs text-gray-500 text-center">Plantas, miner&iacute;a, log&iacute;stica
+                                </p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M3 21h18M5 21V7l7-4 7 4v14M9 9h6M9 13h6M9 17h6" />
+                                    </svg></div>
+                                <p class="text-base font-bold text-white">Consultoras &amp; agencias</p>
+                                <p class="text-xs text-gray-500 text-center">Gestionan m&uacute;ltiples consultores</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== DEMO TERMINAL ===== -->
+            <section class="py-20 md:py-28">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="reveal">
+                            <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">En
+                                acci&oacute;n</p>
+                            <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Mira
+                                c&oacute;mo corre una emisi&oacute;n real</h2>
+                            <p class="text-lg text-gray-400 mb-6">En serio, eso es todo. Una planilla, un click, y la
+                                magia ocurre detr&aacute;s del tel&oacute;n mientras t&uacute; te tomas un caf&eacute;.
+                            </p>
+                            <ul class="space-y-3 text-gray-400">
+                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
+                                    Conexi&oacute;n segura al SII con tu clave</li>
+                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
+                                    Validaci&oacute;n de cada RUT en l&iacute;nea</li>
+                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
+                                    ZIP final con todos los PDF emitidos</li>
+                            </ul>
+                        </div>
+                        <div class="reveal" data-reveal>
+                            <div class="terminal">
+                                <div class="terminal-header">
+                                    <span class="terminal-dot r"></span>
+                                    <span class="terminal-dot y"></span>
+                                    <span class="terminal-dot g"></span>
+                                    <span class="terminal-title">boletapro &mdash; emisi&oacute;n BHE</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <div class="terminal-line"><span class="prompt">&gt;</span> <span
+                                            class="muted">$</span> boletapro emitir &mdash;file junio.xlsx</div>
+                                    <div class="terminal-line"><span class="muted">[</span>1/247<span
+                                            class="muted">]</span> Conectando a <span class="ok">zeus.sii.cl</span> ...
+                                    </div>
+                                    <div class="terminal-line"><span class="muted">[</span>247/247<span
+                                            class="muted">]</span> Boletas procesadas correctamente</div>
+                                    <div class="terminal-line"><span class="prompt">&gt;</span> ZIP generado: <span
+                                            class="ok">boletas_BHE_2026-06.zip</span></div>
+                                    <div class="terminal-line"><span class="muted">Listo en 2m 14s &mdash; </span><span
+                                            class="ok">&#10003; 247/247 exitosas</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FEATURES ===== -->
+            <section class="py-20 md:py-28 bg-surface-dark">
                 <div class="container mx-auto px-6 text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Diseñado para Profesionales</h2>
-                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-16">Olvídate de procesos manuales lentos.
-                        Enfócate en tu trabajo mientras nosotros gestionamos la burocracia.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="reveal mb-16">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Por
+                            qu&eacute; BoletaPro</p>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Dise&ntilde;ado
+                            para profesionales</h2>
+                        <p class="text-lg text-gray-400 max-w-3xl mx-auto">Olv&iacute;date de procesos manuales lentos.
+                            Enf&oacute;cate en tu trabajo mientras nosotros gestionamos la burocracia.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Ahorra Horas de Trabajo</h3>
+                            <h3 class="text-xl font-bold text-white mb-2">Ahorra horas de trabajo</h3>
                             <p class="text-gray-400">Emite 10, 100 o 1000 boletas en el tiempo que te toma tomarte un
-                                café.</p>
+                                caf&eacute;.</p>
+                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
+                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
+                            </svg>
                         </div>
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Cero Errores</h3>
+                            <h3 class="text-xl font-bold text-white mb-2">Cero errores</h3>
                             <p class="text-gray-400">Evita multas y problemas contables eliminando el error humano en la
-                                digitación.</p>
+                                digitaci&oacute;n.</p>
+                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
+                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
+                            </svg>
                         </div>
                         <div
-                            class="p-8 border border-dark rounded-lg bg-gray-900/30 hover:border-primary-green transition duration-300">
+                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
                             <div
-                                class="text-primary-green mb-4 bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Rápido y Seguro</h3>
-                            <p class="text-gray-400">Tu información y claves viajan encriptadas. Solo tú tienes el
-                                control.</p>
+                            <h3 class="text-xl font-bold text-white mb-2">R&aacute;pido y seguro</h3>
+                            <p class="text-gray-400">Tu informaci&oacute;n y claves viajan encriptadas. Solo t&uacute;
+                                tienes el control.</p>
+                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
+                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
+                            </svg>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Pricing Section (UPDATED)
-            <section id="pricing" class="py-20">
+            <!-- ===== PRICING (HABILITADO) ===== -->
+            <section id="pricing" class="py-20 md:py-28">
                 <div class="container mx-auto px-6">
-                    <div class="text-center mb-16">
-                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Planes Flexibles</h2>
-                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Elige el plan que se adapte al volumen de tu
-                            negocio.</p>
+                    <div class="text-center mb-14 reveal">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Planes</p>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Elige el plan
+                            que se adapta a tu volumen</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Sin contratos, sin ataduras. Cancela cuando
+                            quieras y tu cupo se renueva cada mes.</p>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-
-                        <!-- Plan Gratuito -->
-            <!-- <div
-                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
-                            <h3 class="text-xl font-bold text-gray-300 mb-2">Gratuito</h3>
-                            <p class="text-gray-500 text-sm mb-4">Ideal para probar</p>
-                            <p class="text-3xl font-extrabold text-white mb-6">$0<span
-                                    class="text-sm font-normal text-gray-400">/mes</span></p>
-                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>10 boletas/mes</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte por WhatsApp</li>
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 max-w-7xl mx-auto reveal-stagger items-stretch">
+                        <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-gray-300 mb-1">Gratis</h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">5 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$0</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 5 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte por
+                                    WhatsApp</li>
                             </ul>
-                            <button class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm"
-                                onclick="document.getElementById('signup-btn').click()">Crear Cuenta</button>
-                        </div> -->
-
-            <!-- Plan Básico -->
-            <!-- <div
-                            class="border border-primary-green rounded-xl p-6 flex flex-col bg-gray-900 relative shadow-lg shadow-green-900/20 transform md:-translate-y-2">
-                            <div
-                                class="absolute top-0 right-0 bg-primary-green text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
-                                INICIAL</div>
-                            <h3 class="text-xl font-bold text-white mb-2">Básico</h3>
-                            <p class="text-gray-400 text-sm mb-4">Pequeños independientes</p>
-                            <p class="text-3xl font-extrabold text-white mb-6">$4.990<span
-                                    class="text-sm font-normal text-gray-400">/mes</span></p>
-                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>50 boletas/mes</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte por WhatsApp</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Historial de 3 meses</li>
+                            <button data-cta="signup"
+                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm">Crear
+                                Cuenta</button>
+                        </div>
+                        <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-white mb-1">Inicial</h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">50 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$7.990</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 50 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 3 meses
+                                </li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte WhatsApp
+                                </li>
                             </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Básico" target="_blank"
-                                class="w-full btn bg-primary-green text-white py-2 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
-                        </div> -->
-
-            <!-- Plan Avanzado -->
-            <!-- <div
-                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
-                            <h3 class="text-xl font-bold text-white mb-2">Avanzado</h3>
-                            <p class="text-gray-400 text-sm mb-4">Consultoras y PyMEs</p>
-                            <p class="text-3xl font-extrabold text-white mb-6">$8.990<span
-                                    class="text-sm font-normal text-gray-400">/mes</span></p>
-                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>100 boletas/mes</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte por WhatsApp</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-green mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Historial de 6 meses</li>
-                            </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Avanzado"
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Inicial%20de%20BoletaPro"
                                 target="_blank"
-                                class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center">Contratar</a>
-                        </div> -->
-
-            <!-- Plan Premium -->
-            <!-- <div
-                            class="border border-dark rounded-xl p-6 flex flex-col bg-surface-dark hover:transform hover:-translate-y-2 transition duration-300">
-                            <h3 class="text-xl font-bold text-primary-amber mb-2">Premium</h3>
-                            <p class="text-gray-400 text-sm mb-4">Alto volumen</p>
-                            <p class="text-3xl font-extrabold text-white mb-6">$34.990<span
-                                    class="text-sm font-normal text-gray-400">/mes</span></p>
-                            <ul class="text-sm space-y-3 text-gray-300 mb-8 flex-grow">
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>500 boletas/mes</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Soporte por WhatsApp</li>
-                                <li class="flex items-center"><svg class="w-4 h-4 text-primary-amber mr-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>Historial de 1 año</li>
+                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center">Contratar</a>
+                        </div>
+                        <div class="pricing-card pricing-card-featured">
+                            <span class="pricing-badge">M&Aacute;S ELEGIDO</span>
+                            <h3 class="text-lg font-bold text-white mb-1">Profesional</h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">100 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$13.990</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 100 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 6 meses
+                                </li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte
+                                    prioritario</li>
                             </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Premium"
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Profesional%20de%20BoletaPro"
                                 target="_blank"
-                                class="w-full btn btn-secondary text-white py-2 rounded-md font-bold text-sm text-center border-primary-amber text-primary-amber hover:bg-amber-900/20">Contratar</a>
-                        </div> -->
-
-        </div>
-        </div>
-        </section>
-        -->
-
-        <!-- FAQ Section -->
-        <section id="faq" class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
-                    <p class="text-lg text-gray-400 max-w-2xl mx-auto">Resolvemos tus dudas sobre la emisión de
-                        boletas de honorarios.</p>
+                                class="w-full btn bg-primary-green text-white py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
+                        </div>
+                        <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-white mb-1">Empresa</h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">500 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$44.990</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 500 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 12 meses
+                                </li>
+                                <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte
+                                    prioritario</li>
+                            </ul>
+                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Empresa%20de%20BoletaPro"
+                                target="_blank"
+                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center">Contratar</a>
+                        </div>
+                        <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-amber-400 mb-1 flex items-center gap-2">Corporativo<svg
+                                    class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.367 2.447a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.366-2.447a1 1 0 00-1.176 0l-3.367 2.447c-.783.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
+                                </svg></h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">+500 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-3xl font-extrabold text-white">Personalizado</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Boletas a tu medida
+                                </li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Onboarding dedicado
+                                </li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Soporte v&iacute;a
+                                    WhatsApp</li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> SLA preferencial</li>
+                            </ul>
+                            <a href="https://wa.me/56938859332?text=Hola,%20necesito%20un%20plan%20corporativo%20para%20%2B500%20boletas%2Fmes"
+                                target="_blank"
+                                class="w-full btn border border-amber-500/40 text-amber-400 py-2.5 rounded-md font-bold text-sm text-center hover:bg-amber-500/10">Hablar
+                                con ventas</a>
+                        </div>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-8 font-mono-accent">Precios en CLP &middot; IVA
+                        incluido &middot; Renovaci&oacute;n mensual del cupo &middot; Sin contratos</p>
                 </div>
-                <div class="max-w-3xl mx-auto space-y-4" itemscope itemtype="https://schema.org/FAQPage">
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
-                        itemscope itemtype="https://schema.org/Question">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
-                            onclick="toggleFaq(this)">
-                            <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué es una Boleta de
-                                Honorarios Electrónica (BHE)?</h3>
-                            <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
-                            itemtype="https://schema.org/Answer">
-                            <p class="text-gray-400" itemprop="text">La Boleta de Honorarios Electrónica (BHE) es un
-                                documento tributario que emiten los trabajadores independientes en Chile por sus
-                                servicios profesionales. Se emite de forma electrónica ante el SII y permite a quien
-                                la recibe justificar un gasto y retener el 15,25% de impuesto.</p>
-                        </div>
+            </section>
+
+            <!-- ===== FAQ ===== -->
+            <section id="faq" class="py-20 md:py-28 bg-surface-dark">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12 reveal">
+                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Dudas</p>
+                        <h2 class="heading-balance text-3xl md:text-4xl font-extrabold text-white mb-4">Preguntas
+                            frecuentes</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Resolvemos tus dudas sobre la emisi&oacute;n
+                            de boletas de honorarios.</p>
                     </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
-                        itemscope itemtype="https://schema.org/Question">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
-                            onclick="toggleFaq(this)">
-                            <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué diferencia hay
-                                entre BHE y BHT?</h3>
-                            <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
-                            itemtype="https://schema.org/Answer">
-                            <p class="text-gray-400" itemprop="text">La <strong class="text-white">BHE</strong> la
-                                emite el profesional por sus propios servicios. La <strong
-                                    class="text-white">BHT</strong> (Boleta de Honorarios de Terceros) la emite una
-                                empresa por cuenta de un tercero que le prestó servicios. Por ejemplo, una
-                                consultora que emite boletas a nombre de sus consultores independientes.</p>
+                    <div class="max-w-3xl mx-auto space-y-4 reveal-stagger" itemscope
+                        itemtype="https://schema.org/FAQPage">
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;C&oacute;mo
+                                    funcionan los planes de BoletaPro?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">Los planes son <strong
+                                        class="text-white">mensuales</strong> y consideran un cierto n&uacute;mero de
+                                    boletas para emitir que se renueva cada mes. <strong class="text-white">No hay
+                                        contratos ni ataduras de por medio.</strong></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
-                        itemscope itemtype="https://schema.org/Question">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
-                            onclick="toggleFaq(this)">
-                            <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿BoletaPro almacena mi
-                                clave del SII?</h3>
-                            <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
-                            itemtype="https://schema.org/Answer">
-                            <p class="text-gray-400" itemprop="text"><strong class="text-white">No.</strong>
-                                BoletaPro no almacena tu RUT, contraseña ni claves del SII. Las credenciales se
-                                envían directamente al SII solo para la emisión de boletas y nunca se guardan en
-                                nuestros servidores.</p>
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;Qu&eacute; es
+                                    una Boleta de Honorarios Electr&oacute;nica (BHE)?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La Boleta de Honorarios Electr&oacute;nica
+                                    (BHE) es un documento tributario que emiten los trabajadores independientes en Chile
+                                    por sus servicios profesionales. Se emite de forma electr&oacute;nica ante el SII y
+                                    permite a quien la recibe justificar un gasto y retener el 15,25% de impuesto.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity"
-                        itemscope itemtype="https://schema.org/Question">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
-                            onclick="toggleFaq(this)">
-                            <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Cómo funciona la
-                                emisión masiva?</h3>
-                            <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
-                            itemtype="https://schema.org/Answer">
-                            <p class="text-gray-400" itemprop="text">Sube un archivo Excel con todos los
-                                destinatarios (RUT, nombre, fecha, monto, descripción). Nuestra plataforma procesa
-                                cada fila, se conecta automáticamente al SII y emite todas las boletas. Al
-                                finalizar, descargas un ZIP con todos los comprobantes PDF.</p>
+
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;Qu&eacute; es
+                                    una Boleta de Honorarios Electr&oacute;nica de Terceros (BHT)?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La Boleta de Honorarios Electr&oacute;nica
+                                    de Terceros (BHT) es un documento tributario que emiten las empresas en Chile
+                                    para respaldar los servicios que le fueron prestados por personas y/o prestadores
+                                    externos que pueden tener o no inicio de actividades en 2da categoría. Se utiliza
+                                    mayormente para evitar el error en la emisión de las boletas por parte de los
+                                    prestadores o porque muchos no tienen inicio de actividades y/o no saben cómo
+                                    realizar el trámite en el SII. Al emitir una boleta de terceros es más fácil y
+                                    rápido para el
+                                    empleador respaldar el servicio prestado.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;Qu&eacute;
+                                    diferencia hay entre BHE y BHT?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La <strong class="text-white">BHE</strong> la
+                                    emite el profesional por sus propios servicios. La <strong
+                                        class="text-white">BHT</strong> (Boleta de Honorarios de Terceros) la emite una
+                                    empresa por cuenta de un tercero que le prest&oacute; servicios. Por ejemplo, una
+                                    consultora que emite boletas a nombre de sus consultores independientes. Una empresa
+                                    agrícola que contrata cosechadores por temporada. Una empresa de Retail que contrata
+                                    reponedores en temporada alta de navidad, etc.</p>
+                            </div>
+                        </div>
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;BoletaPro
+                                    almacena mi clave del SII?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text"><strong class="text-white">No.</strong>
+                                    BoletaPro no almacena tu RUT, ni claves del SII. Las credenciales se
+                                    env&iacute;an encriptadas directamente al SII solo para la emisi&oacute;n de boletas
+                                    y nunca se
+                                    guardan en nuestros servidores.</p>
+                            </div>
+                        </div>
+                        <div class="bg-black border border-dark rounded-xl overflow-hidden" itemprop="mainEntity"
+                            itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left"
+                                onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">&iquest;C&oacute;mo
+                                    funciona la emisi&oacute;n masiva?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer"
+                                itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">Sube un archivo Excel con todos los
+                                    destinatarios (RUT, nombre, fecha, monto, descripci&oacute;n). Nuestra plataforma
+                                    procesa cada fila, se conecta autom&aacute;ticamente al SII y emite todas las
+                                    boletas. Al finalizar, descargas un ZIP con todos los comprobantes PDF.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <!-- ===== CTA FINAL ===== -->
+            <section class="cta-gradient py-20">
+                <div class="container mx-auto px-6 text-center relative">
+                    <div class="sii-badge mx-auto mb-6" data-reveal>
+                        <span class="dot"></span>
+                        <svg width="22" height="14" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+                            <path fill="#1f6cb5" d="M40 15c-15 0-25 10-25 25v60c0 15 10 25 25 25h5V15h-5z" />
+                            <circle fill="#e84e1b" cx="100" cy="20" r="12" />
+                            <circle fill="#e84e1b" cx="140" cy="20" r="12" />
+                            <rect fill="#1f6cb5" x="90" y="32" width="20" height="83" />
+                            <rect fill="#1f6cb5" x="130" y="32" width="20" height="83" />
+                        </svg>
+                        <span>Servicio de Impuestos Internos &middot; Chile</span>
+                    </div>
+                    <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-5 reveal">Tu
+                        pr&oacute;xima emisi&oacute;n puede ser cuesti&oacute;n de un caf&eacute;.</h2>
+                    <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8 reveal">Crea una cuenta gratis, emite 5
+                        boletas y comprueba por qu&eacute; cientos de profesionales en Chile ya no emiten a mano.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
+                        <button data-cta="signup"
+                            class="btn bg-primary-green text-white px-8 py-3 rounded-md font-bold text-base bg-primary-green-hover inline-flex items-center justify-center gap-2">Empezar
+                            gratis<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg></button>
+                        <a href="https://wa.me/56938859332?text=Hola,%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20BoletaPro"
+                            target="_blank"
+                            class="btn btn-secondary text-white px-8 py-3 rounded-md font-bold text-base inline-flex items-center justify-center gap-2">Hablar
+                            por WhatsApp</a>
+                    </div>
+                </div>
+            </section>
 
         </div>
-        <!-- Footer -->
-        <footer class="bg-surface-dark border-t border-dark">
-            <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-                <p>&copy; 2026 BoletaPro. Todos los derechos reservados.</p>
-                <div class="mt-4 flex justify-center space-x-6 text-sm">
-                    <a href="terminos.html" class="hover:text-primary-green transition-colors">Términos y
-                        Condiciones</a>
-                    <a href="privacidad.html" class="hover:text-primary-green transition-colors">Política de
-                        Privacidad</a>
-                    <a href="https://wa.me/56938859332" target="_blank"
-                        class="hover:text-primary-green transition-colors">Contacto</a>
+
+        <!-- ===== FOOTER ELABORADO ===== -->
+        <footer class="bg-black border-t border-dark">
+            <div class="container mx-auto px-6 py-14">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+                    <div class="col-span-2 md:col-span-1">
+                        <a href="#" class="text-2xl font-bold text-white flex items-center gap-2 mb-4">
+                            <svg class="w-7 h-7 text-primary-green" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Boleta<span class="text-primary-green">Pro</span>
+                        </a>
+                        <p class="text-sm text-gray-500 mb-4">Emisi&oacute;n masiva de boletas ante el SII de Chile.
+                            Simple, r&aacute;pido y seguro.</p>
+                        <p class="text-sm text-gray-400 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-primary-green" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Hecho en <strong class="text-white">Santiago de Chile</strong>
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Producto</h4>
+                        <ul class="space-y-2.5 text-sm">
+                            <li><a class="footer-link" href="#proceso">C&oacute;mo funciona</a></li>
+                            <li><a class="footer-link" href="#casos-uso">Casos de uso</a></li>
+                            <li><a class="footer-link" href="#pricing">Planes</a></li>
+                            <li><a class="footer-link" href="#faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Legal</h4>
+                        <ul class="space-y-2.5 text-sm">
+                            <li><a class="footer-link" href="terminos.html">T&eacute;rminos y Condiciones</a></li>
+                            <li><a class="footer-link" href="privacidad.html">Pol&iacute;tica de Privacidad</a></li>
+                            <li><a class="footer-link" href="https://wa.me/56938859332" target="_blank">Contacto</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Contacto</h4>
+                        <ul class="space-y-2.5 text-sm">
+                            <li><a class="footer-link inline-flex items-center gap-2" href="https://wa.me/56938859332"
+                                    target="_blank"><svg class="w-4 h-4 text-primary-green" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326z" />
+                                    </svg>WhatsApp</a></li>
+                            <li class="text-gray-500 font-mono-accent text-xs">Lun-Vie 9:00-18:00</li>
+                            <li class="text-gray-500 text-xs">+56 9 3885 9332</li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    class="border-t border-dark mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+                    <p>&copy; 2026 BoletaPro &middot; Todos los derechos reservados.</p>
+                    <p class="font-mono-accent">Servicio independiente de automatizaci&oacute;n &middot; Conectado a
+                        zeus.sii.cl y loa.sii.cl</p>
                 </div>
             </div>
         </footer>
@@ -2905,6 +3951,52 @@
                 arrow.classList.add('rotate-180');
             }
         }
+
+        // ===== Landing v7: reveal on scroll + flip cards + signup CTAs =====
+        (function () {
+            // Reveal on scroll (IntersectionObserver)
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+                document.querySelectorAll('.reveal, .reveal-stagger, .step-card').forEach(function (el) {
+                    observer.observe(el);
+                });
+            } else {
+                // Fallback: show everything
+                document.querySelectorAll('.reveal, .reveal-stagger, .step-card').forEach(function (el) {
+                    el.classList.add('in-view');
+                });
+            }
+
+            // Flip cards (click/tap toggle for mobile)
+            document.querySelectorAll('[data-flip-target]').forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    if (e.target.closest('a, button')) return;
+                    card.classList.toggle('flipped');
+                });
+            });
+
+            // Hero mockup reveal triggers IntersectionObserver for its data-reveal
+            document.querySelectorAll('[data-reveal]').forEach(function (el) {
+                el.classList.add('reveal');
+            });
+
+            // Signup CTAs: trigger the existing signup button
+            document.querySelectorAll('[data-cta="signup"]').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const signupBtn = document.getElementById('signup-btn');
+                    if (signupBtn) signupBtn.click();
+                });
+            });
+        })();
     </script>
 </body>
 
