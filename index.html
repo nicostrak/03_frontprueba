@@ -988,6 +988,17 @@
             height: 28px;
         }
 
+        /* BHT variant - amber/orange icon for empresas */
+        .uc-avatar--bht .uc-icon {
+            background: linear-gradient(160deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05));
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+        .uc-avatar--bht:hover {
+            background: rgba(245, 158, 11, 0.05);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
         /* Terminal demo */
         .terminal {
             background: #0a0a0a;
@@ -1246,23 +1257,31 @@
             <section class="hero-bg">
                 <div class="container mx-auto px-6 pt-20 pb-20 md:pt-28 md:pb-28">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                        <div class="lg:col-span-7">
+                        <div class="lg:col-span-7 lg:col-start-3 text-center mx-auto">
                             <div class="sii-badge mb-6 fade-in">
                                 <span class="dot"></span>
+                                <svg width="22" height="14" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true">
+                                    <path fill="#1f6cb5" d="M40 15c-15 0-25 10-25 25v60c0 15 10 25 25 25h5V15h-5z" />
+                                    <circle fill="#e84e1b" cx="100" cy="20" r="12" />
+                                    <circle fill="#e84e1b" cx="140" cy="20" r="12" />
+                                    <rect fill="#1f6cb5" x="90" y="32" width="20" height="83" />
+                                    <rect fill="#1f6cb5" x="130" y="32" width="20" height="83" />
                                 </svg>
                                 <span>Conectado con el SII de Chile</span>
                             </div>
                             <h1
                                 class="heading-balance text-4xl md:text-6xl font-extrabold text-white leading-[1.05] mb-6 fade-in">
-                                Automatiza tus boletas <span class="text-primary-green">ante el SII</span> en segundos.
+                                Emite tus boletas de honorarios electrónicas y de Terceros<span
+                                    class="text-primary-green"> de forma masiva ante el SII.</span>
                             </h1>
-                            <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl fade-in">
-                                Carga una planilla Excel con RUT, monto y fecha &rarr; BoletaPro se conecta al portal
+                            <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto fade-in">
+                                Carga una planilla Excel con la información de tus boletas &rarr; BoletaPro se conecta
+                                al portal
                                 del SII &rarr;
-                                descargas todas las boletas en un ZIP. Sin claves guardadas, sin planillas eternas, sin
-                                errores.
+                                descargas todas las boletas.
                             </p>
-                            <div class="flex flex-col sm:flex-row gap-4 fade-in">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
                                 <button data-cta="signup"
                                     class="btn bg-primary-green text-white px-7 py-3 rounded-md font-bold text-base bg-primary-green-hover inline-flex items-center justify-center gap-2">
                                     Empezar gratis
@@ -1337,8 +1356,8 @@
                     <div class="text-center mb-14 reveal">
                         <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Dos tipos,
                             una plataforma</p>
-                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">&iquest;Boletas
-                            de Honorarios Electrónicas o Boletas de Honorarios de Terceros?</h2>
+                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Puedes
+                            emitir dos tipos de boletas de honorarios</h2>
                         <p class="text-lg text-gray-400 max-w-2xl mx-auto"> En Boleta Pro puedes emitir ambas de forma
                             masiva.</p>
                     </div>
@@ -1370,8 +1389,8 @@
                                         <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Ej:
                                             contador, abogado, dentista, veterinario, médico, etc.</li>
                                     </ul>
-                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Pasa el mouse o toca para
-                                        m&aacute;s &rarr;</p>
+                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Haz clic para m&aacute;s
+                                        &rarr;</p>
                                 </div>
                                 <div class="flip-back flex flex-col justify-center">
                                     <p
@@ -1398,7 +1417,7 @@
                                         <div>
                                             <p class="text-xs text-gray-500 font-mono-accent uppercase tracking-widest">
                                                 BHT</p>
-                                            <h3 class="text-2xl font-bold text-white">Boleta de Honorarios de Terceros
+                                            <h3 class="text-2xl font-bold text-white">Honorarios de Terceros
                                             </h3>
                                         </div>
                                     </div>
@@ -1411,8 +1430,8 @@
                                         <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Ej:
                                             consultora, agencia, retail, productoras, industriales, etc.</li>
                                     </ul>
-                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Pasa el mouse o toca para
-                                        m&aacute;s &rarr;</p>
+                                    <p class="text-xs text-gray-600 mt-6 font-mono-accent">Haz clic para m&aacute;s
+                                        &rarr;</p>
                                 </div>
                                 <div class="flip-back flex flex-col justify-center">
                                     <p class="text-xs text-amber-400 font-mono-accent uppercase tracking-widest mb-3">
@@ -1446,60 +1465,99 @@
                                 class="px-2.5 py-1 bg-primary-green/15 text-primary-green text-xs font-bold rounded font-mono-accent">BHE</span>
                             <h3 class="text-xl font-bold text-white">Profesionales independientes</h3>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 reveal-stagger">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3 reveal-stagger">
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M12 3v18M3 12h18M5 5l14 14M19 5L5 19" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="4" y="3" width="16" height="18" rx="2" />
+                                        <rect x="7" y="6" width="10" height="3" rx="0.5" />
+                                        <circle cx="8" cy="13" r="1" />
+                                        <circle cx="11" cy="13" r="1" />
+                                        <circle cx="14" cy="13" r="1" />
+                                        <circle cx="8" cy="16" r="1" />
+                                        <circle cx="11" cy="16" r="1" />
+                                        <circle cx="14" cy="16" r="1" />
+                                        <circle cx="17" cy="17" r="1.5" />
+                                        <path d="M16 17h2M16 19h2" />
+                                    </svg></div>
+                                <p class="text-sm font-semibold text-white">Contadores</p>
+                            </div>
+                            <div class="uc-avatar">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 3v18"/>
+                                        <path d="M5 8h14"/>
+                                        <path d="M3 8l2-3h14l2 3"/>
+                                        <path d="M7 8v3a3 3 0 003 3h4a3 3 0 003-3V8"/>
+                                        <circle cx="7" cy="6" r="0.5"/>
+                                        <circle cx="17" cy="6" r="0.5"/>
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Abogados</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M12 4v16m-8-8h16" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 3a2 2 0 00-2 2 2 2 0 002 2 2 2 0 002-2 2 2 0 00-2-2z"/>
+                                        <path d="M19 3a2 2 0 00-2 2 2 2 0 002 2 2 2 0 002-2 2 2 0 00-2-2z"/>
+                                        <path d="M7 4c-1 0-2 .8-2 2v3a2 2 0 002 2"/>
+                                        <path d="M17 4c1 0 2 .8 2 2v3a2 2 0 01-2 2"/>
+                                        <path d="M7 5h10v2H7z"/>
+                                        <path d="M11 6h2v13a1 1 0 01-1 1 1 1 0 01-1-1V6z"/>
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Kinesi&oacute;logos</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8 4a6 6 0 016 6v1"/>
+                                        <path d="M14 5a5 5 0 011 9.9"/>
+                                        <path d="M10 8a3 3 0 011 5.8"/>
+                                        <path d="M7 16c0 1 .5 2 1.5 2h7c1 0 1.5-1 1.5-2"/>
+                                        <path d="M8 18v2M16 18v2"/>
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Psic&oacute;logos</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M8 3v2m8-2v2M4 7h16v4a4 4 0 01-4 4h-1l-2 4-2-4H8a4 4 0 01-4-4V7z" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 3c-2.5 0-4.5 1.5-4.5 4 0 1.5.5 2.5 1 3.5-1 1.5-1.5 3-1.5 4.5 0 2 1 3.5 1 5 0 1 1 2 2 2h4c1 0 2-1 2-2 0-1.5 1-3 1-5 0-1.5-.5-3-1.5-4.5.5-1 1-2 1-3.5 0-2.5-2-4-4.5-4z"/>
+                                        <path d="M10 14h4"/>
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Dentistas</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M4 12a8 8 0 1016 0 8 8 0 00-16 0zM12 8v4l3 2" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 21s-7-4.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 6.5-7 11-7 11z" />
+                                        <path d="M3 12h2l1-2 2 4 2-5 2 4 2-2 2 1h2" />
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">M&eacute;dicos</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M6 4c0 2 1 3 3 3s3-1 3-3-1-3-3-3-3 1-3 3zM12 17c0 2 1 3 3 3s3-1 3-3-1-3-3-3-3 1-3 3z" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <ellipse cx="12" cy="14" rx="3.5" ry="4" />
+                                        <circle cx="7" cy="9" r="1.8" />
+                                        <circle cx="17" cy="9" r="1.8" />
+                                        <circle cx="9" cy="5" r="1.5" />
+                                        <circle cx="15" cy="5" r="1.5" />
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Veterinarios</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M4 20l8-16 8 16M8 14h8" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 11l9-6 9 6" />
+                                        <path d="M5 10v10h14V10" />
+                                        <path d="M10 20v-5h4v5" />
+                                        <path d="M3 11h18" />
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white">Arquitectos</p>
                             </div>
                             <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M12 4v16m8-8H4" />
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 4v16M4 12h16" />
                                     </svg></div>
                                 <p class="text-sm font-semibold text-white leading-tight">Y muchos m&aacute;s</p>
                             </div>
@@ -1512,162 +1570,80 @@
                                 class="px-2.5 py-1 bg-amber-500/15 text-amber-400 text-xs font-bold rounded font-mono-accent">BHT</span>
                             <h3 class="text-xl font-bold text-white">Empresas y organizaciones</h3>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 reveal-stagger">
-                            <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M3 9l9-6 9 6v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9z" />
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 reveal-stagger">
+                            <div class="uc-avatar uc-avatar--bht">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 9l1.5-5h15L21 9" />
+                                        <path d="M3 9v11a1 1 0 001 1h5v-7h6v7h5a1 1 0 001-1V9" />
+                                        <path d="M3 9h18" />
+                                        <path d="M9 13h2M13 13h2" />
                                     </svg></div>
                                 <p class="text-base font-bold text-white">Retail</p>
                                 <p class="text-xs text-gray-500 text-center">Tiendas, supermercados, e-commerce</p>
                             </div>
-                            <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M4 21V8l8-5 8 5v13M9 21V12h6v9" />
+                            <div class="uc-avatar uc-avatar--bht">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="9" r="3"/>
+                                        <path d="M9 4v2M9 12v2M4 9h2M12 9h2M5.5 5.5l1.5 1.5M11 11l1.5 1.5M5.5 12.5l1.5-1.5M11 6.5l1.5-1.5"/>
+                                        <path d="M9 9h.01"/>
+                                        <circle cx="16" cy="15" r="2.5"/>
+                                        <path d="M16 11v1.5M16 17.5V19M12 15h1.5M18.5 15H20M13.3 12.3l1 1M17.7 16.7l1 1M13.3 17.7l1-1M17.7 13.3l1-1"/>
+                                        <path d="M16 15h.01"/>
                                     </svg></div>
                                 <p class="text-base font-bold text-white">Productivas</p>
                                 <p class="text-xs text-gray-500 text-center">Manufactureras, agro, servicios</p>
                             </div>
-                            <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M12 2l3 6 6 1-4.5 4 1 6L12 16l-5.5 3 1-6L3 9l6-1 3-6z" />
+                            <div class="uc-avatar uc-avatar--bht">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 21V10l5-2v13"/>
+                                        <path d="M8 8l5-2 5 2v13"/>
+                                        <path d="M18 10l3 1v10"/>
+                                        <path d="M3 21h18"/>
+                                        <path d="M11 14h2v7"/>
+                                        <path d="M15 14h2v7"/>
+                                        <path d="M7 14h2v7"/>
+                                        <path d="M18 3v5M20.5 5.5h-5"/>
+                                        <path d="M14 5c0-1 .7-2 1.5-2h3c.8 0 1.5 1 1.5 2v2c0 1-.7 1-1.5 1h-3C14.7 6 14 6 14 5z"/>
+                                        <path d="M16 5c0 1 0 1.5 0 2"/>
                                     </svg></div>
                                 <p class="text-base font-bold text-white">Industriales</p>
-                                <p class="text-xs text-gray-500 text-center">Plantas, miner&iacute;a, log&iacute;stica
-                                </p>
+                                <p class="text-xs text-gray-500 text-center">Plantas, miner&iacute;a, log&iacute;stica</p>
                             </div>
-                            <div class="uc-avatar">
-                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                            d="M3 21h18M5 21V7l7-4 7 4v14M9 9h6M9 13h6M9 17h6" />
+                            <div class="uc-avatar uc-avatar--bht">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="6" cy="8" r="2.5"/>
+                                        <path d="M2.5 21v-1a3 3 0 013-3h1"/>
+                                        <path d="M9.5 21v-1a3 3 0 00-3-3"/>
+                                        <circle cx="18" cy="8" r="2.5"/>
+                                        <path d="M14.5 21v-1a3 3 0 013-3h1"/>
+                                        <path d="M21.5 21v-1a3 3 0 00-3-3"/>
+                                        <circle cx="12" cy="5" r="2.5"/>
+                                        <path d="M8.5 18v-1a3 3 0 013-3h1"/>
+                                        <path d="M15.5 18v-1a3 3 0 00-3-3"/>
                                     </svg></div>
                                 <p class="text-base font-bold text-white">Consultoras &amp; agencias</p>
                                 <p class="text-xs text-gray-500 text-center">Gestionan m&uacute;ltiples consultores</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ===== DEMO TERMINAL ===== -->
-            <section class="py-20 md:py-28">
-                <div class="container mx-auto px-6">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div class="reveal">
-                            <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">En
-                                acci&oacute;n</p>
-                            <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Mira
-                                c&oacute;mo corre una emisi&oacute;n real</h2>
-                            <p class="text-lg text-gray-400 mb-6">En serio, eso es todo. Una planilla, un click, y la
-                                magia ocurre detr&aacute;s del tel&oacute;n mientras t&uacute; te tomas un caf&eacute;.
-                            </p>
-                            <ul class="space-y-3 text-gray-400">
-                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
-                                    Conexi&oacute;n segura al SII con tu clave</li>
-                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
-                                    Validaci&oacute;n de cada RUT en l&iacute;nea</li>
-                                <li class="flex gap-3"><span class="text-primary-green font-mono-accent">&check;</span>
-                                    ZIP final con todos los PDF emitidos</li>
-                            </ul>
-                        </div>
-                        <div class="reveal" data-reveal>
-                            <div class="terminal">
-                                <div class="terminal-header">
-                                    <span class="terminal-dot r"></span>
-                                    <span class="terminal-dot y"></span>
-                                    <span class="terminal-dot g"></span>
-                                    <span class="terminal-title">boletapro &mdash; emisi&oacute;n BHE</span>
-                                </div>
-                                <div class="terminal-body">
-                                    <div class="terminal-line"><span class="prompt">&gt;</span> <span
-                                            class="muted">$</span> boletapro emitir &mdash;file junio.xlsx</div>
-                                    <div class="terminal-line"><span class="muted">[</span>1/247<span
-                                            class="muted">]</span> Conectando a <span class="ok">zeus.sii.cl</span> ...
-                                    </div>
-                                    <div class="terminal-line"><span class="muted">[</span>247/247<span
-                                            class="muted">]</span> Boletas procesadas correctamente</div>
-                                    <div class="terminal-line"><span class="prompt">&gt;</span> ZIP generado: <span
-                                            class="ok">boletas_BHE_2026-06.zip</span></div>
-                                    <div class="terminal-line"><span class="muted">Listo en 2m 14s &mdash; </span><span
-                                            class="ok">&#10003; 247/247 exitosas</span></div>
-                                </div>
+                            <div class="uc-avatar uc-avatar--bht">
+                                <div class="uc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 10-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z" />
+                                        <path d="M9 11.5h.01M15 11.5h.01" />
+                                        <path d="M9.5 14.5c.5.5 1.5 1 2.5 1s2-.5 2.5-1" />
+                                    </svg></div>
+                                <p class="text-base font-bold text-white">Fundaciones sin fines de lucro</p>
+                                <p class="text-xs text-gray-500 text-center">ONGs, fundaciones y entidades sociales</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ===== FEATURES ===== -->
-            <section class="py-20 md:py-28 bg-surface-dark">
-                <div class="container mx-auto px-6 text-center">
-                    <div class="reveal mb-16">
-                        <p class="text-primary-green font-mono-accent text-xs tracking-widest uppercase mb-3">Por
-                            qu&eacute; BoletaPro</p>
-                        <h2 class="heading-balance text-3xl md:text-5xl font-extrabold text-white mb-4">Dise&ntilde;ado
-                            para profesionales</h2>
-                        <p class="text-lg text-gray-400 max-w-3xl mx-auto">Olv&iacute;date de procesos manuales lentos.
-                            Enf&oacute;cate en tu trabajo mientras nosotros gestionamos la burocracia.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
-                        <div
-                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
-                            <div
-                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
-                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Ahorra horas de trabajo</h3>
-                            <p class="text-gray-400">Emite 10, 100 o 1000 boletas en el tiempo que te toma tomarte un
-                                caf&eacute;.</p>
-                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
-                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
-                            </svg>
-                        </div>
-                        <div
-                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
-                            <div
-                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
-                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Cero errores</h3>
-                            <p class="text-gray-400">Evita multas y problemas contables eliminando el error humano en la
-                                digitaci&oacute;n.</p>
-                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
-                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
-                            </svg>
-                        </div>
-                        <div
-                            class="feature-card p-8 border border-dark rounded-2xl bg-black/30 hover:border-primary-green transition duration-300 text-left">
-                            <div
-                                class="text-primary-green mb-4 bg-gray-800 w-14 h-14 rounded-xl flex items-center justify-center">
-                                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2">R&aacute;pido y seguro</h3>
-                            <p class="text-gray-400">Tu informaci&oacute;n y claves viajan encriptadas. Solo t&uacute;
-                                tienes el control.</p>
-                            <svg class="feature-tick mt-4" width="40" height="20" viewBox="0 0 40 20" fill="none"
-                                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 10l8 8 28-28" class="text-primary-green" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ===== PRICING (HABILITADO) ===== -->
             <section id="pricing" class="py-20 md:py-28">
@@ -1763,8 +1739,8 @@
                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.367 2.447a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.366-2.447a1 1 0 00-1.176 0l-3.367 2.447c-.783.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
                                 </svg></h3>
                             <p class="text-gray-500 text-xs mb-5 font-mono-accent">+500 boletas / mes</p>
-                            <div class="mb-6"><span
-                                    class="pricing-price text-3xl font-extrabold text-white">Personalizado</span></div>
+                            <div class="mb-6"><span class="pricing-price text-3xl font-extrabold text-white">A
+                                    medida</span></div>
                             <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
                                 <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Boletas a tu medida
                                 </li>
@@ -2029,8 +2005,6 @@
                 <div
                     class="border-t border-dark mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
                     <p>&copy; 2026 BoletaPro &middot; Todos los derechos reservados.</p>
-                    <p class="font-mono-accent">Servicio independiente de automatizaci&oacute;n &middot; Conectado a
-                        zeus.sii.cl y loa.sii.cl</p>
                 </div>
             </div>
         </footer>
