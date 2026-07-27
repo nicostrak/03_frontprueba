@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /terminos.html
+Allow: /privacidad.html
+Allow: /forgot-password.html
+Allow: /update-password.html
+Allow: /email-confirmation.html
+
+# Block AI training crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://www.boletapro.cl/sitemap.xml

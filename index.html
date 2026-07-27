@@ -4,7 +4,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoletaPro - Automatización de Honorarios para Profesionales</title>
+    <title>BoletaPro - Emite Boletas BHE y BHT ante el SII de Chile</title>
+
+    <!-- SEO Meta -->
+    <meta name="description" content="Emite Boletas de Honorarios Electrónicas (BHE) y de Terceros (BHT) masivamente ante el SII de Chile. Carga tu Excel y automatiza cientos de boletas en segundos.">
+    <meta name="keywords" content="boleta de honorarios electrónica, BHE, BHT, SII, emisión masiva boletas, boletas electrónicas Chile, honorarios profesionales, automatización tributaria, boleta terceros">
+    <meta name="author" content="BoletaPro">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.boletapro.cl/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="BoletaPro - Emite Boletas BHE y BHT ante el SII de Chile">
+    <meta property="og:description" content="Automatiza la emisión masiva de Boletas de Honorarios ante el SII. Carga tu Excel y emite cientos de boletas en segundos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.boletapro.cl/">
+    <meta property="og:image" content="https://www.boletapro.cl/og-image.png">
+    <meta property="og:locale" content="es_CL">
+    <meta property="og:site_name" content="BoletaPro">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BoletaPro - Emite Boletas BHE y BHT ante el SII">
+    <meta name="twitter:description" content="Automatiza la emisión masiva de Boletas de Honorarios ante el SII.">
+    <meta name="twitter:image" content="https://www.boletapro.cl/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://cdn.sheetjs.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "BoletaPro",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "description": "Plataforma para emisión masiva de Boletas de Honorarios Electrónicas (BHE) y Boletas de Terceros (BHT) ante el SII de Chile.",
+      "url": "https://www.boletapro.cl/",
+      "inLanguage": "es-CL",
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "0",
+        "highPrice": "34990",
+        "priceCurrency": "CLP",
+        "offerCount": "4"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es una Boleta de Honorarios Electrónica (BHE)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La Boleta de Honorarios Electrónica (BHE) es un documento tributario que emiten los trabajadores independientes en Chile por sus servicios profesionales. Se emite de forma electrónica ante el SII y permite a quien la recibe justificar un gasto y retener el 15,25% de impuesto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué diferencia hay entre BHE y BHT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La BHE la emite el profesional por sus propios servicios. La BHT (Boleta de Honorarios de Terceros) la emite una empresa por cuenta de un tercero que le prestó servicios. Por ejemplo, una consultora que emite boletas a nombre de sus consultores independientes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿BoletaPro almacena mi clave del SII?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+           "text": "No. BoletaPro no almacena tu RUT, contraseña ni claves del SII. Las credenciales se envían directamente al SII solo para la emisión de boletas y nunca se guardan en nuestros servidores."
+           }
+         },
+         {
+           "@type": "Question",
+           "name": "¿Cómo funciona la emisión masiva?",
+           "acceptedAnswer": {
+             "@type": "Answer",
+             "text": "Sube un archivo Excel con todos los destinatarios (RUT, nombre, fecha, monto, descripción). Nuestra plataforma procesa cada fila, se conecta automáticamente al SII y emite todas las boletas. Al finalizar, descargas un ZIP con todos los comprobantes PDF."
+           }
+         }
+       ]
+     }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "BoletaPro",
+      "url": "https://www.boletapro.cl/",
+      "logo": "https://www.boletapro.cl/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+56-9-3885-9332",
+        "contactType": "customer service",
+        "availableLanguage": "Spanish"
+      }
+    }
+    </script>
 
     <!-- Google Fonts: Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -188,6 +298,10 @@
         .whatsapp-float:hover {
             background-color: #1ebe57;
             transform: scale(1.1);
+        }
+
+        .faq-arrow.rotate-180 {
+            transform: rotate(180deg);
         }
 
         /* Video Modal */
@@ -444,6 +558,7 @@
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#features" class="text-gray-400 hover:text-white transition">Funcionalidades</a>
                         <a href="#pricing" class="text-gray-400 hover:text-white transition">Planes</a>
+                        <a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="login-btn"
@@ -688,6 +803,62 @@
                 </div>
             </section>
 
+            <!-- FAQ Section -->
+            <section id="faq" class="py-20">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">Resolvemos tus dudas sobre la emisión de boletas de honorarios.</p>
+                    </div>
+                    <div class="max-w-3xl mx-auto space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué es una Boleta de Honorarios Electrónica (BHE)?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La Boleta de Honorarios Electrónica (BHE) es un documento tributario que emiten los trabajadores independientes en Chile por sus servicios profesionales. Se emite de forma electrónica ante el SII y permite a quien la recibe justificar un gasto y retener el 15,25% de impuesto.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Qué diferencia hay entre BHE y BHT?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">La <strong class="text-white">BHE</strong> la emite el profesional por sus propios servicios. La <strong class="text-white">BHT</strong> (Boleta de Honorarios de Terceros) la emite una empresa por cuenta de un tercero que le prestó servicios. Por ejemplo, una consultora que emite boletas a nombre de sus consultores independientes.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿BoletaPro almacena mi clave del SII?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text"><strong class="text-white">No.</strong> BoletaPro no almacena tu RUT, contraseña ni claves del SII. Las credenciales se envían directamente al SII solo para la emisión de boletas y nunca se guardan en nuestros servidores.</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-dark rounded-lg overflow-hidden" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <button class="faq-toggle w-full flex justify-between items-center p-6 text-left" onclick="toggleFaq(this)">
+                                <h3 class="text-lg font-semibold text-white pr-4" itemprop="name">¿Cómo funciona la emisión masiva?</h3>
+                                <svg class="w-5 h-5 text-primary-green flex-shrink-0 faq-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-content hidden px-6 pb-6" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <p class="text-gray-400" itemprop="text">Sube un archivo Excel con todos los destinatarios (RUT, nombre, fecha, monto, descripción). Nuestra plataforma procesa cada fila, se conecta automáticamente al SII y emite todas las boletas. Al finalizar, descargas un ZIP con todos los comprobantes PDF.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
         <!-- Footer -->
         <footer class="bg-surface-dark border-t border-dark">
@@ -696,6 +867,7 @@
                 <div class="mt-4 flex justify-center space-x-6 text-sm">
                     <a href="terminos.html" class="hover:text-primary-green transition-colors">Términos y
                         Condiciones</a>
+                    <a href="privacidad.html" class="hover:text-primary-green transition-colors">Política de Privacidad</a>
                     <a href="https://wa.me/56938859332" target="_blank"
                         class="hover:text-primary-green transition-colors">Contacto</a>
                 </div>
@@ -795,6 +967,12 @@
     </section>
 
     <!-- ======== TUTORIAL MODAL (NEW) ======== -->
+    <!-- [VIDEO TUTORIAL MODAL - DESHABILITADO TEMPORALMENTE]
+         Para re-activar cuando se tenga el video:
+         1. Descomentar el section debajo
+         2. Descomentar la línea: setTimeout(showTutorialModal, 1000); en initializeDashboardAfterLogin()
+    -->
+    <!--
     <section id="tutorial-modal-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-90 z-[60] flex justify-center items-center p-4 opacity-0 pointer-events-none">
         <div id="tutorial-modal"
@@ -804,16 +982,7 @@
                 <button id="close-tutorial-modal-btn" class="text-gray-500 hover:text-white text-3xl">&times;</button>
             </div>
             <div class="video-container mb-6 bg-black rounded-lg border border-dark">
-                <!-- Placeholder for Video Tutorial -->
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
-                    <svg class="w-16 h-16 mb-4 text-primary-green opacity-80" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
-                    </svg>
-                    <p class="text-lg">Aquí se reproducirá el Video Tutorial</p>
-                    <p class="text-sm text-gray-600">(YouTube Embed)</p>
-                </div>
-                <!-- <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID" title="Tutorial BoletaPro" allowfullscreen></iframe> -->
+                <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID" title="Tutorial BoletaPro" allowfullscreen></iframe>
             </div>
             <div class="flex justify-end">
                 <button id="finish-tutorial-btn"
@@ -822,6 +991,7 @@
             </div>
         </div>
     </section>
+    -->
 
 
     <!-- ======== DASHBOARD SECTION ======== -->
@@ -902,9 +1072,9 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            <div class="bg-surface-dark p-6 rounded-lg border border-dark">
-                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Límite Total Plan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-surface-dark p-4 rounded-lg border border-dark">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-4">Limite Total Plan</h3>
                                 <div id="consumption-container" class="space-y-4">
                                     <!-- Datos de consumo se cargarán aquí -->
                                 </div>
@@ -912,7 +1082,7 @@
 
                             <!-- NUEVA TARJETA BHE -->
                             <div
-                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-between">
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
                                 <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Propias (BHE)</h3>
                                 <div class="mt-auto">
                                     <span id="bhe-count-display" class="text-4xl font-bold text-primary-green">0</span>
@@ -921,12 +1091,23 @@
                                 <div class="mt-2 text-xs text-gray-500">Consumo acumulado actual</div>
                             </div>
 
+                            <!-- NUEVA TARJETA BHT -->
                             <div
-                                class="bg-surface-dark p-6 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-between">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-2">Boletas Terceros (BHT)</h3>
+                                <div class="mt-auto">
+                                    <span id="bht-count-display" class="text-4xl font-bold text-primary-green">0</span>
+                                    <span class="text-gray-500 text-sm ml-2">este mes</span>
+                                </div>
+                                <div class="mt-2 text-xs text-gray-500">Consumo acumulado actual</div>
+                            </div>
+
+                            <div
+                                class="bg-surface-dark p-4 rounded-lg border border-dark flex flex-col justify-center items-center text-center">
                                 <h3 class="text-lg font-semibold text-white mb-2">¿Necesitas ayuda?</h3>
-                                <p class="text-gray-400 text-sm mb-4">Contacta a nuestro soporte especializado.</p>
+                                <p class="text-gray-400 text-sm mb-2">Contacta a nuestro soporte especializado.</p>
                                 <a href="https://wa.me/56938859332" target="_blank"
-                                    class="btn bg-primary-green text-white px-6 py-2 rounded-md font-semibold bg-primary-green-hover">
+                                    class="btn bg-primary-green text-white px-4 py-2 rounded-md font-semibold bg-primary-green-hover">
                                     Chat Soporte WhatsApp
                                 </a>
                             </div>
@@ -1040,7 +1221,7 @@
                                     </label>
 
                                     <!-- Opción BHET -->
-                                    <label class="radio-card hidden" for="tipo-bhet">
+                                    <label class="radio-card" for="tipo-bhet">
                                         <input type="radio" name="tipo-boleta" id="tipo-bhet" value="bht">
                                         <div class="radio-card-content">
                                             <div class="text-primary-green">
@@ -1054,7 +1235,7 @@
                                             </div>
                                             <div>
                                                 <h4 class="text-lg font-bold text-white mb-1">Boleta de Honorarios de
-                                                    Terceros (BHET)</h4>
+                                                    Terceros (BHT)</h4>
                                                 <p class="text-sm text-gray-400">Emisión de boletas por cuenta de
                                                     terceros</p>
                                             </div>
@@ -1076,10 +1257,30 @@
 
                                 <!-- Plantilla de descarga (solo para BHE) -->
                                 <div id="plantilla-bhe-info"
-                                    class="hidden mb-6 bg-gray-900/50 p-4 rounded border border-dark">
+                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
                                     <div class="flex justify-between items-center mb-2">
-                                        <h4 class="text-sm font-medium text-white">Plantilla Requerida</h4>
-                                        <a href="plantilla_bhe.xlsx" download="Plantilla_Carga_BHE_BoletaPro.xlsx"
+                                        <h4 class="text-sm font-medium text-white">Plantilla BHE</h4>
+                                        <a href="Plantillas_boletas_honorarios_propias.xlsm" download="Plantillas_boletas_honorarios_propias.xlsm"
+                                            class="text-xs text-primary-green hover:underline flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                                                </path>
+                                            </svg>
+                                            Descargar Excel
+                                        </a>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Usa la plantilla oficial para evitar errores de
+                                        formato.</p>
+                                </div>
+
+                                <!-- Plantilla de descarga (solo para BHT) -->
+                                <div id="plantilla-bht-info"
+                                    class="hidden mb-4 bg-gray-900/50 p-4 rounded border border-dark">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="text-sm font-medium text-white">Plantilla BHT</h4>
+                                        <a href="Plantilla_honorarios_de_terceros.xlsm" download="Plantilla_honorarios_de_terceros.xlsm"
                                             class="text-xs text-primary-green hover:underline flex items-center">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -1095,7 +1296,7 @@
                                 </div>
 
                                 <!-- Drag & Drop Zone -->
-                                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
+                                <input type="file" id="file-input" accept=".csv,.xlsx,.xls,.xlsm" class="hidden">
                                 <div id="drop-zone" class="drop-zone">
                                     <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -1105,7 +1306,8 @@
                                     </svg>
                                     <p class="text-lg text-gray-400 mb-2">Arrastra tu Excel aquí</p>
                                     <p class="text-sm text-gray-600 mb-4">o haz clic para seleccionar</p>
-                                    <p class="text-xs text-gray-700">Formatos permitidos: .csv, .xlsx | Máximo 5MB</p>
+                                    <p class="text-xs text-gray-700">Formatos permitidos: .csv, .xlsx, .xls, .xlsm |
+                                        Máximo 5MB</p>
                                 </div>
 
                                 <!-- File Info (después de cargar) -->
@@ -1201,7 +1403,7 @@
                                             class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                                     </div>
 
-                                    <div>
+                                    <div id="wizard-muestra-glosa-container">
                                         <label class="block text-sm font-medium text-gray-400 mb-2">Mostrar descripción
                                             de
                                             actividades</label>
@@ -1308,7 +1510,7 @@
                 <!-- Footer for Dashboard -->
                 <footer class="bg-surface-dark border-t border-dark mt-auto">
                     <div class="container mx-auto px-6 py-4 text-center text-gray-400 text-sm">
-                        <p>&copy; 2025 BoletaPro.</p>
+                        <p>&copy; 2026 BoletaPro.</p>
                     </div>
                 </footer>
             </div>
@@ -1367,10 +1569,12 @@
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
 
-            // Tutorial Modal Elements
-            const tutorialModalSection = document.getElementById('tutorial-modal-section');
-            const closeTutorialModalBtn = document.getElementById('close-tutorial-modal-btn');
-            const finishTutorialBtn = document.getElementById('finish-tutorial-btn');
+            // [VIDEO TUTORIAL - DESHABILITADO TEMPORALMENTE]
+            // El modal del tutorial está comentado en el HTML.
+            // Las variables below return null y no se usan hasta que se descomente.
+            const tutorialModalSection = null; // document.getElementById('tutorial-modal-section');
+            const closeTutorialModalBtn = null; // document.getElementById('close-tutorial-modal-btn');
+            const finishTutorialBtn = null; // document.getElementById('finish-tutorial-btn');
 
             // --- UI Helper Functions ---
             const showAuthModal = (view = 'login') => {
@@ -1392,18 +1596,13 @@
             };
 
             const showTutorialModal = () => {
-                // Check if user has seen tutorial in this session
-                if (!sessionStorage.getItem('tutorialSeen')) {
-                    tutorialModalSection.classList.remove('opacity-0', 'pointer-events-none');
-                    tutorialModalSection.querySelector('#tutorial-modal').classList.remove('scale-95');
-                    sessionStorage.setItem('tutorialSeen', 'true');
-                }
+                // [VIDEO TUTORIAL - DESHABILITADO]
+                // No-op until video is ready
             };
 
             const hideTutorialModal = () => {
-                tutorialModalSection.classList.add('opacity-0');
-                tutorialModalSection.querySelector('#tutorial-modal').classList.add('scale-95');
-                setTimeout(() => tutorialModalSection.classList.add('pointer-events-none'), 300);
+                // [VIDEO TUTORIAL - DESHABILITADO]
+                // No-op until video is ready
             };
 
             const showDashboard = (user) => {
@@ -1415,7 +1614,7 @@
                     initializeDashboard(user);
                     isDashboardInitialized = true;
                     // Show Tutorial on first dashboard load
-                    setTimeout(showTutorialModal, 1000);
+// setTimeout(showTutorialModal, 1000); // [VIDEO TUTORIAL - DESHABILITADO]
                 } else {
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                 }
@@ -1459,9 +1658,9 @@
             showSignupViewBtn.addEventListener('click', () => showAuthModal('signup'));
             showLoginViewBtn.addEventListener('click', () => showAuthModal('login'));
 
-            // Tutorial Events
-            closeTutorialModalBtn.addEventListener('click', hideTutorialModal);
-            finishTutorialBtn.addEventListener('click', hideTutorialModal);
+            // [VIDEO TUTORIAL - DESHABILITADO]
+            // closeTutorialModalBtn?.addEventListener('click', hideTutorialModal);
+            // finishTutorialBtn?.addEventListener('click', hideTutorialModal);
 
             // --- Auth Logic ---
             loginForm.addEventListener('submit', async (e) => {
@@ -1662,6 +1861,12 @@
                         bheDisplay.textContent = bheCount;
                     }
 
+                    // Update BHT card
+                    const bhtDisplay = document.getElementById('bht-count-display');
+                    if (bhtDisplay) {
+                        bhtDisplay.textContent = bhtCount;
+                    }
+
                     // Total Bar
                     const percentage = planLimit > 0 ? Math.min(100, (totalUsed / planLimit) * 100) : 0;
 
@@ -1728,15 +1933,17 @@
                         const tr = document.createElement('tr');
                         tr.className = 'border-b border-dark hover:bg-surface-dark transition';
 
-                        const statusBadge = log.fue_exitoso
-                            ? `<span class="px-2 py-1 text-xs font-semibold text-green-300 bg-green-900/50 rounded-full border border-green-800">Exitoso</span>`
-                            : `<span class="px-2 py-1 text-xs font-semibold text-red-300 bg-red-900/50 rounded-full border border-red-800">Error</span>`;
+                        const statusBadge = log.fue_exitoso === null
+                            ? `<span class="px-2 py-1 text-xs font-semibold text-blue-300 bg-blue-900/50 rounded-full border border-blue-800 animate-pulse">Procesando...</span>`
+                            : log.fue_exitoso
+                                ? `<span class="px-2 py-1 text-xs font-semibold text-green-300 bg-green-900/50 rounded-full border border-green-800">Exitoso</span>`
+                                : `<span class="px-2 py-1 text-xs font-semibold text-red-300 bg-red-900/50 rounded-full border border-red-800">Error</span>`;
 
                         const downloadLink = log.resultado_url
                             ? `<a href="${log.resultado_url}" target="_blank" class="text-primary-green hover:underline flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> ZIP</a>`
                             : '<span class="text-gray-600">-</span>';
 
-                        const errorBtn = (!log.fue_exitoso && log.detalles_error)
+                        const errorBtn = (log.fue_exitoso === false && log.detalles_error)
                             ? `<button class="text-amber-500 hover:text-amber-400 text-sm font-semibold error-btn">Ver Error</button>`
                             : '';
 
@@ -1785,6 +1992,65 @@
                         .range(from, to);
 
                     if (!error) renderHistory(data);
+                };
+
+                // --- Polling para tareas en proceso ---
+                let pollIntervalId = null;
+                const POLL_INTERVAL_MS = 10000;
+                const MAX_POLL_ATTEMPTS = 60; // 10 min max
+
+                const hasProcessingRecords = (logs) => logs.some(log => log.fue_exitoso === null);
+
+                const startPollingIfNeeded = (logs) => {
+                    if (!hasProcessingRecords(logs)) {
+                        stopPolling();
+                        return;
+                    }
+                    // Only poll if tab is visible and history section is visible
+                    if (document.visibilityState !== 'visible') return;
+                    // Check if we're on a page that shows the history view (dashboard-section visible)
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    if (!dashboardSection || dashboardSection.classList.contains('hidden')) return;
+
+                    if (pollIntervalId) return; // Already polling
+
+                    pollIntervalId = setInterval(async () => {
+                        if (document.visibilityState !== 'visible') return;
+                        await loadUsageHistory();
+                    }, POLL_INTERVAL_MS);
+                };
+
+                const stopPolling = () => {
+                    if (pollIntervalId) {
+                        clearInterval(pollIntervalId);
+                        pollIntervalId = null;
+                    }
+                };
+
+                // Visibility change listener
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        loadUsageHistory(); // Refresh immediately when tab becomes visible
+                    } else {
+                        stopPolling();
+                    }
+                });
+
+                // Override loadUsageHistory to trigger polling after each load
+                const originalLoadUsageHistory = loadUsageHistory;
+                loadUsageHistory = async () => {
+                    await originalLoadUsageHistory();
+                    // After load, check if we need to start/stop polling
+                    // The rendered data is in usageHistoryBody, but we need the raw data
+                    // We re-fetch to be safe
+                    const from = currentPage * pageSize;
+                    const to = from + pageSize - 1;
+                    const { data: logs } = await supabaseClient
+                        .from('registros_uso_api')
+                        .select('*')
+                        .order('fecha_registro', { ascending: false })
+                        .range(from, to);
+                    if (logs) startPollingIfNeeded(logs);
                 };
 
                 loadDashboardData = async () => {
@@ -1855,6 +2121,7 @@
                 let uploadedFile = null;
                 let excelData = null;
                 let validationErrors = [];
+                let isSubmitting = false;
 
                 // Wizard Elements
                 const wizardSteps = document.querySelectorAll('.wizard-step');
@@ -1879,6 +2146,7 @@
                 const fileSize = document.getElementById('file-size');
                 const btnRemoveFile = document.getElementById('btn-remove-file');
                 const plantillaBheInfo = document.getElementById('plantilla-bhe-info');
+                const plantillaBhtInfo = document.getElementById('plantilla-bht-info');
                 const btnStep2Back = document.getElementById('btn-step2-back');
                 const btnStep2Next = document.getElementById('btn-step2-next');
 
@@ -1951,8 +2219,9 @@
 
                 btnStep1Next.addEventListener('click', () => {
                     if (selectedTipoBoleta) {
-                        // Show plantilla info only for BHE
+                        // Show plantilla info only for BHE/BHT (not applicable for other types)
                         plantillaBheInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        plantillaBhtInfo.classList.toggle('hidden', selectedTipoBoleta !== 'bht');
                         updateWizardUI(2);
                     }
                 });
@@ -1960,11 +2229,11 @@
                 // ===== STEP 2: Carga de Archivo =====
                 const handleFileSelect = (file) => {
                     // Validate file type
-                    const validExtensions = ['.csv', '.xlsx', '.xls'];
+                    const validExtensions = ['.csv', '.xlsx', '.xls', '.xlsm'];
                     const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
 
                     if (!validExtensions.includes(fileExtension)) {
-                        showToast('Formato de archivo no válido. Usa .csv o .xlsx', 'error');
+                        showToast('Formato de archivo no válido. Usa .csv, .xlsx, .xls o .xlsm', 'error');
                         return;
                     }
 
@@ -2141,13 +2410,13 @@
 
                     // Mapa de alias aceptados para cada columna estándar
                     const columnMapping = {
-                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario'],
-                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social'],
-                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle'],
-                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad'],
-                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta'],
-                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios'],
-                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion']
+                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario', 'rut_completo_tercero', 'RUT'],
+                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social', 'NOMBRE_COMPLETO', 'nombre_completo', 'NOMBRE_TERC', 'NOMBRE_TERCERO'],
+                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle', 'DOMICILIO', 'domicilio_tercero'],
+                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad', 'COMUNA', 'comuna_tercero'],
+                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta', 'FECHA_BOLETA'],
+                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios', 'MONTO_BRUTO', 'monto_bruto', 'MONTO'],
+                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion', 'PRESTACION']
                     };
 
                     // Normalizar headers
@@ -2282,6 +2551,11 @@
                     if (validationErrors.length === 0) {
                         // Show tipo_retencion only for BHE
                         wizardTipoRetencionContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        // Show hdn_muestra_glosa only for BHE
+                        const wizardMuestraGlosaContainer = document.getElementById('wizard-muestra-glosa-container');
+                        if (wizardMuestraGlosaContainer) {
+                            wizardMuestraGlosaContainer.classList.toggle('hidden', selectedTipoBoleta !== 'bhe');
+                        }
                         updateWizardUI(4);
                     }
                 });
@@ -2299,6 +2573,14 @@
                 wizardFinalForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
 
+                    // Prevenir doble submit inmediato
+                    if (isSubmitting) return;
+                    isSubmitting = true;
+
+                    // Deshabilitar botón ANTES de cualquier operación async
+                    showLoadingState(btnEmitNow, 'Procesando...');
+                    emissionResult.classList.add('hidden');
+
                     try {
                         const { data: { session } } = await supabaseClient.auth.getSession();
                         if (!session) throw new Error("Sesión expirada");
@@ -2307,6 +2589,8 @@
                         const rutValidation = formatAndValidateRUT(wizardRutInput);
                         if (!rutValidation.valid) {
                             showToast('El RUT ingresado no es válido', 'error');
+                            hideLoadingState(btnEmitNow);
+                            isSubmitting = false;
                             return;
                         }
 
@@ -2315,17 +2599,15 @@
                         const tipoRetencion = selectedTipoBoleta === 'bhe' ? document.getElementById('wizard-tipo-retencion').value : null;
                         const hdnMuestraGlosa = document.querySelector('input[name="hdn_muestra_glosa"]:checked')?.value || "si";
 
-                        // Show loading state
-                        showLoadingState(btnEmitNow, 'Procesando...');
-                        emissionResult.classList.add('hidden');
-
                         // Prepare FormData
                         const formData = new FormData();
                         formData.append('rut', cleanRut);
                         formData.append('clave', clave);
                         formData.append('csv_file', uploadedFile);
-                        if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
-                        formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
+                        if (selectedTipoBoleta === 'bhe') {
+                            if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion);
+                            formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
+                        }
 
                         const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedTipoBoleta}/emitir-csv`;
                         const response = await fetch(proxyApiUrl, {
@@ -2432,6 +2714,7 @@
                         showToast('Error: ' + errorMessage, 'error');
                     } finally {
                         hideLoadingState(btnEmitNow);
+                        isSubmitting = false;
                     }
                 });
 
@@ -2439,12 +2722,26 @@
                 // END WIZARD LOGIC
                 // ============================================
 
-
                 // Init
                 loadDashboardData();
             };
 
         });
+
+        // ===== FAQ Toggle Logic (global, outside DOMContentLoaded) =====
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const arrow = button.querySelector('.faq-arrow');
+            const isOpen = !content.classList.contains('hidden');
+
+            if (isOpen) {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            } else {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            }
+        }
     </script>
 </body>
 
