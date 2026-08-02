@@ -2089,6 +2089,45 @@
                         </div>
                     </div>
 
+                    <!-- Tipo de Perfil -->
+                    <div class="mb-4">
+                        <label for="signup-tipo-perfil" class="block text-sm font-medium text-gray-400 mb-2">Tipo de Perfil</label>
+                        <select id="signup-tipo-perfil" required
+                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="Profesional">Profesional</option>
+                            <option value="Empresa">Empresa</option>
+                        </select>
+                    </div>
+
+                    <!-- Actividad -->
+                    <div class="mb-6">
+                        <label for="signup-actividad" class="block text-sm font-medium text-gray-400 mb-2">Actividad</label>
+                        <select id="signup-actividad" required
+                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Jurídico">Jurídico</option>
+                            <option value="Contabilidad y Finanzas">Contabilidad y Finanzas</option>
+                            <option value="Tecnología e Informática">Tecnología e Informática</option>
+                            <option value="Ingeniería">Ingeniería</option>
+                            <option value="Arquitectura y Construcción">Arquitectura y Construcción</option>
+                            <option value="Diseño y Creatividad">Diseño y Creatividad</option>
+                            <option value="Marketing y Publicidad">Marketing y Publicidad</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Recursos Humanos">Recursos Humanos</option>
+                            <option value="Administración y Consultoría">Administración y Consultoría</option>
+                            <option value="Comercio y Ventas">Comercio y Ventas</option>
+                            <option value="Transporte y Logística">Transporte y Logística</option>
+                            <option value="Belleza y Bienestar">Belleza y Bienestar</option>
+                            <option value="Deportes y Fitness">Deportes y Fitness</option>
+                            <option value="Arte y Entretenimiento">Arte y Entretenimiento</option>
+                            <option value="Organismo público">Organismo público</option>
+                            <option value="Organización sin fines de lucro">Organización sin fines de lucro</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
                     <button type="submit"
                         class="w-full btn bg-primary-green text-white py-3 rounded-md font-bold bg-primary-green-hover flex justify-center items-center">Crear
                         Cuenta</button>
@@ -2156,6 +2195,15 @@
                             </path>
                         </svg>
                         Emitir Boletas
+                    </a>
+                    <a href="#billing" data-view="billing-view"
+                        class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                            </path>
+                        </svg>
+                        Facturación
                     </a>
                     <a href="#settings" data-view="settings-view"
                         class="sidebar-link flex items-center p-3 rounded-md text-gray-400 font-semibold">
@@ -2657,6 +2705,87 @@
                             </div>
                         </div>
                     </div>
+                    <div id="billing-view" class="dashboard-view hidden">
+                        <h2 class="text-4xl font-bold text-white mb-8">Facturación</h2>
+                        <p class="text-gray-400 mb-6">Completa tus datos de facturación. Puedes actualizarlos cuando lo desees.</p>
+
+                        <div class="bg-surface-dark p-4 rounded-lg border border-primary-green/30 bg-primary-green/5 mb-8">
+                            <p class="text-sm text-gray-300">La activación del servicio se realizará una vez confirmado el pago. Recibirás por correo el documento tributario (boleta o factura) correspondiente y la confirmación de tu suscripción.</p>
+                        </div>
+
+                        <div class="bg-surface-dark p-6 rounded-lg border border-dark mb-8">
+                            <h3 class="text-xl font-bold text-white mb-4">Datos de Facturación</h3>
+                            <div id="billing-loading" class="text-gray-400 text-center py-4">Cargando datos...</div>
+                            <div id="billing-success-message" class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
+                            <div id="billing-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
+                            <div id="billing-tipo-wrapper" class="mb-6">
+                                <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
+                                <div class="inline-flex rounded-lg bg-gray-900 border border-dark p-1">
+                                    <button type="button" id="tipo-factura-btn"
+                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 bg-primary-green text-white shadow-md">
+                                        Factura
+                                    </button>
+                                    <button type="button" id="tipo-boleta-btn"
+                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
+                                        Boleta
+                                    </button>
+                                </div>
+                            </div>
+                            <form id="billing-form" class="hidden space-y-4">
+                                <div>
+                                    <label for="billing-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label>
+                                    <input type="text" id="billing-rut" required placeholder="12345678-9"
+                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                </div>
+                                <div>
+                                    <label for="billing-razon-social" class="block text-sm font-medium text-gray-400 mb-1">Razón Social o Nombre</label>
+                                    <input type="text" id="billing-razon-social" required placeholder="Razón Social o Nombre Completo"
+                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                </div>
+                                <div id="billing-giro-wrapper">
+                                    <label for="billing-giro" class="block text-sm font-medium text-gray-400 mb-1">Giro Comercial (Actividad Económica)</label>
+                                    <input type="text" id="billing-giro" required placeholder="Ej: Servicios de contabilidad y auditoría"
+                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                </div>
+                                <div>
+                                    <label for="billing-direccion" class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
+                                    <input type="text" id="billing-direccion" required placeholder="Calle, número, depto/oficina"
+                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                </div>
+                                <div>
+                                    <label for="billing-comuna" class="block text-sm font-medium text-gray-400 mb-1">Comuna</label>
+                                    <div class="relative">
+                                        <input type="text" id="billing-comuna" required placeholder="Escribe para buscar tu comuna..."
+                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"
+                                            autocomplete="off">
+                                        <ul id="billing-comuna-dropdown" class="hidden absolute z-20 w-full mt-1 bg-gray-900 border border-dark rounded-md max-h-60 overflow-y-auto shadow-lg"></ul>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="billing-email" class="block text-sm font-medium text-gray-400 mb-1">Correo Electrónico</label>
+                                    <input type="email" id="billing-email" required placeholder="correo@ejemplo.com"
+                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                </div>
+                                <div id="billing-version-info" class="text-sm text-gray-500 hidden">
+                                    Versión actual: <span id="billing-version-number"></span> — <span id="billing-version-date"></span>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <button type="button" id="billing-edit-btn"
+                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
+                                        Modificar
+                                    </button>
+                                    <button type="submit" id="billing-save-btn"
+                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
+                                        Guardar Datos de Facturación
+                                    </button>
+                                    <button type="button" id="billing-cancel-btn"
+                                        class="hidden btn btn-secondary text-white px-6 py-3 rounded-md font-semibold">
+                                        Salir sin guardar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Footer for Dashboard -->
@@ -2846,6 +2975,8 @@
                 const password = document.getElementById('signup-password').value;
                 const confirmPassword = document.getElementById('signup-confirm-password').value;
                 const terms = document.getElementById('terms').checked;
+                const tipoPerfil = document.getElementById('signup-tipo-perfil').value;
+                const actividad = document.getElementById('signup-actividad').value;
                 const btn = signupForm.querySelector('button[type="submit"]');
 
                 document.getElementById('signup-error-message').classList.add('hidden');
@@ -2865,7 +2996,11 @@
                     email,
                     password,
                     options: {
-                        emailRedirectTo: window.location.origin + window.location.pathname.replace('index.html', '') + 'email-confirmation.html'
+                        emailRedirectTo: window.location.origin + window.location.pathname.replace('index.html', '') + 'email-confirmation.html',
+                        data: {
+                            tipo_perfil: tipoPerfil,
+                            actividad: actividad
+                        }
                     }
                 });
 
@@ -2962,7 +3097,7 @@
 
                         const formData = new FormData(form);
                         const selectedApi = document.getElementById('api-select').value;
-                        const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedApi}`;
+                        const proxyApiUrl = `https://test---boletapro-api-mddl5s4dta-tl.a.run.app/${selectedApi}`;
 
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
@@ -3129,15 +3264,6 @@
                     pageIndicator.textContent = `Página ${currentPage + 1} de ${totalPages || 1}`;
                     prevPageBtn.disabled = currentPage === 0;
                     nextPageBtn.disabled = (currentPage + 1) * pageSize >= totalRecords;
-
-                    // Polling: auto-refresh if there are rows with fue_exitoso=null (Procesando)
-                    if (window.historyPollingInterval) clearInterval(window.historyPollingInterval);
-                    const hasProcessing = logs.some(log => log.fue_exitoso == null);
-                    if (hasProcessing) {
-                        window.historyPollingInterval = setInterval(() => {
-                            loadUsageHistory();
-                        }, 15000);
-                    }
                 };
 
                 const loadUsageHistory = async () => {
@@ -3155,7 +3281,46 @@
                         .order('fecha_registro', { ascending: false })
                         .range(from, to);
 
-                    if (!error) renderHistory(data);
+                    // Buscar tareas en proceso (tabla procesos_activos)
+                    const lastRut = sessionStorage.getItem('last_emission_rut');
+                    let inProgressRow = null;
+                    if (lastRut && currentPage === 0) {
+                        const { data: procData } = await supabaseClient
+                            .from('procesos_activos')
+                            .select('*')
+                            .eq('rut', lastRut)
+                            .limit(1);
+                        const proc = (procData && procData.length > 0) ? procData[0] : null;
+                        if (proc && proc.procesadas < proc.total_boletas) {
+                            inProgressRow = {
+                                id: 'processing-' + lastRut,
+                                fue_exitoso: null,
+                                servicio_api: proc.tipo,
+                                cantidad_procesada: proc.procesadas + ' de ' + proc.total_boletas,
+                                fecha_registro: proc.iniciado_en,
+                                task_id: proc.job_id,
+                                resultado_url: null,
+                                detalles_error: null,
+                            };
+                        }
+                    }
+
+                    // Merge: fila "Procesando" al inicio si existe
+                    let displayData = data || [];
+                    if (inProgressRow) {
+                        displayData = [inProgressRow, ...displayData];
+                    }
+
+                    if (!error || inProgressRow) {
+                        renderHistory(displayData);
+                        // Polling si hay tarea en curso
+                        if (window.historyPollingInterval) clearInterval(window.historyPollingInterval);
+                        if (inProgressRow) {
+                            window.historyPollingInterval = setInterval(() => {
+                                loadUsageHistory();
+                            }, 15000);
+                        }
+                    }
                 };
 
                 loadDashboardData = async () => {
@@ -3192,6 +3357,7 @@
                         dashboardViews.forEach(v => v.classList.add('hidden'));
                         document.getElementById(link.dataset.view).classList.remove('hidden');
                         if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
+                        if (link.dataset.view === 'billing-view') loadBillingData();
                     };
                 });
 
@@ -3211,6 +3377,345 @@
                         });
                     };
                 }
+
+                // --- Billing Logic ---
+
+                const validarRut = (rut) => {
+                    const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+                    if (cleaned.length < 2) return false;
+                    const dv = cleaned.slice(-1);
+                    const body = cleaned.slice(0, -1);
+                    let sum = 0;
+                    let multiplier = 2;
+                    for (let i = body.length - 1; i >= 0; i--) {
+                        sum += parseInt(body[i]) * multiplier;
+                        multiplier = multiplier < 7 ? multiplier + 1 : 2;
+                    }
+                    const expectedDv = 11 - (sum % 11);
+                    let expectedChar;
+                    if (expectedDv === 11) expectedChar = '0';
+                    else if (expectedDv === 10) expectedChar = 'K';
+                    else expectedChar = expectedDv.toString();
+                    return dv === expectedChar;
+                };
+
+                const billingFields = [
+                    'billing-rut', 'billing-razon-social', 'billing-giro',
+                    'billing-direccion', 'billing-comuna', 'billing-email'
+                ];
+
+                const setBillingFieldsDisabled = (disabled) => {
+                    billingFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.disabled = disabled;
+                    });
+                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
+                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
+                    if (tipoFacturaBtn) tipoFacturaBtn.disabled = disabled;
+                    if (tipoBoletaBtn) tipoBoletaBtn.disabled = disabled;
+                };
+
+                let selectedTipoDocumento = 'factura';
+
+                const setTipoDocumentoUI = (tipo) => {
+                    selectedTipoDocumento = tipo === 'boleta' ? 'boleta' : 'factura';
+                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
+                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
+                    const giroWrapper = document.getElementById('billing-giro-wrapper');
+                    const giroInput = document.getElementById('billing-giro');
+
+                    const activate = (activeBtn, inactiveBtn) => {
+                        activeBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
+                        activeBtn.classList.remove('text-gray-400');
+                        inactiveBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                        inactiveBtn.classList.add('text-gray-400');
+                    };
+
+                    if (selectedTipoDocumento === 'boleta') {
+                        activate(tipoBoletaBtn, tipoFacturaBtn);
+                        if (giroWrapper) giroWrapper.classList.add('hidden');
+                        if (giroInput) { giroInput.required = false; giroInput.disabled = true; }
+                    } else {
+                        activate(tipoFacturaBtn, tipoBoletaBtn);
+                        if (giroWrapper) giroWrapper.classList.remove('hidden');
+                        if (giroInput) { giroInput.required = true; giroInput.disabled = false; }
+                    }
+                };
+
+                document.getElementById('tipo-factura-btn').addEventListener('click', () => setTipoDocumentoUI('factura'));
+                document.getElementById('tipo-boleta-btn').addEventListener('click', () => setTipoDocumentoUI('boleta'));
+
+                const loadBillingData = async () => {
+                    const loadingEl = document.getElementById('billing-loading');
+                    const form = document.getElementById('billing-form');
+                    const versionInfo = document.getElementById('billing-version-info');
+                    const editBtn = document.getElementById('billing-edit-btn');
+                    const saveBtn = document.getElementById('billing-save-btn');
+                    loadingEl.classList.remove('hidden');
+                    form.classList.add('hidden');
+
+                    const { data, error } = await supabaseClient
+                        .from('datos_facturacion')
+                        .select('*')
+                        .eq('usuario_id', user.id)
+                        .order('version', { ascending: false })
+                        .limit(1);
+
+                    loadingEl.classList.add('hidden');
+
+                    const cancelBtn = document.getElementById('billing-cancel-btn');
+
+                    if (!error && data && data.length > 0) {
+                        const d = data[0];
+                        document.getElementById('billing-rut').value = d.rut || '';
+                        document.getElementById('billing-razon-social').value = d.razon_social || '';
+                        document.getElementById('billing-giro').value = d.giro || '';
+                        document.getElementById('billing-direccion').value = d.direccion || '';
+                        document.getElementById('billing-comuna').value = d.comuna || '';
+                        document.getElementById('billing-email').value = d.email_facturacion || '';
+                        setTipoDocumentoUI(d.tipo_documento || 'factura');
+                        document.getElementById('billing-version-number').textContent = d.version;
+                        document.getElementById('billing-version-date').textContent = new Date(d.creado_en).toLocaleString('es-CL');
+                        versionInfo.classList.remove('hidden');
+                        form.classList.remove('hidden');
+                        setBillingFieldsDisabled(true);
+                        editBtn.classList.remove('hidden');
+                        saveBtn.classList.add('hidden');
+                        cancelBtn.classList.add('hidden');
+                    } else {
+                        form.classList.remove('hidden');
+                        versionInfo.classList.add('hidden');
+                        setBillingFieldsDisabled(false);
+                        editBtn.classList.add('hidden');
+                        saveBtn.classList.remove('hidden');
+                        cancelBtn.classList.add('hidden');
+                    }
+                };
+
+                let billingOriginalValues = {};
+
+                const editBtn = document.getElementById('billing-edit-btn');
+                editBtn.addEventListener('click', () => {
+                    billingOriginalValues = {};
+                    billingFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) billingOriginalValues[id] = el.value;
+                    });
+                    billingOriginalValues['tipo_documento'] = selectedTipoDocumento;
+                    setBillingFieldsDisabled(false);
+                    setTipoDocumentoUI(selectedTipoDocumento);
+                    editBtn.classList.add('hidden');
+                    document.getElementById('billing-save-btn').classList.remove('hidden');
+                    document.getElementById('billing-cancel-btn').classList.remove('hidden');
+                    document.getElementById('billing-rut').focus();
+                });
+
+                const cancelBtn = document.getElementById('billing-cancel-btn');
+                cancelBtn.addEventListener('click', () => {
+                    billingFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = billingOriginalValues[id] || '';
+                    });
+                    setTipoDocumentoUI(billingOriginalValues['tipo_documento'] || 'factura');
+                    setBillingFieldsDisabled(true);
+                    cancelBtn.classList.add('hidden');
+                    document.getElementById('billing-save-btn').classList.add('hidden');
+                    editBtn.classList.remove('hidden');
+                    document.getElementById('billing-success-message').classList.add('hidden');
+                    document.getElementById('billing-error-message').classList.add('hidden');
+                });
+
+                // --- Comuna Autocomplete ---
+                const COMUNAS_VALIDAS_JS = [
+                    "ALGARROBO","ALHUE","ALTO BIO BIO","ALTO DEL CARMEN","ALTO HOSPICIO",
+                    "ANCUD","ANDACOLLO","ANGOL","ANTOFAGASTA","ANTUCO","ARAUCO","ARICA",
+                    "AYSEN","BUIN","BULNES","CABILDO","CABO DE HORNOS","CABRERO","CALAMA",
+                    "CALBUCO","CALDERA","CALERA DE TANGO","CALLE LARGA","CAMARONES","CAMINA",
+                    "CANELA","CANETE","CARAHUE","CARTAGENA","CASABLANCA","CASTRO","CATEMU",
+                    "CAUQUENES","CERRILLOS","CERRO NAVIA","CHAITEN","CHANARAL","CHANCO",
+                    "CHEPICA","CHIGUAYANTE","CHILE CHICO","CHILLAN","CHILLAN VIEJO",
+                    "CHIMBARONGO","CHOLCHOL","CHONCHI","CISNES","COBQUECURA","COCHAMO",
+                    "COCHRANE","CODEGUA","COELEMU","COIHUECO","COINCO","COLBUN","COLCHANE",
+                    "COLINA","COLLIPULLI","COLTAUCO","COMBARBALA","CON CON","CONCEPCION",
+                    "CONCHALI","CONSTITUCION","CONTULMO","COPIAPO","COQUIMBO","CORONEL",
+                    "CORRAL","COYHAIQUE","CUNCO","CURACAVI","CURACAUTIN","CURACO DE VELEZ",
+                    "CURANILAHUE","CURARREHUE","CUREPTO","CURICO","DALCAHUE","DIEGO DE ALMAGRO",
+                    "DONIHUE","EL BOSQUE","EL CARMEN","EL MONTE","EL QUISCO","EL TABO",
+                    "EMPEDRADO","ERCILLA","EST CENTRAL","FLORIDA","FREIRE","FREIRINA","FRESIA",
+                    "FRUTILLAR","FUTALEUFU","FUTRONO","GALVARINO","GENERAL LAGOS","GORBEA",
+                    "GRANEROS","GUAITECAS","HIJUELAS","HUALAIHUE","HUALANE","HUALPEN","HUALQUI",
+                    "HUARA","HUASCO","HUECHURABA","ILLAPEL","INDEPENDENCIA","IQUIQUE",
+                    "ISLA DE MAIPO","ISLA DE PASCUA","JUAN FERNANDEZ","LA CALERA","LA CISTERNA",
+                    "LA CRUZ","LA ESTRELLA","LA FLORIDA","LA GRANJA","LA HIGUERA","LA LIGUA",
+                    "LA PINTANA","LA REINA","LA SERENA","LA UNION","LAGO RANCO","LAGO VERDE",
+                    "LAGUNA BLANCA","LAJA","LAMPA","LANCO","LAS CABRAS","LAS CONDES","LAUTARO",
+                    "LEBU","LICANTEN","LIMACHE","LINARES","LITUECHE","LLANQUIHUE","LLAY-LLAY",
+                    "LO BARNECHEA","LO ESPEJO","LO PRADO","LOLOL","LONCOCHE","LONGAVI",
+                    "LONQUIMAY","LOS ALAMOS","LOS ANDES","LOS ANGELES","LOS LAGOS",
+                    "LOS MUERMOS","LOS SAUCES","LOS VILOS","LOTA","LUMACO","MACHALI","MACUL",
+                    "MAFIL","MAIPU","MALLOA","MARCHIGUE","MARIA ELENA","MARIA PINTO",
+                    "MARIQUINA","MAULE","MAULLIN","MEJILLONES","MELIPEUCO","MELIPILLA",
+                    "MOLINA","MONTE PATRIA","MULCHEN","NACIMIENTO","NANCAGUA","NAVIDAD",
+                    "NEGRETE","NINHUE","NOGALES","NUEVA IMPERIAL","NUNOA","O'HIGGINS","OLIVAR",
+                    "OLLAGUE","OLMUE","OSORNO","OVALLE","P AGUIRRE CERDA","PADRE HURTADO",
+                    "PADRE LAS CASAS","PAIHUANO","PAILLACO","PAINE","PALENA","PALMILLA",
+                    "PANGUIPULLI","PANQUEHUE","PAPUDO","PAREDONES","PARRAL","PELARCO",
+                    "PELLUHUE","PEMUCO","PENAFLOR","PENALOLEN","PENCAHUE","PENCO","PERALILLO",
+                    "PERQUENCO","PETORCA","PEUMO","PICA","PICHIDEGUA","PICHILEMU","PINTO",
+                    "PIRQUE","PITRUFQUEN","PLACILLA","PORTEZUELO","PORVENIR","POZO ALMONTE",
+                    "PRIMAVERA","PROVIDENCIA","PUCHUNCAVI","PUCON","PUDAHUEL","PUENTE ALTO",
+                    "PUERTO MONTT","PUERTO NATALES","PUERTO OCTAY","PUERTO VARAS","PUMANQUE",
+                    "PUNITAQUI","PUNTA ARENAS","PUQUELDON","PUREN","PURRANQUE","PUTAENDO",
+                    "PUTRE","PUYEHUE","QUEILEN","QUELLON","QUEMCHI","QUILACO","QUILICURA",
+                    "QUILLECO","QUILLON","QUILLOTA","QUILPUE","QUINCHAO","QUINTA NORMAL",
+                    "QUINTA TILCOCO","QUINTERO","QUIRIHUE","RANCAGUA","RANQUIL","RAUCO",
+                    "RECOLETA","RENAICO","RENCA","RENGO","REQUINOA","RETIRO","RINCONADA",
+                    "RIO BUENO","RIO CLARO","RIO HURTADO","RIO IBANEZ","RIO NEGRO","RIO VERDE",
+                    "ROMERAL","SAAVEDRA","SAGRADA FAMILIA","SALAMANCA","SAN ANTONIO",
+                    "SAN BERNARDO","SAN CARLOS","SAN CLEMENTE","SAN ESTEBAN","SAN FABIAN",
+                    "SAN FELIPE","SAN FERNANDO","SAN FRANCISCO DE MOSTAZAL","SAN GREG NIQUEN",
+                    "SAN GREGORIO","SAN IGNACIO","SAN JAVIER","SAN JOAQUIN","SAN JOSE MAIPO",
+                    "SAN JUAN DE LA COSTA","SAN MIGUEL","SAN NICOLAS","SAN PABLO",
+                    "SAN PEDRO DE ATACAMA","SAN PEDRO DE LA PAZ","SAN PEDRO DE MELIPILLA",
+                    "SAN RAFAEL","SAN RAMON","SAN ROSENDO","SAN VICENTE","SANTA BARBARA",
+                    "SANTA CRUZ","SANTA JUANA","SANTA MARIA","SANTIAGO","SANTO DOMINGO",
+                    "SIERRA GORDA","TALAGANTE","TALCA","TALCAHUANO","TALTAL","TEMUCO","TENO",
+                    "TEODORO SCHMIDT","TIERRA AMARILLA","TIL-TIL","TIMAUKEL","TIRUA","TOCOPILLA",
+                    "TOLTEN","TOME","TORRES DE PAINE","TORTEL","TRAIGUEN","TREHUACO","TUCAPEL",
+                    "VALDIVIA","VALLENAR","VALPARAISO","VICHUQUEN","VICTORIA","VICUNA","VILCUN",
+                    "VILLA ALEGRE","VILLA ALEMANA","VILLARRICA","VINA DEL MAR","VITACURA",
+                    "YERBAS BUENAS","YUMBEL","YUNGAY","ZAPALLAR"
+                ];
+
+                const comunaInput = document.getElementById('billing-comuna');
+                const comunaDropdown = document.getElementById('billing-comuna-dropdown');
+                let comunaSelectedIndex = -1;
+
+                const closeComunaDropdown = () => {
+                    comunaDropdown.classList.add('hidden');
+                    comunaSelectedIndex = -1;
+                };
+
+                const selectComuna = (comuna) => {
+                    comunaInput.value = comuna;
+                    closeComunaDropdown();
+                };
+
+                comunaInput.addEventListener('input', () => {
+                    const query = comunaInput.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+                    comunaDropdown.innerHTML = '';
+                    comunaSelectedIndex = -1;
+                    if (!query) { comunaDropdown.classList.add('hidden'); return; }
+                    const matches = COMUNAS_VALIDAS_JS.filter(c =>
+                        c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(query)
+                    ).slice(0, 15);
+                    if (matches.length === 0) { comunaDropdown.classList.add('hidden'); return; }
+                    matches.forEach(c => {
+                        const li = document.createElement('li');
+                        li.textContent = c;
+                        li.className = 'px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer text-sm';
+                        li.addEventListener('mousedown', (e) => { e.preventDefault(); selectComuna(c); });
+                        comunaDropdown.appendChild(li);
+                    });
+                    comunaDropdown.classList.remove('hidden');
+                });
+
+                comunaInput.addEventListener('keydown', (e) => {
+                    const items = comunaDropdown.querySelectorAll('li');
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        comunaSelectedIndex = Math.min(comunaSelectedIndex + 1, items.length - 1);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        comunaSelectedIndex = Math.max(comunaSelectedIndex - 1, 0);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
+                    } else if (e.key === 'Enter') {
+                        if (comunaSelectedIndex >= 0 && items[comunaSelectedIndex]) {
+                            e.preventDefault();
+                            selectComuna(items[comunaSelectedIndex].textContent);
+                        }
+                    } else if (e.key === 'Escape') {
+                        closeComunaDropdown();
+                    }
+                });
+
+                comunaInput.addEventListener('blur', () => {
+                    setTimeout(closeComunaDropdown, 150);
+                });
+
+                const esComunaValida = (comuna) => COMUNAS_VALIDAS_JS.some(c => c === comuna);
+
+                const billingForm = document.getElementById('billing-form');
+                billingForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const successMsg = document.getElementById('billing-success-message');
+                    const errorMsg = document.getElementById('billing-error-message');
+                    successMsg.classList.add('hidden');
+                    errorMsg.classList.add('hidden');
+
+                    const rut = document.getElementById('billing-rut').value.trim();
+                    const razonSocial = document.getElementById('billing-razon-social').value.trim();
+                    const giro = document.getElementById('billing-giro').value.trim();
+                    const direccion = document.getElementById('billing-direccion').value.trim();
+                    const comuna = document.getElementById('billing-comuna').value.trim();
+                    const email = document.getElementById('billing-email').value.trim();
+
+                    if (!validarRut(rut)) {
+                        errorMsg.textContent = 'El RUT ingresado no es válido. Usa formato 12345678-9.';
+                        errorMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    if (!esComunaValida(comuna)) {
+                        errorMsg.textContent = 'La comuna ingresada no es válida. Selecciona una de la lista.';
+                        errorMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    const saveBtn = document.getElementById('billing-save-btn');
+                    const originalText = saveBtn.innerHTML;
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<div class="spinner inline-block mr-2"></div>Guardando...';
+
+                    try {
+                        const { error: insertError } = await supabaseClient
+                            .from('datos_facturacion')
+                            .insert({
+                                usuario_id: user.id,
+                                rut,
+                                razon_social: razonSocial,
+                                giro: selectedTipoDocumento === 'boleta' ? null : giro,
+                                direccion,
+                                comuna,
+                                email_facturacion: email,
+                                tipo_documento: selectedTipoDocumento
+                            });
+
+                        if (insertError) {
+                            errorMsg.textContent = insertError.message;
+                            errorMsg.classList.remove('hidden');
+                        } else {
+                            successMsg.textContent = 'Datos de facturación guardados correctamente.';
+                            successMsg.classList.remove('hidden');
+                            loadBillingData();
+                        }
+                    } catch (err) {
+                        console.error('Error guardando datos de facturación:', err);
+                        errorMsg.textContent = 'Error al guardar: ' + (err.message || err);
+                        errorMsg.classList.remove('hidden');
+                    } finally {
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = originalText;
+                    }
+
+                    setTimeout(() => {
+                        successMsg.classList.add('hidden');
+                        errorMsg.classList.add('hidden');
+                    }, 5000);
+                });
 
                 // Modals
                 closeErrorModal.onclick = hideErrorModal;
@@ -3772,7 +4277,7 @@
                             formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
                         }
 
-                        const proxyApiUrl = `https://boletapro-api-742039510932.southamerica-west1.run.app/${selectedTipoBoleta}/emitir-csv`;
+                        const proxyApiUrl = `https://test---boletapro-api-mddl5s4dta-tl.a.run.app/${selectedTipoBoleta}/emitir-csv`;
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
                             headers: { 'Authorization': `Bearer ${session.access_token}` },
@@ -3831,6 +4336,9 @@
                         } else {
                             const result = await response.json();
                             const taskId = result.task_id ? result.task_id.split('/').pop() : 'N/A';
+
+                            // Guardar RUT para mostrar progreso "Procesando" en el historial
+                            sessionStorage.setItem('last_emission_rut', cleanRut);
 
                             showToast('¡Proceso iniciado!', 'success');
                             loadUsageHistory();
