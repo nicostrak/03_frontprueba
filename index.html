@@ -3785,7 +3785,17 @@
                             let errorDetail = 'Error en la emisión';
                             try {
                                 const errorData = await response.json();
-                                errorDetail = errorData.error || errorData.detail || errorDetail;
+                                const rawDetail = errorData.error || errorData.detail;
+                                if (rawDetail) {
+                                    if (typeof rawDetail === 'object') {
+                                        errorDetail = rawDetail.mensaje || rawDetail.detalle || 'Error en la emisión';
+                                        if (rawDetail.errores && Array.isArray(rawDetail.errores) && rawDetail.errores.length > 0) {
+                                            errorDetail += '\n\n• ' + rawDetail.errores.join('\n• ');
+                                        }
+                                    } else {
+                                        errorDetail = rawDetail;
+                                    }
+                                }
                             } catch (e) {
                                 errorDetail = `Error ${response.status}: Servidor no disponible`;
                             }
@@ -3887,7 +3897,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                                 <h4 class="text-2xl font-bold text-red-400 mb-2">Error en la Emisión</h4>
-                                <p class="text-gray-300 bg-red-900/10 p-3 rounded border border-red-900/30 text-sm leading-relaxed">${errorMessage}</p>
+                                <p class="text-gray-300 bg-red-900/10 p-3 rounded border border-red-900/30 text-sm leading-relaxed whitespace-pre-line">${errorMessage}</p>
                             </div>
                         `;
                         emissionResult.classList.remove('hidden', 'border-green-800', 'bg-green-900/20');
