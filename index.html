@@ -3991,7 +3991,8 @@
                         // Validación para BHE
                         validationErrors = validateBHE(excelData);
                     } else {
-                        // Para BHT con datos presentes, la validación completa la hace el servidor.
+                        // Validación para BHT
+                        validationErrors = validateBHT(excelData);
                     }
 
                     // Render validation status
@@ -4040,13 +4041,38 @@
                     }
                 };
 
+                // Regex compartidos para validación de campos de texto
+                const INVALID_CHAR_REGEX = /[^a-zA-Z0-9\s]/;
+                const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                const validarTexto = (valor, campo, lineNum, errors) => {
+                    if (!valor) return;
+                    const str = String(valor);
+                    if (INVALID_CHAR_REGEX.test(str)) {
+                        errors.push({ linea: lineNum, error: `El campo '${campo}' contiene caracteres no permitidos (tildes, ñ, comas, puntos, etc.).` });
+                    }
+                    if (str !== str.trimEnd()) {
+                        errors.push({ linea: lineNum, error: `El campo '${campo}' tiene espacios en blanco al final.` });
+                    }
+                };
+
+                const validarComuna = (comuna, lineNum, errors) => {
+                    if (!comuna) {
+                        errors.push({ linea: lineNum, error: 'La Comuna está vacía.' });
+                        return;
+                    }
+                    const comunaUpper = String(comuna).trim().toUpperCase();
+                    if (!COMUNAS_VALIDAS_JS.includes(comunaUpper)) {
+                        errors.push({ linea: lineNum, error: `La Comuna '${String(comuna).trim()}' no es válida. Revise los comentarios en las cabeceras de la plantilla.` });
+                    }
+                };
+
                 // Validación BHE (Mejorada con Mapeo de Columnas)
                 const validateBHE = (data) => {
                     const errors = [];
-                    let headers = data[0].map(h => String(h).trim()); // Headers originales limpios
+                    let headers = data[0].map(h => String(h).trim());
                     const rows = data.slice(1);
 
-                    // Mapa de alias aceptados para cada columna estándar
                     const columnMapping = {
                         'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_destinatario', 'rut destinatario', 'rut_completo_tercero', 'RUT'],
                         'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'nombre destinatario', 'razon_social', 'NOMBRE_COMPLETO', 'nombre_completo', 'NOMBRE_TERC', 'NOMBRE_TERCERO'],
@@ -4054,10 +4080,10 @@
                         'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad', 'COMUNA', 'comuna_tercero'],
                         'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta', 'FECHA_BOLETA'],
                         'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios', 'MONTO_BRUTO', 'monto_bruto', 'MONTO'],
-                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion', 'PRESTACION']
+                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion', 'PRESTACION'],
+                        'Email': ['email', 'correo', 'txt_email_contribuyente', 'EMAIL', 'email_contribuyente', 'correo electronico', 'correo electrónico']
                     };
 
-                    // Normalizar headers
                     const normalizedHeaders = headers.map(header => {
                         const headerLower = header.toLowerCase();
                         for (const [standardName, aliases] of Object.entries(columnMapping)) {
@@ -4065,14 +4091,12 @@
                                 return standardName;
                             }
                         }
-                        return header; // Si no coincide, dejar original
+                        return header;
                     });
 
-                    // Reemplazar headers en la data original (para referencia posterior si fuera necesario)
                     data[0] = normalizedHeaders;
                     headers = normalizedHeaders;
 
-                    // Verificar columnas requeridas
                     const requiredColumns = ['RUT Receptor', 'Razón Social', 'Dirección', 'Comuna', 'Fecha Emisión', 'Monto Honorarios', 'Descripción'];
                     const missingColumns = requiredColumns.filter(col => !headers.includes(col));
 
@@ -4081,47 +4105,139 @@
                         return errors;
                     }
 
-                    // Validar cada fila
                     rows.forEach((row, index) => {
                         const lineNum = index + 2;
 
-                        // Ignorar filas completamente vacías
                         const isEmptyRow = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || String(cell).trim() === '');
                         if (isEmptyRow) return;
 
-                        // Crear objeto de la fila usando headers normalizados
                         const rowData = {};
                         headers.forEach((header, i) => {
                             rowData[header] = row[i];
                         });
 
-                        // Validar RUT
                         const rut = rowData['RUT Receptor'];
                         if (!rut || !validateRUT(String(rut))) {
                             errors.push({ linea: lineNum, error: `RUT Receptor inválido (${rut || 'vacío'})` });
                         }
 
-                        // Validar Razón Social
                         if (!rowData['Razón Social'] || String(rowData['Razón Social']).trim() === '') {
                             errors.push({ linea: lineNum, error: 'Razón Social es requerida' });
                         }
 
-                        // Validar Fecha
+                        if (!rowData['Dirección'] || String(rowData['Dirección']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Dirección es requerida' });
+                        }
+
                         const fecha = rowData['Fecha Emisión'];
                         if (!fecha || !validateFecha(fecha)) {
                             errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY` });
                         }
 
-                        // Validar Monto
                         const monto = rowData['Monto Honorarios'];
                         if (!monto || isNaN(Number(monto)) || Number(monto) <= 0) {
                             errors.push({ linea: lineNum, error: 'Monto Honorarios debe ser un número positivo' });
                         }
 
-                        // Validar Descripción
                         if (!rowData['Descripción'] || String(rowData['Descripción']).trim() === '') {
                             errors.push({ linea: lineNum, error: 'Descripción es requerida' });
                         }
+
+                        validarComuna(rowData['Comuna'], lineNum, errors);
+
+                        validarTexto(rowData['Razón Social'], 'Razón Social', lineNum, errors);
+                        validarTexto(rowData['Dirección'], 'Dirección', lineNum, errors);
+                        validarTexto(rowData['Descripción'], 'Descripción', lineNum, errors);
+
+                        const email = rowData['Email'];
+                        if (email && String(email).trim() !== '' && !EMAIL_REGEX.test(String(email).trim())) {
+                            errors.push({ linea: lineNum, error: `El Email '${String(email).trim()}' no tiene un formato válido.` });
+                        }
+                    });
+
+                    return errors;
+                };
+
+                // Validación BHT (Boletas de Honorarios de Terceros)
+                const validateBHT = (data) => {
+                    const errors = [];
+                    let headers = data[0].map(h => String(h).trim());
+                    const rows = data.slice(1);
+
+                    const columnMapping = {
+                        'RUT Receptor': ['rut', 'rut receptor', 'rut_receptor', 'rut_completo_tercero', 'rut_completo_destinatario', 'rut destinatario', 'rut tercero', 'RUT', 'rut_tercero'],
+                        'Razón Social': ['razón social', 'razon social', 'nombre', 'nombres', 'txt_nombres_destinatario', 'txt_nombres_tercero', 'nombre destinatario', 'nombre tercero', 'razon_social', 'NOMBRE_COMPLETO', 'nombre_completo', 'NOMBRE_TERC', 'NOMBRE_TERCERO'],
+                        'Dirección': ['dirección', 'direccion', 'domicilio', 'txt_domicilio_destinatario', 'calle', 'DOMICILIO', 'domicilio_tercero'],
+                        'Comuna': ['comuna', 'txt_comuna_destinatario', 'ciudad', 'COMUNA', 'comuna_tercero'],
+                        'Fecha Emisión': ['fecha', 'fecha emisión', 'fecha emision', 'fecha_boleta', 'fecha boleta', 'FECHA_BOLETA'],
+                        'Monto Honorarios': ['monto', 'monto honorarios', 'valor', 'valor_prestacion_1', 'valor prestacion', 'honorarios', 'MONTO_BRUTO', 'monto_bruto', 'MONTO'],
+                        'Descripción': ['descripción', 'descripcion', 'detalle', 'glosa', 'desc_prestacion_1', 'prestacion', 'PRESTACION']
+                    };
+
+                    const normalizedHeaders = headers.map(header => {
+                        const headerLower = header.toLowerCase();
+                        for (const [standardName, aliases] of Object.entries(columnMapping)) {
+                            if (standardName.toLowerCase() === headerLower || aliases.includes(headerLower)) {
+                                return standardName;
+                            }
+                        }
+                        return header;
+                    });
+
+                    data[0] = normalizedHeaders;
+                    headers = normalizedHeaders;
+
+                    const requiredColumns = ['RUT Receptor', 'Razón Social', 'Dirección', 'Comuna', 'Fecha Emisión', 'Monto Honorarios', 'Descripción'];
+                    const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+
+                    if (missingColumns.length > 0) {
+                        errors.push({ linea: 0, error: `Faltan columnas requeridas o no se reconocen: ${missingColumns.join(', ')}` });
+                        return errors;
+                    }
+
+                    rows.forEach((row, index) => {
+                        const lineNum = index + 2;
+
+                        const isEmptyRow = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || String(cell).trim() === '');
+                        if (isEmptyRow) return;
+
+                        const rowData = {};
+                        headers.forEach((header, i) => {
+                            rowData[header] = row[i];
+                        });
+
+                        const rut = rowData['RUT Receptor'];
+                        if (!rut || !validateRUT(String(rut))) {
+                            errors.push({ linea: lineNum, error: `RUT Receptor inválido (${rut || 'vacío'})` });
+                        }
+
+                        if (!rowData['Razón Social'] || String(rowData['Razón Social']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Razón Social es requerida' });
+                        }
+
+                        if (!rowData['Dirección'] || String(rowData['Dirección']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Dirección es requerida' });
+                        }
+
+                        const fecha = rowData['Fecha Emisión'];
+                        if (!fecha || !validateFecha(fecha)) {
+                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY` });
+                        }
+
+                        const monto = rowData['Monto Honorarios'];
+                        if (!monto || isNaN(Number(monto)) || Number(monto) <= 0) {
+                            errors.push({ linea: lineNum, error: 'Monto Honorarios debe ser un número positivo' });
+                        }
+
+                        if (!rowData['Descripción'] || String(rowData['Descripción']).trim() === '') {
+                            errors.push({ linea: lineNum, error: 'Descripción es requerida' });
+                        }
+
+                        validarComuna(rowData['Comuna'], lineNum, errors);
+
+                        validarTexto(rowData['Razón Social'], 'Razón Social', lineNum, errors);
+                        validarTexto(rowData['Dirección'], 'Dirección', lineNum, errors);
+                        validarTexto(rowData['Descripción'], 'Descripción', lineNum, errors);
                     });
 
                     return errors;
