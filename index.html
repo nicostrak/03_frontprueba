@@ -2766,9 +2766,6 @@
                                     <input type="email" id="billing-email" required placeholder="correo@ejemplo.com"
                                         class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
                                 </div>
-                                <div id="billing-version-info" class="text-sm text-gray-500 hidden">
-                                    Versión actual: <span id="billing-version-number"></span> — <span id="billing-version-date"></span>
-                                </div>
                                 <div class="flex space-x-4">
                                     <button type="button" id="billing-edit-btn"
                                         class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
@@ -3448,7 +3445,6 @@
                 const loadBillingData = async () => {
                     const loadingEl = document.getElementById('billing-loading');
                     const form = document.getElementById('billing-form');
-                    const versionInfo = document.getElementById('billing-version-info');
                     const editBtn = document.getElementById('billing-edit-btn');
                     const saveBtn = document.getElementById('billing-save-btn');
                     loadingEl.classList.remove('hidden');
@@ -3458,7 +3454,7 @@
                         .from('datos_facturacion')
                         .select('*')
                         .eq('usuario_id', user.id)
-                        .order('version', { ascending: false })
+                        .order('id', { ascending: false })
                         .limit(1);
 
                     loadingEl.classList.add('hidden');
@@ -3474,9 +3470,6 @@
                         document.getElementById('billing-comuna').value = d.comuna || '';
                         document.getElementById('billing-email').value = d.email_facturacion || '';
                         setTipoDocumentoUI(d.tipo_documento || 'factura');
-                        document.getElementById('billing-version-number').textContent = d.version;
-                        document.getElementById('billing-version-date').textContent = new Date(d.creado_en).toLocaleString('es-CL');
-                        versionInfo.classList.remove('hidden');
                         form.classList.remove('hidden');
                         setBillingFieldsDisabled(true);
                         editBtn.classList.remove('hidden');
@@ -3484,7 +3477,6 @@
                         cancelBtn.classList.add('hidden');
                     } else {
                         form.classList.remove('hidden');
-                        versionInfo.classList.add('hidden');
                         setBillingFieldsDisabled(false);
                         editBtn.classList.add('hidden');
                         saveBtn.classList.remove('hidden');
