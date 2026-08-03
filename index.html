@@ -3094,7 +3094,7 @@
 
                         const formData = new FormData(form);
                         const selectedApi = document.getElementById('api-select').value;
-                        const proxyApiUrl = `https://boletapro-api-mddl5s4dta-tl.a.run.app/${selectedApi}`;
+                        const proxyApiUrl = `https://test---boletapro-api-mddl5s4dta-tl.a.run.app/${selectedApi}`;
 
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
@@ -4269,7 +4269,7 @@
                             formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
                         }
 
-                        const proxyApiUrl = `https://boletapro-api-mddl5s4dta-tl.a.run.app/${selectedTipoBoleta}/emitir-csv`;
+                        const proxyApiUrl = `https://test---boletapro-api-mddl5s4dta-tl.a.run.app/${selectedTipoBoleta}/emitir-csv`;
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
                             headers: { 'Authorization': `Bearer ${session.access_token}` },
