@@ -4131,7 +4131,7 @@
 
                         const fecha = rowData['Fecha Emisión'];
                         if (!fecha || !validateFecha(fecha)) {
-                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY` });
+                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY o DD/MM/YYYY` });
                         }
 
                         const monto = rowData['Monto Honorarios'];
@@ -4221,7 +4221,7 @@
 
                         const fecha = rowData['Fecha Emisión'];
                         if (!fecha || !validateFecha(fecha)) {
-                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY` });
+                            errors.push({ linea: lineNum, error: `Fecha Emisión inválida (${fecha}). Formato: DD-MM-YYYY o DD/MM/YYYY` });
                         }
 
                         const monto = rowData['Monto Honorarios'];
@@ -4281,17 +4281,19 @@
                     return `${day}${separator}${month}${separator}${year}`;
                 };
 
-                // Validar fecha DD-MM-YYYY
+                // Validar fecha DD-MM-YYYY o DD/MM/YYYY
                 const validateFecha = (fecha) => {
                     if (!fecha) return false;
 
-                    // Si es un número de Excel, convertirlo a formato canónico DD-MM-YYYY
+                    // Si es un número de Excel, convertirlo a DD-MM-YYYY
                     if (typeof fecha === 'number') {
                         fecha = excelSerialToDateString(fecha, '-');
                     }
 
-                    const regex = /^(\d{2})-(\d{2})-(\d{4})$/;
-                    const match = String(fecha).match(regex);
+                    // Acepta tanto DD-MM-YYYY como DD/MM/YYYY
+                    const str = String(fecha).trim();
+                    const regex = /^(\d{2})[-\/](\d{2})[-\/](\d{4})$/;
+                    const match = str.match(regex);
 
                     if (!match) return false;
 
