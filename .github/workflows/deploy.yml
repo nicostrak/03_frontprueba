@@ -20,16 +20,10 @@ jobs:
         run: |
           sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" index.html
           sed -i "s|SUPABASE_ANON_KEY_PLACEHOLDER|${{ secrets.SUPABASE_ANON_KEY }}|g" index.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" index.html
           sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" forgot-password.html
           sed -i "s|SUPABASE_ANON_KEY_PLACEHOLDER|${{ secrets.SUPABASE_ANON_KEY }}|g" forgot-password.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" forgot-password.html
           sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" update-password.html
           sed -i "s|SUPABASE_ANON_KEY_PLACEHOLDER|${{ secrets.SUPABASE_ANON_KEY }}|g" update-password.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" update-password.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" terminos.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" privacidad.html
-          sed -i "s|GA_MEASUREMENT_ID_PLACEHOLDER|${{ secrets.GA_MEASUREMENT_ID }}|g" email-confirmation.html
 
 
       - name: Deploy to GitHub Pages 🚀
