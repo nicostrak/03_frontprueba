@@ -1210,6 +1210,15 @@
             }
         }
     </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EDRP63SPBR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EDRP63SPBR');
+    </script>
 </head>
 
 <body class="antialiased">
@@ -2960,6 +2969,7 @@
                     showMessage('login-error-message', 'Error: Credenciales incorrectas');
                     hideLoadingState(btn);
                 } else {
+                    gtag('event', 'login', { method: 'email' });
                     hideAuthModal();
                     loginForm.reset();
                     hideLoadingState(btn);
@@ -3004,6 +3014,7 @@
                 if (error) {
                     showMessage('signup-error-message', error.message);
                 } else {
+                    gtag('event', 'sign_up', { method: 'email' });
                     showMessage('signup-success-message', '¡Cuenta creada! Revisa tu email para confirmar tu cuenta.', false);
                     signupForm.reset();
                 }
@@ -3343,7 +3354,7 @@
                 };
 
                 // --- Event Listeners Internal ---
-                logoutBtn.onclick = () => supabaseClient.auth.signOut();
+                logoutBtn.onclick = () => { gtag('event', 'logout'); supabaseClient.auth.signOut(); };
                 menuToggleBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
 
                 sidebarLinks.forEach(link => {
@@ -4450,6 +4461,7 @@
                             emissionResult.classList.add('border-green-800', 'bg-green-900/20');
 
                             showToast('¡Boletas emitidas exitosamente!', 'success');
+                            gtag('event', 'boleta_emitida', { tipo: selectedTipoBoleta });
                             loadUsageHistory();
                             loadDashboardData();
                             attachGoToHistoryHandler();
@@ -4461,6 +4473,7 @@
                             sessionStorage.setItem('last_emission_rut', cleanRut);
 
                             showToast('¡Proceso iniciado!', 'success');
+                            gtag('event', 'boleta_encolada', { tipo: selectedTipoBoleta });
                             loadUsageHistory();
                             loadDashboardData();
 
