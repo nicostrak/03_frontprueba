@@ -3220,7 +3220,8 @@
                     if (!resp.ok) {
                         throw new Error(data.detail || 'No se pudo crear la orden de pago');
                     }
-                    window.location.href = data.redirect_url;
+                    // Abrir el checkout de Flow en una pestaña nueva, dejando BoletaPro abierta
+                    window.open(data.redirect_url, '_blank', 'noopener');
                 } catch (err) {
                     console.error('Flow checkout error:', err);
                     alert('Error al crear la orden de pago: ' + err.message);
