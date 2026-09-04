@@ -4013,7 +4013,7 @@
                     try {
                         const { data: profile } = await supabaseClient
                             .from('perfiles')
-                            .select('plan_id, fecha_expiracion_plan, planes(nombre, precio, limite_llamadas_api)')
+                            .select('plan_id, planes(nombre, precio, limite_llamadas_api)')
                             .eq('usuario_id', user.id)
                             .single();
                         const plan = profile && profile.planes ? profile.planes : null;
@@ -4024,8 +4024,26 @@
                                 ? `Plan gratuito &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`
                                 : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`;
                             planDetalleEl.innerHTML = detalle;
-                            if (precio > 0) setVencimiento(profile?.fecha_expiracion_plan);
-                            else setVencimiento(null);
+                            if (precio > 0) {
+                                // La fecha de vencimiento viene del backend (leería suscripciones
+                                // con service role, sin depender de la RLS de esa tabla).
+                                let fechaFin = null;
+                                try {
+                                    const { data: { session } } = await supabaseClient.auth.getSession();
+                                    if (session) {
+                                        const resp = await fetch(`${FLOW_API_BASE}/mi-suscripcion`, {
+                                            headers: { 'Authorization': `Bearer ${session.access_token}` }
+                                        });
+                                        if (resp.ok) {
+                                            const payload = await resp.json();
+                                            fechaFin = payload && payload.fecha_fin_periodo;
+                                        }
+                                    }
+                                } catch { /* Error de red u otro: no se muestra vencimiento */ }
+                                setVencimiento(fechaFin);
+                            } else {
+                                setVencimiento(null);
+                            }
                         } else {
                             planNombreEl.textContent = 'Gratuito';
                             planDetalleEl.textContent = 'Plan gratuito';
