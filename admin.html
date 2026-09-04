@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - BoletaPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="env.js"></script>
+    <style>
+        body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        .spinner { border: 3px solid rgba(255,255,255,.2); border-top-color: #22d3ee; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="max-w-7xl mx-auto p-6">
+        <header class="flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold">Panel de Administración</h1>
+                <p class="text-slate-400 text-sm">BoletaPro</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="session-info" class="text-slate-400 text-sm"></span>
+                <a id="btn-volver-menu" href="index.html"
+                   class="px-3 py-2 text-sm bg-cyan-600 hover:bg-cyan-500 rounded-lg">← Volver a mi panel</a>
+                <button id="btn-logout" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">Salir</button>
+            </div>
+        </header>
+
+        <div id="msg-permiso" class="hidden p-4 mb-6 bg-red-900/40 border border-red-700 rounded-lg text-red-200"></div>
+
+        <div id="contenido-admin" class="hidden">
+            <section class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Resumen global</h2>
+                <div id="cards-resumen" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+            </section>
+
+            <section class="mb-8">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <h2 class="text-lg font-semibold">Usuarios</h2>
+                    <div class="flex gap-2">
+                        <input id="input-busqueda" type="text" placeholder="Buscar por email, nombre o ID..."
+                               class="px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-lg placeholder-slate-500">
+                        <button id="btn-buscar" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">Buscar</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto bg-slate-900 rounded-lg border border-slate-800">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-800 text-left text-slate-300">
+                            <tr>
+                                <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="email">Email <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="plan">Plan <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="limite">Límite <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="consumo">Consumo mes <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="errores">Errores mes <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="restantes">Restantes <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="admin">Admin <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-usuarios"></tbody>
+                    </table>
+                    <div id="tabla-vacio" class="hidden p-6 text-center text-slate-500">Sin resultados.</div>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-3 mt-3">
+                    <div class="flex items-center gap-3">
+                        <div class="text-slate-400 text-sm" id="info-paginacion"></div>
+                        <select id="select-tamano" class="px-2 py-2 text-sm bg-slate-900 border border-slate-700 rounded-lg">
+                            <option value="10" selected>10 por página</option>
+                            <option value="20">20 por página</option>
+                            <option value="50">50 por página</option>
+                            <option value="100">100 por página</option>
+                            <option value="500">500 por página</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-pag-ant" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed">← Anterior</button>
+                        <span id="indicador-pagina" class="text-sm text-slate-400"></span>
+                        <button id="btn-pag-sig" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed">Siguiente →</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Mantenimiento</h2>
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800 flex items-center gap-4 flex-wrap">
+                    <div>
+                        <p class="font-medium">Degradar planes vencidos</p>
+                        <p class="text-slate-400 text-sm">Degrada a plan Gratuito todos los usuarios con plan expirado.</p>
+                    </div>
+                    <button id="btn-downgrade" class="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-500 rounded-lg">Ejecutar</button>
+                </div>
+                <div id="resultado-downgrade" class="hidden mt-3 p-4 bg-slate-900 rounded-lg border border-slate-800 text-sm"></div>
+            </section>
+        </div>
+
+        <div id="vista-detalle" class="hidden">
+            <button id="btn-volver" class="mb-4 px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">← Volver al listado</button>
+            <div id="detalle-cuerpo" class="space-y-6"></div>
+        </div>
+    </div>
+
+    <script>
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const API_BASE = 'http://127.0.0.1:8010';
+        const NOMBRES_MES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+        let session = null;
+
+        async function getToken() {
+            const { data } = await supabaseClient.auth.getSession();
+            session = data.session;
+            return session ? session.access_token : null;
+        }
+
+        async function apiCall(method, path, body) {
+            const token = await getToken();
+            if (!token) throw new Error('Sesión expirada');
+            const res = await fetch(API_BASE + path, {
+                method,
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                body: body ? JSON.stringify(body) : undefined
+            });
+            if (res.status === 401) throw new Error('No autenticado');
+            if (res.status === 403) throw new Error('FORBIDDEN');
+            if (!res.ok) {
+                const d = await res.json().catch(() => ({}));
+                throw new Error(d.detail || ('Error HTTP ' + res.status));
+            }
+            return res.json();
+        }
+
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function mostrarPermiso(msg) {
+            const box = document.getElementById('msg-permiso');
+            box.textContent = msg;
+            box.classList.remove('hidden');
+            document.getElementById('contenido-admin').classList.add('hidden');
+        }
+
+        async function cargarResumen() {
+            const data = await apiCall('GET', '/admin/metricas/resumen');
+            const hoy = new Date();
+            const cards = [
+                { label: 'Usuarios registrados', valor: data.usuarios_registrados, color: 'text-cyan-400' },
+                { label: `Usuarios con emisiones (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.usuarios_con_emisiones_mes, color: 'text-teal-400' },
+                { label: `Boletas emitidas (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.boletas_emitidas_mes, color: 'text-green-400' },
+                { label: `Registros con error (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.registros_con_error_mes, color: 'text-red-400' },
+                { label: 'Claves API activas', valor: data.claves_api_activas, color: 'text-amber-400' },
+            ];
+            document.getElementById('cards-resumen').innerHTML = cards.map(c => `
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800">
+                    <div class="text-slate-400 text-sm">${c.label}</div>
+                    <div class="text-3xl font-bold ${c.color}">${c.valor}</div>
+                </div>`).join('');
+        }
+
+        function renderTabla(usuarios) {
+            const tbody = document.getElementById('tbody-usuarios');
+            const vacio = document.getElementById('tabla-vacio');
+            tbody.innerHTML = '';
+            if (!usuarios || usuarios.length === 0) {
+                vacio.classList.remove('hidden');
+                return;
+            }
+            vacio.classList.add('hidden');
+            usuarios.forEach(u => {
+                const rest = u.boletas_restantes === null ? '∞' : u.boletas_restantes;
+                const fila = document.createElement('tr');
+                fila.className = 'border-t border-slate-800 hover:bg-slate-800/40';
+                fila.innerHTML = `
+                    <td class="p-3">
+                        <div>${esc(u.email || '—')}</div>
+                        <div class="text-slate-500 text-xs">${esc(u.nombre_completo || '')} <span class="text-slate-600">${esc((u.id || '').slice(0, 8))}</span></div>
+                    </td>
+                    <td class="p-3">${esc(u.plan_nombre || 'Sin Plan')}</td>
+                    <td class="p-3 text-right">${u.limite_mensual >= 999999 ? '∞' : u.limite_mensual}</td>
+                    <td class="p-3 text-right">${u.consumo_mes_actual}</td>
+                    <td class="p-3 text-right ${u.boletas_con_error_mes > 0 ? 'text-red-400' : ''}">${u.boletas_con_error_mes}</td>
+                    <td class="p-3 text-right ${u.boletas_con_error_mes > 0 && (u.boletas_restantes !== null && u.boletas_restantes <= 0) ? 'text-red-400' : ''}">${rest}</td>
+                    <td class="p-3">${u.es_admin ? '<span class="text-amber-400">●</span>' : ''}</td>
+                    <td class="p-3 text-right"><button data-id="${esc(u.id)}" class="btn-detalle px-3 py-1 text-xs bg-cyan-600 hover:bg-cyan-500 rounded-lg">Detalle</button></td>`;
+                tbody.appendChild(fila);
+            });
+        }
+
+        let paginaActual = 1;
+        let tamanoPagina = 10;
+        let totalPaginas = 0;
+        let ordenColumna = null;
+        let ordenDireccion = 'asc';
+
+        async function cargarUsuarios(busqueda) {
+            const params = new URLSearchParams();
+            if (busqueda) params.set('busqueda', busqueda);
+            params.set('pagina', paginaActual);
+            params.set('tamano', tamanoPagina);
+            if (ordenColumna) {
+                params.set('orden_por', ordenColumna);
+                params.set('orden_dir', ordenDireccion);
+            }
+            const data = await apiCall('GET', '/admin/usuarios?' + params.toString());
+            renderTabla(data.usuarios);
+            totalPaginas = data.total_paginas || 0;
+            renderPaginacion(data.total);
+        }
+
+        function aplicarOrden(columna) {
+            if (ordenColumna === columna) {
+                ordenDireccion = ordenDireccion === 'asc' ? 'desc' : 'asc';
+            } else {
+                ordenColumna = columna;
+                ordenDireccion = 'asc';
+            }
+            paginaActual = 1;
+            actualizarIndicadoresOrden();
+            cargarUsuarios(document.getElementById('input-busqueda').value);
+        }
+
+        function actualizarIndicadoresOrden() {
+            document.querySelectorAll('th[data-orden]').forEach(th => {
+                const ico = th.querySelector('.orden-ico');
+                if (!ico) return;
+                if (th.dataset.orden === ordenColumna) {
+                    ico.textContent = ordenDireccion === 'asc' ? '▲' : '▼';
+                } else {
+                    ico.textContent = '';
+                }
+            });
+        }
+
+        function renderPaginacion(total) {
+            const info = document.getElementById('info-paginacion');
+            const indicador = document.getElementById('indicador-pagina');
+            const btnAnt = document.getElementById('btn-pag-ant');
+            const btnSig = document.getElementById('btn-pag-sig');
+            if (paginaActual > totalPaginas && totalPaginas > 0) {
+                paginaActual = 1;
+                cargarUsuarios(document.getElementById('input-busqueda').value);
+                return;
+            }
+            const inicio = total === 0 ? 0 : (paginaActual - 1) * tamanoPagina + 1;
+            const fin = Math.min(paginaActual * tamanoPagina, total);
+            info.textContent = total === 0 ? 'Sin resultados' : `Mostrando ${inicio}-${fin} de ${total} usuarios`;
+            indicador.textContent = totalPaginas > 0 ? `Página ${paginaActual} de ${totalPaginas}` : '';
+            btnAnt.disabled = paginaActual <= 1;
+            btnSig.disabled = paginaActual >= totalPaginas;
+        }
+
+        function fmtFecha(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return isNaN(d) ? '—' : d.toLocaleDateString('es-CL');
+        }
+
+        function renderDetalle(u) {
+            const rest = u.boletas_restantes === null ? '∞' : u.boletas_restantes;
+            const regs = u.registros_uso_recientes || [];
+            const cuerpo = document.getElementById('detalle-cuerpo');
+
+            const resumenHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5 space-y-2 text-sm">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">${esc(u.nombre_completo || u.email || 'Usuario')}</h3>
+                        <span class="text-slate-400 text-xs">${esc(u.email || '')} · ${esc(u.id)}</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                        <div><div class="text-slate-400 text-xs">Plan</div><div class="font-medium">${esc(u.plan_nombre || 'Sin Plan')}</div></div>
+                        <div><div class="text-slate-400 text-xs">Límite</div><div class="font-medium">${u.limite_mensual >= 999999 ? '∞' : u.limite_mensual}</div></div>
+                        <div><div class="text-slate-400 text-xs">Consumo mes</div><div class="font-medium">${u.consumo_mes_actual}</div></div>
+                        <div><div class="text-slate-400 text-xs">Restantes</div><div class="font-medium">${rest}</div></div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div><div class="text-slate-400 text-xs">Errores mes</div><div class="font-medium">${u.boletas_con_error_mes}</div></div>
+                        <div><div class="text-slate-400 text-xs">Es admin</div><div class="font-medium">${u.es_admin ? 'Sí' : 'No'}</div></div>
+                        <div><div class="text-slate-400 text-xs">Inicio periodo</div><div class="font-medium">${fmtFecha(u.fecha_inicio_periodo)}</div></div>
+                        <div><div class="text-slate-400 text-xs">Expira plan</div><div class="font-medium">${fmtFecha(u.fecha_expiracion_plan)}</div></div>
+                    </div>
+                </div>`;
+
+            const cambioPlanHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
+                    <h4 class="font-semibold mb-3">Cambiar plan</h4>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Plan ID</label>
+                            <input id="inp-plan-id" type="number" value="${esc(u.plan_id || 1)}" class="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg w-24">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Inicio periodo (opcional)</label>
+                            <input id="inp-fecha-inicio" type="date" class="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg color-scheme-dark">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Expiración (opcional)</label>
+                            <input id="inp-fecha-exp" type="date" class="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg color-scheme-dark">
+                        </div>
+                        <button id="btn-guardar-plan" class="px-4 py-2 text-sm bg-cyan-600 hover:bg-cyan-500 rounded-lg">Guardar</button>
+                    </div>
+                    <p class="text-slate-500 text-xs mt-2">El límite mensual lo define el plan asignado.</p>
+                    <div id="msg-plan" class="hidden mt-2 text-sm"></div>
+                </div>`;
+
+            const clavesHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
+                    <h4 class="font-semibold mb-3">Claves API</h4>
+                    <div id="lista-claves" class="space-y-2 text-sm"></div>
+                </div>`;
+
+            const registrosHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
+                    <h4 class="font-semibold mb-3">Registros de uso recientes (${regs.length})</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-800 text-left text-slate-300">
+                                <tr><th class="p-2">Fecha</th><th class="p-2">Endpoint</th><th class="p-2">Estado</th><th class="p-2 text-right">Cantidad</th></tr>
+                            </thead>
+                            <tbody>
+                                ${regs.map(r => `
+                                    <tr class="border-t border-slate-800">
+                                        <td class="p-2 whitespace-nowrap">${fmtFecha(r.fecha_registro)}</td>
+                                        <td class="p-2">${esc(r.endpoint || '')}</td>
+                                        <td class="p-2 ${r.fue_exitoso ? 'text-green-400' : 'text-red-400'}">${r.fue_exitoso ? 'OK' : 'Error (' + (r.codigo_estado || '?') + ')'}</td>
+                                        <td class="p-2 text-right">${r.cantidad_procesada || 0}</td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+
+            cuerpo.innerHTML = resumenHtml + cambioPlanHtml + clavesHtml + registrosHtml;
+
+            cargarClaves(u.id);
+
+            document.getElementById('btn-guardar-plan').addEventListener('click', async () => {
+                const planId = parseInt(document.getElementById('inp-plan-id').value, 10);
+                const body = { plan_id: planId };
+                const fi = document.getElementById('inp-fecha-inicio').value;
+                const fe = document.getElementById('inp-fecha-exp').value;
+                if (fi) body.fecha_inicio_periodo = new Date(fi + 'T00:00:00').toISOString();
+                if (fe) body.fecha_expiracion_plan = new Date(fe + 'T00:00:00').toISOString();
+                const msg = document.getElementById('msg-plan');
+                try {
+                    await apiCall('PATCH', `/admin/usuarios/${u.id}/plan`, body);
+                    msg.className = 'mt-2 text-sm text-green-400';
+                    msg.textContent = 'Plan actualizado.';
+                    verDetalle(u.id);
+                } catch (e) {
+                    msg.className = 'mt-2 text-sm text-red-400';
+                    msg.textContent = 'Error: ' + e.message;
+                }
+            });
+        }
+
+        async function cargarClaves(usuarioId) {
+            const cont = document.getElementById('lista-claves');
+            cont.innerHTML = '<div class="text-slate-500"><span class="spinner mr-2"></span>Cargando...</div>';
+            try {
+                const data = await apiCall('GET', `/admin/usuarios/${usuarioId}/claves-api`);
+                if (!data.claves || data.claves.length === 0) {
+                    cont.innerHTML = '<div class="text-slate-500">Sin claves API.</div>';
+                    return;
+                }
+                cont.innerHTML = data.claves.map(c => `
+                    <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                        <div>
+                            <div class="font-medium">${esc(c.nombre_clave || c.prefijo_clave || 'Clave')}</div>
+                            <div class="text-slate-400 text-xs">${esc(c.prefijo_clave || '')} · creada ${fmtFecha(c.fecha_creacion)} · último uso ${fmtFecha(c.fecha_ultimo_uso)}</div>
+                        </div>
+                        <button data-clave="${esc(c.id)}" data-activa="${c.esta_activa}" class="btn-toggle-clave px-3 py-1 text-xs rounded-lg ${c.esta_activa ? 'bg-red-600 hover:bg-red-500' : 'bg-green-600 hover:bg-green-500'}">${c.esta_activa ? 'Revocar' : 'Activar'}</button>
+                    </div>`).join('');
+                cont.querySelectorAll('.btn-toggle-clave').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const claveId = btn.dataset.clave;
+                        const nuevaActiva = btn.dataset.activa !== 'true';
+                        try {
+                            await apiCall('PATCH', `/admin/usuarios/${usuarioId}/claves-api/${claveId}`, { esta_activa: nuevaActiva });
+                            cargarClaves(usuarioId);
+                        } catch (e) {
+                            alert('Error: ' + e.message);
+                        }
+                    });
+                });
+            } catch (e) {
+                cont.innerHTML = '<div class="text-red-400">Error: ' + esc(e.message) + '</div>';
+            }
+        }
+
+        async function verDetalle(usuarioId) {
+            document.getElementById('vista-detalle').classList.remove('hidden');
+            document.getElementById('contenido-admin').classList.add('hidden');
+            document.getElementById('detalle-cuerpo').innerHTML = '<div class="p-6 text-slate-400"><span class="spinner mr-2"></span>Cargando detalle...</div>';
+            try {
+                const u = await apiCall('GET', `/admin/usuarios/${usuarioId}`);
+                renderDetalle(u);
+            } catch (e) {
+                document.getElementById('detalle-cuerpo').innerHTML = '<div class="p-6 text-red-400">Error: ' + esc(e.message) + '</div>';
+            }
+        }
+
+        async function verTodos() {
+            document.getElementById('vista-detalle').classList.add('hidden');
+            document.getElementById('contenido-admin').classList.remove('hidden');
+            await cargarResumen();
+            paginaActual = 1;
+            await cargarUsuarios(document.getElementById('input-busqueda').value);
+        }
+
+        async function init() {
+            const info = document.getElementById('session-info');
+            const { data } = await supabaseClient.auth.getSession();
+            if (!data.session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            info.textContent = data.session.user.email || 'Sesión iniciada';
+            try {
+                await verTodos();
+                document.getElementById('contenido-admin').classList.remove('hidden');
+            } catch (e) {
+                if (e.message === 'FORBIDDEN') {
+                    mostrarPermiso('No tienes permisos de administrador. Si crees que es un error, contacta al soporte de BoletaPro.');
+                } else {
+                    mostrarPermiso('Error de acceso: ' + e.message);
+                }
+            }
+        }
+
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        });
+        document.getElementById('btn-buscar').addEventListener('click', () => { paginaActual = 1; cargarUsuarios(document.getElementById('input-busqueda').value); });
+        document.getElementById('input-busqueda').addEventListener('keydown', e => { if (e.key === 'Enter') { paginaActual = 1; cargarUsuarios(document.getElementById('input-busqueda').value); } });
+        document.getElementById('btn-volver').addEventListener('click', verTodos);
+        document.getElementById('btn-pag-ant').addEventListener('click', () => {
+            if (paginaActual > 1) { paginaActual--; cargarUsuarios(document.getElementById('input-busqueda').value); }
+        });
+        document.getElementById('btn-pag-sig').addEventListener('click', () => {
+            if (paginaActual < totalPaginas) { paginaActual++; cargarUsuarios(document.getElementById('input-busqueda').value); }
+        });
+        document.getElementById('select-tamano').addEventListener('change', (e) => {
+            tamanoPagina = parseInt(e.target.value, 10);
+            paginaActual = 1;
+            cargarUsuarios(document.getElementById('input-busqueda').value);
+        });
+        document.querySelectorAll('th[data-orden]').forEach(th => {
+            th.addEventListener('click', () => aplicarOrden(th.dataset.orden));
+        });
+
+        document.getElementById('btn-downgrade').addEventListener('click', async () => {
+            const box = document.getElementById('resultado-downgrade');
+            box.classList.remove('hidden');
+            box.innerHTML = '<span class="spinner mr-2"></span>Ejecutando...';
+            try {
+                const r = await apiCall('POST', '/admin/downgrade-planes-vencidos');
+                box.innerHTML = `
+                    <div class="grid grid-cols-3 gap-3">
+                        <div><div class="text-slate-400 text-xs">Degradados</div><div class="text-lg font-bold text-amber-400">${r.degradados}</div></div>
+                        <div><div class="text-slate-400 text-xs">Excluidos</div><div class="text-lg font-bold">${r.excluidos}</div></div>
+                        <div><div class="text-slate-400 text-xs">Errores</div><div class="text-lg font-bold ${r.errores && r.errores.length ? 'text-red-400' : ''}">${r.errores ? r.errores.length : 0}</div></div>
+                    </div>
+                    ${r.errores && r.errores.length ? '<div class="mt-2 text-red-400 text-xs">' + r.errores.map(esc).join('<br>') + '</div>' : ''}`;
+            } catch (e) {
+                box.innerHTML = '<div class="text-red-400">Error: ' + esc(e.message) + '</div>';
+            }
+        });
+
+        document.getElementById('tbody-usuarios').addEventListener('click', e => {
+            const btn = e.target.closest('.btn-detalle');
+            if (btn) verDetalle(btn.dataset.id);
+        });
+
+        init();
+    </script>
+</body>
+</html>

@@ -2739,7 +2739,7 @@
                     </div>
                     <div id="billing-view" class="dashboard-view hidden">
                         <h2 class="text-4xl font-bold text-white mb-8">Facturación</h2>
-                        <p class="text-gray-400 mb-6">Completa tus datos de facturación. Puedes actualizarlos cuando lo desees.</p>
+                        <p class="text-gray-400 mb-6">Gestiona tu suscripción. El comprobante tributario (boleta o factura) lo eliges al momento de pagar.</p>
 
                         <div class="bg-surface-dark p-4 rounded-lg border border-primary-green/30 bg-primary-green/5 mb-8">
                             <p class="text-sm text-gray-300">La activación del servicio se realizará una vez confirmado el pago. Recibirás por correo el documento tributario (boleta o factura) correspondiente y la confirmación de tu suscripción.</p>
@@ -2759,75 +2759,6 @@
                             </div>
                         </div>
 
-                        <div class="bg-surface-dark p-6 rounded-lg border border-dark mb-8">
-                            <h3 class="text-xl font-bold text-white mb-4">Datos de Facturación</h3>
-                            <div id="billing-loading" class="text-gray-400 text-center py-4">Cargando datos...</div>
-                            <div id="billing-success-message" class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
-                            <div id="billing-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
-                            <div id="billing-tipo-wrapper" class="mb-6">
-                                <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
-                                <div class="inline-flex rounded-lg bg-gray-900 border border-dark p-1">
-                                    <button type="button" id="tipo-factura-btn"
-                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 bg-primary-green text-white shadow-md">
-                                        Factura
-                                    </button>
-                                    <button type="button" id="tipo-boleta-btn"
-                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
-                                        Boleta
-                                    </button>
-                                </div>
-                            </div>
-                            <form id="billing-form" class="hidden space-y-4">
-                                <div>
-                                    <label for="billing-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label>
-                                    <input type="text" id="billing-rut" required placeholder="12345678-9"
-                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-razon-social" class="block text-sm font-medium text-gray-400 mb-1">Razón Social o Nombre</label>
-                                    <input type="text" id="billing-razon-social" required placeholder="Razón Social o Nombre Completo"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div id="billing-giro-wrapper">
-                                    <label for="billing-giro" class="block text-sm font-medium text-gray-400 mb-1">Giro Comercial (Actividad Económica)</label>
-                                    <input type="text" id="billing-giro" required placeholder="Ej: Servicios de contabilidad y auditoría"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-direccion" class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
-                                    <input type="text" id="billing-direccion" required placeholder="Calle, número, depto/oficina"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-comuna" class="block text-sm font-medium text-gray-400 mb-1">Comuna</label>
-                                    <div class="relative">
-                                        <input type="text" id="billing-comuna" required placeholder="Escribe para buscar tu comuna..."
-                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"
-                                            autocomplete="off">
-                                        <ul id="billing-comuna-dropdown" class="hidden absolute z-20 w-full mt-1 bg-gray-900 border border-dark rounded-md max-h-60 overflow-y-auto shadow-lg"></ul>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="billing-email" class="block text-sm font-medium text-gray-400 mb-1">Correo Electrónico</label>
-                                    <input type="email" id="billing-email" required placeholder="correo@ejemplo.com"
-                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div class="flex space-x-4">
-                                    <button type="button" id="billing-edit-btn"
-                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
-                                        Modificar
-                                    </button>
-                                    <button type="submit" id="billing-save-btn"
-                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
-                                        Guardar Datos de Facturación
-                                    </button>
-                                    <button type="button" id="billing-cancel-btn"
-                                        class="hidden btn btn-secondary text-white px-6 py-3 rounded-md font-semibold">
-                                        Salir sin guardar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
 
                     <!-- Plans View -->
@@ -2874,92 +2805,100 @@
     <!-- Suscripción / Gestionar plan -->
     <section id="subscription-modal-section"
         class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
-        <div class="bg-surface-dark w-full max-w-5xl p-8 rounded-lg border border-dark shadow-2xl transform scale-95 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-2xl font-bold text-white">Gestionar suscripción</h2>
-                <button id="close-subscription-modal" class="text-gray-500 hover:text-white text-3xl">&times;</button>
-            </div>
-            <p class="text-sm text-gray-300 mb-6">Elige un plan y presiona <strong class="text-primary-green">Pagar</strong> para
-                procesarlo de forma segura con <strong class="text-primary-green">Flow.cl</strong>. Tu cupo se activa
-                automáticamente al confirmarse. Sin contratos, cancela cuando quieras.</p>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <!-- Planes -->
-                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
-                    <div class="pricing-card plan-option" data-plan-id="1" data-plan-name="Gratis" data-amount="0">
-                        <h3 class="text-lg font-bold text-gray-300 mb-1">Gratis</h3>
-                        <p class="text-gray-500 text-xs mb-5 font-mono-accent">5 boletas / mes</p>
-                        <div class="mb-6"><span
-                                class="pricing-price text-4xl font-extrabold text-white">$0</span><span
-                                class="text-sm text-gray-500">/mes</span></div>
-                        <ul class="text-sm space-y-2.5 text-gray-300 mb-4 flex-grow">
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 5 boletas mensuales</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte por WhatsApp</li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card plan-option" data-plan-id="2" data-plan-name="Inicial" data-amount="7990">
-                        <h3 class="text-lg font-bold text-white mb-1">Inicial</h3>
-                        <p class="text-gray-500 text-xs mb-5 font-mono-accent">50 boletas / mes</p>
-                        <div class="mb-6"><span
-                                class="pricing-price text-4xl font-extrabold text-white">$7.990</span><span
-                                class="text-sm text-gray-500">/mes</span></div>
-                        <ul class="text-sm space-y-2.5 text-gray-300 mb-4 flex-grow">
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 50 boletas mensuales</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 3 meses</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte WhatsApp</li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card pricing-card-featured plan-option" data-plan-id="3" data-plan-name="Profesional" data-amount="13990">
-                        <span class="pricing-badge">M&Aacute;S ELEGIDO</span>
-                        <h3 class="text-lg font-bold text-white mb-1">Profesional</h3>
-                        <p class="text-gray-500 text-xs mb-5 font-mono-accent">100 boletas / mes</p>
-                        <div class="mb-6"><span
-                                class="pricing-price text-4xl font-extrabold text-white">$13.990</span><span
-                                class="text-sm text-gray-500">/mes</span></div>
-                        <ul class="text-sm space-y-2.5 text-gray-300 mb-4 flex-grow">
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 100 boletas mensuales</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 6 meses</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card plan-option" data-plan-id="4" data-plan-name="Empresa" data-amount="44990">
-                        <h3 class="text-lg font-bold text-white mb-1">Empresa</h3>
-                        <p class="text-gray-500 text-xs mb-5 font-mono-accent">500 boletas / mes</p>
-                        <div class="mb-6"><span
-                                class="pricing-price text-4xl font-extrabold text-white">$44.990</span><span
-                                class="text-sm text-gray-500">/mes</span></div>
-                        <ul class="text-sm space-y-2.5 text-gray-300 mb-4 flex-grow">
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 500 boletas mensuales</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 12 meses</li>
-                            <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
-                        </ul>
-                    </div>
+        <div class="bg-surface-dark w-full max-w-6xl p-6 rounded-lg border border-dark shadow-2xl transform scale-95 max-h-[95vh] overflow-y-auto overflow-x-hidden">
+            <div class="flex justify-between items-start gap-4 mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Gestionar suscripción</h2>
+                    <p class="text-xs text-gray-300 mt-1">Elige un plan y presiona <strong class="text-primary-green">Pagar</strong> (con Flow.cl). Tu
+                        cupo se activa al confirmarse. Sin contratos, cancela cuando quieras.</p>
                 </div>
-                <!-- Carrito -->
-                <div id="subscription-cart"
-                    class="bg-surface-dark border border-primary-green/30 rounded-lg p-5 lg:sticky lg:top-0">
-                    <h3 class="text-lg font-bold text-white mb-4">Tu carrito</h3>
-                    <div id="cart-empty" class="text-gray-500 text-sm">Selecciona un plan para continuar.</div>
-                    <div id="cart-content" class="hidden space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span id="cart-plan-name" class="text-gray-200 font-semibold">-</span>
-                            <span id="cart-plan-price" class="text-white font-bold">-</span>
+                <button id="close-subscription-modal" class="text-gray-500 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+
+            <!-- Planes: una sola fila con tarjetas compactas -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-stretch">
+                <div class="pricing-card plan-option p-4" data-plan-id="1" data-plan-name="Gratis" data-amount="0">
+                    <h3 class="text-base font-bold text-gray-300">Gratis</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">5 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$0</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 5 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte por WhatsApp</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="2" data-plan-name="Inicial" data-amount="7990">
+                    <h3 class="text-base font-bold text-white">Inicial</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">50 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$7.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 50 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 3 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte WhatsApp</li>
+                    </ul>
+                </div>
+                <div class="pricing-card pricing-card-featured plan-option p-4 relative" data-plan-id="3" data-plan-name="Profesional" data-amount="13990">
+                    <span class="pricing-badge">M&Aacute;S ELEGIDO</span>
+                    <h3 class="text-base font-bold text-white">Profesional</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">100 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$13.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 100 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 6 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="4" data-plan-name="Empresa" data-amount="44990">
+                    <h3 class="text-base font-bold text-white">Empresa</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">500 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$44.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 500 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 12 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Carrito compacto horizontal -->
+            <div id="subscription-cart"
+                class="bg-surface-dark border border-primary-green/30 rounded-lg p-4 mt-4">
+                <div class="flex flex-col lg:flex-row items-center gap-4 flex-wrap justify-between">
+                    <div class="flex-1 min-w-[180px]">
+                        <h3 class="text-sm font-bold text-white mb-1">Tu carrito</h3>
+                        <div id="cart-empty" class="text-gray-500 text-sm">Selecciona un plan para continuar.</div>
+                        <div id="cart-content" class="hidden space-y-0.5">
+                            <div class="flex items-center gap-3">
+                                <span id="cart-plan-name" class="text-gray-200 font-semibold">-</span>
+                                <span id="cart-plan-price" class="text-white font-bold">-</span>
+                            </div>
+                            <div class="text-xs text-gray-500" id="cart-plan-subject">-</div>
                         </div>
-                        <div class="text-xs text-gray-500" id="cart-plan-subject">-</div>
-                        <hr class="border-dark">
-                        <div class="flex justify-between text-lg">
-                            <span class="text-gray-300">Total</span>
-                            <span id="cart-total" class="text-primary-green font-extrabold">-</span>
-                        </div>
+                    </div>
+                    <label id="anual-switch-row" class="flex items-center gap-2 text-sm text-gray-300 order-3 lg:order-none">
+                        <span>Pago Anual <strong class="text-primary-green">-20%</strong></span>
+                        <button id="anual-switch" type="button" role="switch" aria-checked="false"
+                            class="relative w-11 h-6 rounded-full bg-gray-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                            <span class="anual-switch-knob absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </label>
+                    <div class="text-right">
+                        <div class="text-xs text-gray-300">Total</div>
+                        <div id="cart-total" class="text-xl text-primary-green font-extrabold leading-tight">-</div>
+                        <div id="cart-total-period" class="text-[11px] text-gray-500"></div>
                     </div>
                     <button id="checkout-selected-plan" disabled
-                        class="w-full mt-6 btn bg-primary-green text-white py-3 rounded-md font-bold text-sm bg-primary-green-hover text-center disabled:opacity-50 disabled:cursor-not-allowed">Pagar</button>
-                    <p class="text-[11px] text-gray-500 mt-3 text-center">Precios en CLP &middot; IVA incluido. Pago
-                        procesado con <strong class="text-primary-green">Flow.cl</strong>.</p>
+                        class="btn bg-primary-green text-white px-6 py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center disabled:opacity-50 disabled:cursor-not-allowed">Pagar</button>
                 </div>
+                <p class="text-[11px] text-gray-500 mt-3 text-center">Precios en CLP &middot; IVA incluido. Pago
+                    procesado con <strong class="text-primary-green">Flow.cl</strong>.</p>
             </div>
         </div>
     </section>
@@ -3187,11 +3126,140 @@
             // --- Flow.cl Checkout (Pricing) ---
             const FLOW_API_BASE = 'http://localhost:8080/flow';
 
+            // --- Shared helpers (validación de facturación: RUT, comunas) ---
+            const validarRut = (rut) => {
+                const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+                if (cleaned.length < 2) return false;
+                const dv = cleaned.slice(-1);
+                const body = cleaned.slice(0, -1);
+                let sum = 0;
+                let multiplier = 2;
+                for (let i = body.length - 1; i >= 0; i--) {
+                    sum += parseInt(body[i]) * multiplier;
+                    multiplier = multiplier < 7 ? multiplier + 1 : 2;
+                }
+                const expectedDv = 11 - (sum % 11);
+                let expectedChar;
+                if (expectedDv === 11) expectedChar = '0';
+                else if (expectedDv === 10) expectedChar = 'K';
+                else expectedChar = expectedDv.toString();
+                return dv === expectedChar;
+            };
+
+            const COMUNAS_VALIDAS_JS = [
+                "ALGARROBO","ALHUE","ALTO BIO BIO","ALTO DEL CARMEN","ALTO HOSPICIO",
+                "ANCUD","ANDACOLLO","ANGOL","ANTOFAGASTA","ANTUCO","ARAUCO","ARICA",
+                "AYSEN","BUIN","BULNES","CABILDO","CABO DE HORNOS","CABRERO","CALAMA",
+                "CALBUCO","CALDERA","CALERA DE TANGO","CALLE LARGA","CAMARONES","CAMINA",
+                "CANELA","CANETE","CARAHUE","CARTAGENA","CASABLANCA","CASTRO","CATEMU",
+                "CAUQUENES","CERRILLOS","CERRO NAVIA","CHAITEN","CHANARAL","CHANCO",
+                "CHEPICA","CHIGUAYANTE","CHILE CHICO","CHILLAN","CHILLAN VIEJO",
+                "CHIMBARONGO","CHOLCHOL","CHONCHI","CISNES","COBQUECURA","COCHAMO",
+                "COCHRANE","CODEGUA","COELEMU","COIHUECO","COINCO","COLBUN","COLCHANE",
+                "COLINA","COLLIPULLI","COLTAUCO","COMBARBALA","CON CON","CONCEPCION",
+                "CONCHALI","CONSTITUCION","CONTULMO","COPIAPO","COQUIMBO","CORONEL",
+                "CORRAL","COYHAIQUE","CUNCO","CURACAVI","CURACAUTIN","CURACO DE VELEZ",
+                "CURANILAHUE","CURARREHUE","CUREPTO","CURICO","DALCAHUE","DIEGO DE ALMAGRO",
+                "DONIHUE","EL BOSQUE","EL CARMEN","EL MONTE","EL QUISCO","EL TABO",
+                "EMPEDRADO","ERCILLA","EST CENTRAL","FLORIDA","FREIRE","FREIRINA","FRESIA",
+                "FRUTILLAR","FUTALEUFU","FUTRONO","GALVARINO","GENERAL LAGOS","GORBEA",
+                "GRANEROS","GUAITECAS","HIJUELAS","HUALAIHUE","HUALANE","HUALPEN","HUALQUI",
+                "HUARA","HUASCO","HUECHURABA","ILLAPEL","INDEPENDENCIA","IQUIQUE",
+                "ISLA DE MAIPO","ISLA DE PASCUA","JUAN FERNANDEZ","LA CALERA","LA CISTERNA",
+                "LA CRUZ","LA ESTRELLA","LA FLORIDA","LA GRANJA","LA HIGUERA","LA LIGUA",
+                "LA PINTANA","LA REINA","LA SERENA","LA UNION","LAGO RANCO","LAGO VERDE",
+                "LAGUNA BLANCA","LAJA","LAMPA","LANCO","LAS CABRAS","LAS CONDES","LAUTARO",
+                "LEBU","LICANTEN","LIMACHE","LINARES","LITUECHE","LLANQUIHUE","LLAY-LLAY",
+                "LO BARNECHEA","LO ESPEJO","LO PRADO","LOLOL","LONCOCHE","LONGAVI",
+                "LONQUIMAY","LOS ALAMOS","LOS ANDES","LOS ANGELES","LOS LAGOS",
+                "LOS MUERMOS","LOS SAUCES","LOS VILOS","LOTA","LUMACO","MACHALI","MACUL",
+                "MAFIL","MAIPU","MALLOA","MARCHIGUE","MARIA ELENA","MARIA PINTO",
+                "MARIQUINA","MAULE","MAULLIN","MEJILLONES","MELIPEUCO","MELIPILLA",
+                "MOLINA","MONTE PATRIA","MULCHEN","NACIMIENTO","NANCAGUA","NAVIDAD",
+                "NEGRETE","NINHUE","NOGALES","NUEVA IMPERIAL","NUNOA","O'HIGGINS","OLIVAR",
+                "OLLAGUE","OLMUE","OSORNO","OVALLE","P AGUIRRE CERDA","PADRE HURTADO",
+                "PADRE LAS CASAS","PAIHUANO","PAILLACO","PAINE","PALENA","PALMILLA",
+                "PANGUIPULLI","PANQUEHUE","PAPUDO","PAREDONES","PARRAL","PELARCO",
+                "PELLUHUE","PEMUCO","PENAFLOR","PENALOLEN","PENCAHUE","PENCO","PERALILLO",
+                "PERQUENCO","PETORCA","PEUMO","PICA","PICHIDEGUA","PICHILEMU","PINTO",
+                "PIRQUE","PITRUFQUEN","PLACILLA","PORTEZUELO","PORVENIR","POZO ALMONTE",
+                "PRIMAVERA","PROVIDENCIA","PUCHUNCAVI","PUCON","PUDAHUEL","PUENTE ALTO",
+                "PUERTO MONTT","PUERTO NATALES","PUERTO OCTAY","PUERTO VARAS","PUMANQUE",
+                "PUNITAQUI","PUNTA ARENAS","PUQUELDON","PUREN","PURRANQUE","PUTAENDO",
+                "PUTRE","PUYEHUE","QUEILEN","QUELLON","QUEMCHI","QUILACO","QUILICURA",
+                "QUILLECO","QUILLON","QUILLOTA","QUILPUE","QUINCHAO","QUINTA NORMAL",
+                "QUINTA TILCOCO","QUINTERO","QUIRIHUE","RANCAGUA","RANQUIL","RAUCO",
+                "RECOLETA","RENAICO","RENCA","RENGO","REQUINOA","RETIRO","RINCONADA",
+                "RIO BUENO","RIO CLARO","RIO HURTADO","RIO IBANEZ","RIO NEGRO","RIO VERDE",
+                "ROMERAL","SAAVEDRA","SAGRADA FAMILIA","SALAMANCA","SAN ANTONIO",
+                "SAN BERNARDO","SAN CARLOS","SAN CLEMENTE","SAN ESTEBAN","SAN FABIAN",
+                "SAN FELIPE","SAN FERNANDO","SAN FRANCISCO DE MOSTAZAL","SAN GREG NIQUEN",
+                "SAN GREGORIO","SAN IGNACIO","SAN JAVIER","SAN JOAQUIN","SAN JOSE MAIPO",
+                "SAN JUAN DE LA COSTA","SAN MIGUEL","SAN NICOLAS","SAN PABLO",
+                "SAN PEDRO DE ATACAMA","SAN PEDRO DE LA PAZ","SAN PEDRO DE MELIPILLA",
+                "SAN RAFAEL","SAN RAMON","SAN ROSENDO","SAN VICENTE","SANTA BARBARA",
+                "SANTA CRUZ","SANTA JUANA","SANTA MARIA","SANTIAGO","SANTO DOMINGO",
+                "SIERRA GORDA","TALAGANTE","TALCA","TALCAHUANO","TALTAL","TEMUCO","TENO",
+                "TEODORO SCHMIDT","TIERRA AMARILLA","TIL-TIL","TIMAUKEL","TIRUA","TOCOPILLA",
+                "TOLTEN","TOME","TORRES DE PAINE","TORTEL","TRAIGUEN","TREHUACO","TUCAPEL",
+                "VALDIVIA","VALLENAR","VALPARAISO","VICHUQUEN","VICTORIA","VICUNA","VILCUN",
+                "VILLA ALEGRE","VILLA ALEMANA","VILLARRICA","VINA DEL MAR","VITACURA",
+                "YERBAS BUENAS","YUMBEL","YUNGAY","ZAPALLAR"
+            ];
+            const esComunaValida = (comuna) => COMUNAS_VALIDAS_JS.some(c => c === comuna);
+
+            const setupComunaAutocomplete = (inputEl, dropdownEl) => {
+                let selectedIndex = -1;
+                const closeDropdown = () => { dropdownEl.classList.add('hidden'); selectedIndex = -1; };
+                const selectComuna = (comuna) => { inputEl.value = comuna; closeDropdown(); };
+                inputEl.addEventListener('input', () => {
+                    const query = inputEl.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+                    dropdownEl.innerHTML = '';
+                    selectedIndex = -1;
+                    if (!query) { dropdownEl.classList.add('hidden'); return; }
+                    const matches = COMUNAS_VALIDAS_JS.filter(c =>
+                        c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(query)
+                    ).slice(0, 15);
+                    if (matches.length === 0) { dropdownEl.classList.add('hidden'); return; }
+                    matches.forEach(c => {
+                        const li = document.createElement('li');
+                        li.textContent = c;
+                        li.className = 'px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer text-sm';
+                        li.addEventListener('mousedown', (e) => { e.preventDefault(); selectComuna(c); });
+                        dropdownEl.appendChild(li);
+                    });
+                    dropdownEl.classList.remove('hidden');
+                });
+                inputEl.addEventListener('keydown', (e) => {
+                    const items = dropdownEl.querySelectorAll('li');
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === selectedIndex));
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        selectedIndex = Math.max(selectedIndex - 1, 0);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === selectedIndex));
+                    } else if (e.key === 'Enter') {
+                        if (selectedIndex >= 0 && items[selectedIndex]) {
+                            e.preventDefault();
+                            selectComuna(items[selectedIndex].textContent);
+                        }
+                    } else if (e.key === 'Escape') {
+                        closeDropdown();
+                    }
+                });
+                inputEl.addEventListener('blur', () => { setTimeout(closeDropdown, 150); });
+            };
+
             const checkoutPlan = async (plan, btn) => {
                 const planId = parseInt(plan.id, 10);
                 const planName = plan.nombre || plan.name;
                 const amount = parseFloat(plan.amount);
                 const subject = plan.subject || `Plan ${planName} BoletaPro`;
+                const periodo = plan.periodo || 'mensual';
 
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (!session) {
@@ -3213,7 +3281,8 @@
                             plan_id: planId,
                             user_id: session.user.id,
                             amount: amount,
-                            subject: subject
+                            subject: subject,
+                            periodo: periodo
                         })
                     });
                     const data = await resp.json();
@@ -3262,21 +3331,73 @@
             const cartPlanPrice = document.getElementById('cart-plan-price');
             const cartPlanSubject = document.getElementById('cart-plan-subject');
             const cartTotal = document.getElementById('cart-total');
+            const cartTotalPeriod = document.getElementById('cart-total-period');
+            const anualSwitch = document.getElementById('anual-switch');
+            const anualSwitchRow = document.getElementById('anual-switch-row');
+            const anualSwitchKnob = document.querySelector('.anual-switch-knob');
             const checkoutSelectedPlanBtn = document.getElementById('checkout-selected-plan');
             let selectedPlan = null;
 
+            const fmtMensual = (monthlyPrice) =>
+                monthlyPrice === 0 ? 'Gratis' : '$' + monthlyPrice.toLocaleString('es-CL') + ' CLP /mes';
+
+            const fmtAnual = (monthlyPrice) => {
+                if (monthlyPrice === 0) return 'Gratis';
+                const total = Math.round(monthlyPrice * 12 * 0.8);
+                return '$' + total.toLocaleString('es-CL') + ' CLP /año';
+            };
+
+            const recalcCart = (periodo) => {
+                if (!selectedPlan) return;
+                const price = (parseInt(selectedPlan.mensual, 10) || 0);
+                const isFree = price === 0;
+                const isAnual = periodo === 'anual' && !isFree;
+
+                // El amount que se envía al backend debe coincidir con la periodicidad
+                selectedPlan.amount = isAnual ? Math.round(price * 12 * 0.8) : price;
+                selectedPlan.periodo = isAnual ? 'anual' : 'mensual';
+
+                cartTotal.textContent = isAnual ? fmtAnual(price) : fmtMensual(price);
+                cartTotalPeriod.textContent = isAnual ? '12 meses • ahorro 20%' : '';
+
+                anualSwitch.setAttribute('aria-checked', isAnual ? 'true' : 'false');
+                if (isAnual) {
+                    anualSwitchKnob.classList.add('translate-x-5');
+                    anualSwitchKnob.classList.remove('translate-x-0');
+                    anualSwitch.classList.add('bg-primary-green');
+                    anualSwitch.classList.remove('bg-gray-600');
+                } else {
+                    anualSwitchKnob.classList.remove('translate-x-5');
+                    anualSwitchKnob.classList.add('translate-x-0');
+                    anualSwitch.classList.remove('bg-primary-green');
+                    anualSwitch.classList.add('bg-gray-600');
+                }
+
+                anualSwitch.disabled = isFree;
+                if (isFree) anualSwitchRow.classList.add('opacity-40', 'pointer-events-none');
+                else anualSwitchRow.classList.remove('opacity-40', 'pointer-events-none');
+            };
+
+            anualSwitch.addEventListener('click', () => {
+                const isAnual = selectedPlan && selectedPlan.periodo !== 'anual' && (parseInt(selectedPlan.mensual, 10) || 0) > 0;
+                if (selectedPlan) {
+                    recalcCart(isAnual ? 'anual' : 'mensual');
+                }
+            });
+
             const updateCart = (plan) => {
-                selectedPlan = plan;
-                const price = (parseInt(plan.amount, 10) || 0);
+                const mensual = (parseInt(plan.amount, 10) || 0);
+                selectedPlan = { ...plan, mensual: mensual, amount: mensual, periodo: 'mensual' };
+                const price = mensual;
                 const priceFmt = price === 0 ? 'Gratis' : '$' + price.toLocaleString('es-CL');
                 cartPlanName.textContent = plan.nombre;
                 cartPlanPrice.textContent = priceFmt;
                 cartPlanSubject.textContent = `${plan.nombre} &bull; ${plan.cupo}`;
-                cartTotal.textContent = priceFmt;
                 cartEmpty.classList.add('hidden');
                 cartContent.classList.remove('hidden');
                 checkoutSelectedPlanBtn.disabled = (price === 0);
                 checkoutSelectedPlanBtn.innerHTML = price === 0 ? 'Plan gratuito' : 'Pagar';
+                recalcCart('mensual');
             };
 
             const planOptions = document.querySelectorAll('.plan-option');
@@ -3650,7 +3771,7 @@
                         dashboardViews.forEach(v => v.classList.add('hidden'));
                         document.getElementById(link.dataset.view).classList.remove('hidden');
                         if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
-                        if (link.dataset.view === 'billing-view') loadBillingData();
+                        if (link.dataset.view === 'billing-view') loadMiSuscripcion();
                     };
                 });
 
@@ -3673,359 +3794,34 @@
 
                 // --- Billing Logic ---
 
-                const validarRut = (rut) => {
-                    const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
-                    if (cleaned.length < 2) return false;
-                    const dv = cleaned.slice(-1);
-                    const body = cleaned.slice(0, -1);
-                    let sum = 0;
-                    let multiplier = 2;
-                    for (let i = body.length - 1; i >= 0; i--) {
-                        sum += parseInt(body[i]) * multiplier;
-                        multiplier = multiplier < 7 ? multiplier + 1 : 2;
-                    }
-                    const expectedDv = 11 - (sum % 11);
-                    let expectedChar;
-                    if (expectedDv === 11) expectedChar = '0';
-                    else if (expectedDv === 10) expectedChar = 'K';
-                    else expectedChar = expectedDv.toString();
-                    return dv === expectedChar;
-                };
-
-                const billingFields = [
-                    'billing-rut', 'billing-razon-social', 'billing-giro',
-                    'billing-direccion', 'billing-comuna', 'billing-email'
-                ];
-
-                const setBillingFieldsDisabled = (disabled) => {
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.disabled = disabled;
-                    });
-                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
-                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
-                    if (tipoFacturaBtn) tipoFacturaBtn.disabled = disabled;
-                    if (tipoBoletaBtn) tipoBoletaBtn.disabled = disabled;
-                };
-
-                let selectedTipoDocumento = 'factura';
-
-                const setTipoDocumentoUI = (tipo) => {
-                    selectedTipoDocumento = tipo === 'boleta' ? 'boleta' : 'factura';
-                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
-                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
-                    const giroWrapper = document.getElementById('billing-giro-wrapper');
-                    const giroInput = document.getElementById('billing-giro');
-
-                    const activate = (activeBtn, inactiveBtn) => {
-                        activeBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
-                        activeBtn.classList.remove('text-gray-400');
-                        inactiveBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
-                        inactiveBtn.classList.add('text-gray-400');
-                    };
-
-                    if (selectedTipoDocumento === 'boleta') {
-                        activate(tipoBoletaBtn, tipoFacturaBtn);
-                        if (giroWrapper) giroWrapper.classList.add('hidden');
-                        if (giroInput) { giroInput.required = false; giroInput.disabled = true; }
-                    } else {
-                        activate(tipoFacturaBtn, tipoBoletaBtn);
-                        if (giroWrapper) giroWrapper.classList.remove('hidden');
-                        if (giroInput) { giroInput.required = true; giroInput.disabled = false; }
-                    }
-                };
-
-                document.getElementById('tipo-factura-btn').addEventListener('click', () => setTipoDocumentoUI('factura'));
-                document.getElementById('tipo-boleta-btn').addEventListener('click', () => setTipoDocumentoUI('boleta'));
-
-                 const loadBillingData = async () => {
-                     const loadingEl = document.getElementById('billing-loading');
-                     const form = document.getElementById('billing-form');
-                     const editBtn = document.getElementById('billing-edit-btn');
-                     const saveBtn = document.getElementById('billing-save-btn');
-                     loadingEl.classList.remove('hidden');
-                     form.classList.add('hidden');
-
-                     const planNombreEl = document.getElementById('mi-suscripcion-plan-nombre');
-                     const planDetalleEl = document.getElementById('mi-suscripcion-plan-detalle');
-                     if (planNombreEl && planDetalleEl) {
-                         const { data: profile } = await supabaseClient
-                             .from('perfiles')
-                             .select('plan_id, planes(nombre, precio, limite_llamadas_api)')
-                             .eq('usuario_id', user.id)
-                             .single();
-                         const plan = profile && profile.planes ? profile.planes : null;
-                         if (plan) {
-                             planNombreEl.textContent = plan.nombre;
-                             const precio = (parseInt(plan.precio, 10) || 0);
-                             const detalle = precio === 0
-                                 ? `Plan gratuito &bull; ${plan.limite_llamadas_api} boletas al mes`
-                                 : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; ${plan.limite_llamadas_api} boletas al mes`;
-                             planDetalleEl.innerHTML = detalle;
-                         } else {
-                             planNombreEl.textContent = 'Gratuito';
-                             planDetalleEl.textContent = 'Plan gratuito';
-                         }
-                     }
-
-                     const { data, error } = await supabaseClient
-                        .from('datos_facturacion')
-                        .select('*')
-                        .eq('usuario_id', user.id)
-                        .order('id', { ascending: false })
-                        .limit(1);
-
-                    loadingEl.classList.add('hidden');
-
-                    const cancelBtn = document.getElementById('billing-cancel-btn');
-
-                    if (!error && data && data.length > 0) {
-                        const d = data[0];
-                        document.getElementById('billing-rut').value = d.rut || '';
-                        document.getElementById('billing-razon-social').value = d.razon_social || '';
-                        document.getElementById('billing-giro').value = d.giro || '';
-                        document.getElementById('billing-direccion').value = d.direccion || '';
-                        document.getElementById('billing-comuna').value = d.comuna || '';
-                        document.getElementById('billing-email').value = d.email_facturacion || '';
-                        setTipoDocumentoUI(d.tipo_documento || 'factura');
-                        form.classList.remove('hidden');
-                        setBillingFieldsDisabled(true);
-                        editBtn.classList.remove('hidden');
-                        saveBtn.classList.add('hidden');
-                        cancelBtn.classList.add('hidden');
-                    } else {
-                        form.classList.remove('hidden');
-                        setBillingFieldsDisabled(false);
-                        editBtn.classList.add('hidden');
-                        saveBtn.classList.remove('hidden');
-                        cancelBtn.classList.add('hidden');
-                    }
-                };
-
-                let billingOriginalValues = {};
-
-                const editBtn = document.getElementById('billing-edit-btn');
-                editBtn.addEventListener('click', () => {
-                    billingOriginalValues = {};
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) billingOriginalValues[id] = el.value;
-                    });
-                    billingOriginalValues['tipo_documento'] = selectedTipoDocumento;
-                    setBillingFieldsDisabled(false);
-                    setTipoDocumentoUI(selectedTipoDocumento);
-                    editBtn.classList.add('hidden');
-                    document.getElementById('billing-save-btn').classList.remove('hidden');
-                    document.getElementById('billing-cancel-btn').classList.remove('hidden');
-                    document.getElementById('billing-rut').focus();
-                });
-
-                const cancelBtn = document.getElementById('billing-cancel-btn');
-                cancelBtn.addEventListener('click', () => {
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.value = billingOriginalValues[id] || '';
-                    });
-                    setTipoDocumentoUI(billingOriginalValues['tipo_documento'] || 'factura');
-                    setBillingFieldsDisabled(true);
-                    cancelBtn.classList.add('hidden');
-                    document.getElementById('billing-save-btn').classList.add('hidden');
-                    editBtn.classList.remove('hidden');
-                    document.getElementById('billing-success-message').classList.add('hidden');
-                    document.getElementById('billing-error-message').classList.add('hidden');
-                });
-
-                // --- Comuna Autocomplete ---
-                const COMUNAS_VALIDAS_JS = [
-                    "ALGARROBO","ALHUE","ALTO BIO BIO","ALTO DEL CARMEN","ALTO HOSPICIO",
-                    "ANCUD","ANDACOLLO","ANGOL","ANTOFAGASTA","ANTUCO","ARAUCO","ARICA",
-                    "AYSEN","BUIN","BULNES","CABILDO","CABO DE HORNOS","CABRERO","CALAMA",
-                    "CALBUCO","CALDERA","CALERA DE TANGO","CALLE LARGA","CAMARONES","CAMINA",
-                    "CANELA","CANETE","CARAHUE","CARTAGENA","CASABLANCA","CASTRO","CATEMU",
-                    "CAUQUENES","CERRILLOS","CERRO NAVIA","CHAITEN","CHANARAL","CHANCO",
-                    "CHEPICA","CHIGUAYANTE","CHILE CHICO","CHILLAN","CHILLAN VIEJO",
-                    "CHIMBARONGO","CHOLCHOL","CHONCHI","CISNES","COBQUECURA","COCHAMO",
-                    "COCHRANE","CODEGUA","COELEMU","COIHUECO","COINCO","COLBUN","COLCHANE",
-                    "COLINA","COLLIPULLI","COLTAUCO","COMBARBALA","CON CON","CONCEPCION",
-                    "CONCHALI","CONSTITUCION","CONTULMO","COPIAPO","COQUIMBO","CORONEL",
-                    "CORRAL","COYHAIQUE","CUNCO","CURACAVI","CURACAUTIN","CURACO DE VELEZ",
-                    "CURANILAHUE","CURARREHUE","CUREPTO","CURICO","DALCAHUE","DIEGO DE ALMAGRO",
-                    "DONIHUE","EL BOSQUE","EL CARMEN","EL MONTE","EL QUISCO","EL TABO",
-                    "EMPEDRADO","ERCILLA","EST CENTRAL","FLORIDA","FREIRE","FREIRINA","FRESIA",
-                    "FRUTILLAR","FUTALEUFU","FUTRONO","GALVARINO","GENERAL LAGOS","GORBEA",
-                    "GRANEROS","GUAITECAS","HIJUELAS","HUALAIHUE","HUALANE","HUALPEN","HUALQUI",
-                    "HUARA","HUASCO","HUECHURABA","ILLAPEL","INDEPENDENCIA","IQUIQUE",
-                    "ISLA DE MAIPO","ISLA DE PASCUA","JUAN FERNANDEZ","LA CALERA","LA CISTERNA",
-                    "LA CRUZ","LA ESTRELLA","LA FLORIDA","LA GRANJA","LA HIGUERA","LA LIGUA",
-                    "LA PINTANA","LA REINA","LA SERENA","LA UNION","LAGO RANCO","LAGO VERDE",
-                    "LAGUNA BLANCA","LAJA","LAMPA","LANCO","LAS CABRAS","LAS CONDES","LAUTARO",
-                    "LEBU","LICANTEN","LIMACHE","LINARES","LITUECHE","LLANQUIHUE","LLAY-LLAY",
-                    "LO BARNECHEA","LO ESPEJO","LO PRADO","LOLOL","LONCOCHE","LONGAVI",
-                    "LONQUIMAY","LOS ALAMOS","LOS ANDES","LOS ANGELES","LOS LAGOS",
-                    "LOS MUERMOS","LOS SAUCES","LOS VILOS","LOTA","LUMACO","MACHALI","MACUL",
-                    "MAFIL","MAIPU","MALLOA","MARCHIGUE","MARIA ELENA","MARIA PINTO",
-                    "MARIQUINA","MAULE","MAULLIN","MEJILLONES","MELIPEUCO","MELIPILLA",
-                    "MOLINA","MONTE PATRIA","MULCHEN","NACIMIENTO","NANCAGUA","NAVIDAD",
-                    "NEGRETE","NINHUE","NOGALES","NUEVA IMPERIAL","NUNOA","O'HIGGINS","OLIVAR",
-                    "OLLAGUE","OLMUE","OSORNO","OVALLE","P AGUIRRE CERDA","PADRE HURTADO",
-                    "PADRE LAS CASAS","PAIHUANO","PAILLACO","PAINE","PALENA","PALMILLA",
-                    "PANGUIPULLI","PANQUEHUE","PAPUDO","PAREDONES","PARRAL","PELARCO",
-                    "PELLUHUE","PEMUCO","PENAFLOR","PENALOLEN","PENCAHUE","PENCO","PERALILLO",
-                    "PERQUENCO","PETORCA","PEUMO","PICA","PICHIDEGUA","PICHILEMU","PINTO",
-                    "PIRQUE","PITRUFQUEN","PLACILLA","PORTEZUELO","PORVENIR","POZO ALMONTE",
-                    "PRIMAVERA","PROVIDENCIA","PUCHUNCAVI","PUCON","PUDAHUEL","PUENTE ALTO",
-                    "PUERTO MONTT","PUERTO NATALES","PUERTO OCTAY","PUERTO VARAS","PUMANQUE",
-                    "PUNITAQUI","PUNTA ARENAS","PUQUELDON","PUREN","PURRANQUE","PUTAENDO",
-                    "PUTRE","PUYEHUE","QUEILEN","QUELLON","QUEMCHI","QUILACO","QUILICURA",
-                    "QUILLECO","QUILLON","QUILLOTA","QUILPUE","QUINCHAO","QUINTA NORMAL",
-                    "QUINTA TILCOCO","QUINTERO","QUIRIHUE","RANCAGUA","RANQUIL","RAUCO",
-                    "RECOLETA","RENAICO","RENCA","RENGO","REQUINOA","RETIRO","RINCONADA",
-                    "RIO BUENO","RIO CLARO","RIO HURTADO","RIO IBANEZ","RIO NEGRO","RIO VERDE",
-                    "ROMERAL","SAAVEDRA","SAGRADA FAMILIA","SALAMANCA","SAN ANTONIO",
-                    "SAN BERNARDO","SAN CARLOS","SAN CLEMENTE","SAN ESTEBAN","SAN FABIAN",
-                    "SAN FELIPE","SAN FERNANDO","SAN FRANCISCO DE MOSTAZAL","SAN GREG NIQUEN",
-                    "SAN GREGORIO","SAN IGNACIO","SAN JAVIER","SAN JOAQUIN","SAN JOSE MAIPO",
-                    "SAN JUAN DE LA COSTA","SAN MIGUEL","SAN NICOLAS","SAN PABLO",
-                    "SAN PEDRO DE ATACAMA","SAN PEDRO DE LA PAZ","SAN PEDRO DE MELIPILLA",
-                    "SAN RAFAEL","SAN RAMON","SAN ROSENDO","SAN VICENTE","SANTA BARBARA",
-                    "SANTA CRUZ","SANTA JUANA","SANTA MARIA","SANTIAGO","SANTO DOMINGO",
-                    "SIERRA GORDA","TALAGANTE","TALCA","TALCAHUANO","TALTAL","TEMUCO","TENO",
-                    "TEODORO SCHMIDT","TIERRA AMARILLA","TIL-TIL","TIMAUKEL","TIRUA","TOCOPILLA",
-                    "TOLTEN","TOME","TORRES DE PAINE","TORTEL","TRAIGUEN","TREHUACO","TUCAPEL",
-                    "VALDIVIA","VALLENAR","VALPARAISO","VICHUQUEN","VICTORIA","VICUNA","VILCUN",
-                    "VILLA ALEGRE","VILLA ALEMANA","VILLARRICA","VINA DEL MAR","VITACURA",
-                    "YERBAS BUENAS","YUMBEL","YUNGAY","ZAPALLAR"
-                ];
-
-                const comunaInput = document.getElementById('billing-comuna');
-                const comunaDropdown = document.getElementById('billing-comuna-dropdown');
-                let comunaSelectedIndex = -1;
-
-                const closeComunaDropdown = () => {
-                    comunaDropdown.classList.add('hidden');
-                    comunaSelectedIndex = -1;
-                };
-
-                const selectComuna = (comuna) => {
-                    comunaInput.value = comuna;
-                    closeComunaDropdown();
-                };
-
-                comunaInput.addEventListener('input', () => {
-                    const query = comunaInput.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-                    comunaDropdown.innerHTML = '';
-                    comunaSelectedIndex = -1;
-                    if (!query) { comunaDropdown.classList.add('hidden'); return; }
-                    const matches = COMUNAS_VALIDAS_JS.filter(c =>
-                        c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(query)
-                    ).slice(0, 15);
-                    if (matches.length === 0) { comunaDropdown.classList.add('hidden'); return; }
-                    matches.forEach(c => {
-                        const li = document.createElement('li');
-                        li.textContent = c;
-                        li.className = 'px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer text-sm';
-                        li.addEventListener('mousedown', (e) => { e.preventDefault(); selectComuna(c); });
-                        comunaDropdown.appendChild(li);
-                    });
-                    comunaDropdown.classList.remove('hidden');
-                });
-
-                comunaInput.addEventListener('keydown', (e) => {
-                    const items = comunaDropdown.querySelectorAll('li');
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        if (items.length === 0) return;
-                        comunaSelectedIndex = Math.min(comunaSelectedIndex + 1, items.length - 1);
-                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        if (items.length === 0) return;
-                        comunaSelectedIndex = Math.max(comunaSelectedIndex - 1, 0);
-                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
-                    } else if (e.key === 'Enter') {
-                        if (comunaSelectedIndex >= 0 && items[comunaSelectedIndex]) {
-                            e.preventDefault();
-                            selectComuna(items[comunaSelectedIndex].textContent);
-                        }
-                    } else if (e.key === 'Escape') {
-                        closeComunaDropdown();
-                    }
-                });
-
-                comunaInput.addEventListener('blur', () => {
-                    setTimeout(closeComunaDropdown, 150);
-                });
-
-                const esComunaValida = (comuna) => COMUNAS_VALIDAS_JS.some(c => c === comuna);
-
-                const billingForm = document.getElementById('billing-form');
-                billingForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const successMsg = document.getElementById('billing-success-message');
-                    const errorMsg = document.getElementById('billing-error-message');
-                    successMsg.classList.add('hidden');
-                    errorMsg.classList.add('hidden');
-
-                    const rut = document.getElementById('billing-rut').value.trim();
-                    const razonSocial = document.getElementById('billing-razon-social').value.trim();
-                    const giro = document.getElementById('billing-giro').value.trim();
-                    const direccion = document.getElementById('billing-direccion').value.trim();
-                    const comuna = document.getElementById('billing-comuna').value.trim();
-                    const email = document.getElementById('billing-email').value.trim();
-
-                    if (!validarRut(rut)) {
-                        errorMsg.textContent = 'El RUT ingresado no es válido. Usa formato 12345678-9.';
-                        errorMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    if (!esComunaValida(comuna)) {
-                        errorMsg.textContent = 'La comuna ingresada no es válida. Selecciona una de la lista.';
-                        errorMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    const saveBtn = document.getElementById('billing-save-btn');
-                    const originalText = saveBtn.innerHTML;
-                    saveBtn.disabled = true;
-                    saveBtn.innerHTML = '<div class="spinner inline-block mr-2"></div>Guardando...';
-
+                const loadMiSuscripcion = async () => {
+                    const planNombreEl = document.getElementById('mi-suscripcion-plan-nombre');
+                    const planDetalleEl = document.getElementById('mi-suscripcion-plan-detalle');
+                    if (!planNombreEl || !planDetalleEl) return;
                     try {
-                        const { error: insertError } = await supabaseClient
-                            .from('datos_facturacion')
-                            .insert({
-                                usuario_id: user.id,
-                                rut,
-                                razon_social: razonSocial,
-                                giro: selectedTipoDocumento === 'boleta' ? null : giro,
-                                direccion,
-                                comuna,
-                                email_facturacion: email,
-                                tipo_documento: selectedTipoDocumento
-                            });
-
-                        if (insertError) {
-                            errorMsg.textContent = insertError.message;
-                            errorMsg.classList.remove('hidden');
+                        const { data: profile } = await supabaseClient
+                            .from('perfiles')
+                            .select('plan_id, planes(nombre, precio, limite_llamadas_api)')
+                            .eq('usuario_id', user.id)
+                            .single();
+                        const plan = profile && profile.planes ? profile.planes : null;
+                        if (plan) {
+                            planNombreEl.textContent = plan.nombre;
+                            const precio = (parseInt(plan.precio, 10) || 0);
+                            const detalle = precio === 0
+                                ? `Plan gratuito &bull; ${plan.limite_llamadas_api} boletas al mes`
+                                : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; ${plan.limite_llamadas_api} boletas al mes`;
+                            planDetalleEl.innerHTML = detalle;
                         } else {
-                            successMsg.textContent = 'Datos de facturación guardados correctamente.';
-                            successMsg.classList.remove('hidden');
-                            loadBillingData();
+                            planNombreEl.textContent = 'Gratuito';
+                            planDetalleEl.textContent = 'Plan gratuito';
                         }
                     } catch (err) {
-                        console.error('Error guardando datos de facturación:', err);
-                        errorMsg.textContent = 'Error al guardar: ' + (err.message || err);
-                        errorMsg.classList.remove('hidden');
-                    } finally {
-                        saveBtn.disabled = false;
-                        saveBtn.innerHTML = originalText;
+                        console.error('Error cargando mi suscripción:', err);
+                        planNombreEl.textContent = 'Gratuito';
+                        planDetalleEl.textContent = 'Plan gratuito';
                     }
-
-                    setTimeout(() => {
-                        successMsg.classList.add('hidden');
-                        errorMsg.classList.add('hidden');
-                    }, 5000);
-                });
+                };
 
                 // Modals
                 closeErrorModal.onclick = hideErrorModal;
