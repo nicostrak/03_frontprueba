@@ -2897,6 +2897,54 @@
                     <button id="checkout-selected-plan" disabled
                         class="btn bg-primary-green text-white px-6 py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center disabled:opacity-50 disabled:cursor-not-allowed">Pagar</button>
                 </div>
+
+                <!-- Comprobante tributario (obligatorio) -->
+                <div id="checkout-tipo-wrapper" class="mt-4 border-t border-dark pt-4">
+                    <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
+                    <div id="checkout-tipo-error" class="hidden p-2 mb-3 text-xs text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div class="inline-flex rounded-lg bg-gray-900 border border-dark p-1">
+                        <button type="button" id="checkout-tipo-boleta"
+                            class="checkout-tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">Boleta</button>
+                        <button type="button" id="checkout-tipo-factura"
+                            class="checkout-tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">Factura</button>
+                    </div>
+
+                    <form id="checkout-factura-form" class="hidden mt-4 space-y-4">
+                        <div>
+                            <label for="checkout-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label>
+                            <input type="text" id="checkout-rut" placeholder="12345678-9"
+                                class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-razon-social" class="block text-sm font-medium text-gray-400 mb-1">Razón Social o Nombre</label>
+                            <input type="text" id="checkout-razon-social" placeholder="Razón Social o Nombre Completo"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-giro" class="block text-sm font-medium text-gray-400 mb-1">Giro Comercial (Actividad Económica)</label>
+                            <input type="text" id="checkout-giro" placeholder="Ej: Servicios de contabilidad y auditoría"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-direccion" class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
+                            <input type="text" id="checkout-direccion" placeholder="Calle, número, depto/oficina"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-comuna" class="block text-sm font-medium text-gray-400 mb-1">Comuna</label>
+                            <div class="relative">
+                                <input type="text" id="checkout-comuna" placeholder="Escribe para buscar tu comuna..."
+                                    class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green" autocomplete="off">
+                                <ul id="checkout-comuna-dropdown" class="hidden absolute z-20 w-full mt-1 bg-gray-900 border border-dark rounded-md max-h-60 overflow-y-auto shadow-lg"></ul>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="checkout-email" class="block text-sm font-medium text-gray-400 mb-1">Correo Electrónico</label>
+                            <input type="email" id="checkout-email" placeholder="correo@ejemplo.com"
+                                class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                    </form>
+                </div>
                 <p class="text-[11px] text-gray-500 mt-3 text-center">Precios en CLP &middot; IVA incluido. Pago
                     procesado con <strong class="text-primary-green">Flow.cl</strong>.</p>
             </div>
@@ -3319,6 +3367,7 @@
             const openSubscriptionModal = () => {
                 if (!subscriptionModal) return;
                 subscriptionModal.classList.remove('opacity-0', 'pointer-events-none');
+                loadCheckoutFacturacion();
             };
             const closeSubscriptionModal = () => {
                 if (!subscriptionModal) return;
@@ -3420,8 +3469,142 @@
                     if (e.target === subscriptionModal) closeSubscriptionModal();
                 });
             }
-            checkoutSelectedPlanBtn.addEventListener('click', () => {
-                if (selectedPlan) checkoutPlan(selectedPlan, checkoutSelectedPlanBtn);
+            // --- Comprobante tributario (Boleta/Factura) en el pago de suscripción ---
+            const checkoutTipoBoletaBtn = document.getElementById('checkout-tipo-boleta');
+            const checkoutTipoFacturaBtn = document.getElementById('checkout-tipo-factura');
+            const checkoutTipoError = document.getElementById('checkout-tipo-error');
+            const checkoutFacturaForm = document.getElementById('checkout-factura-form');
+            const checkoutFacturaFields = ['checkout-rut', 'checkout-razon-social', 'checkout-giro', 'checkout-direccion', 'checkout-comuna'];
+            const checkoutEmailField = document.getElementById('checkout-email');
+            let selectedCheckoutTipo = null;
+
+            const checkoutComunaInput = document.getElementById('checkout-comuna');
+            const checkoutComunaDropdown = document.getElementById('checkout-comuna-dropdown');
+
+            if (checkoutComunaInput && checkoutComunaDropdown) {
+                setupComunaAutocomplete(checkoutComunaInput, checkoutComunaDropdown);
+            }
+
+            const showCheckoutTipoError = (msg) => {
+                if (!checkoutTipoError) return;
+                checkoutTipoError.textContent = msg;
+                checkoutTipoError.classList.remove('hidden');
+            };
+            const hideCheckoutTipoError = () => {
+                if (checkoutTipoError) checkoutTipoError.classList.add('hidden');
+            };
+
+            const setCheckoutTipo = (tipo) => {
+                selectedCheckoutTipo = tipo === 'boleta' ? 'boleta' : (tipo === 'factura' ? 'factura' : null);
+                hideCheckoutTipoError();
+                const isFactura = selectedCheckoutTipo === 'factura';
+                if (selectedCheckoutTipo === null) {
+                    if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.classList.add('text-gray-400');
+                    if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.classList.add('text-gray-400');
+                } else if (isFactura) {
+                    checkoutTipoFacturaBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoFacturaBtn.classList.remove('text-gray-400');
+                    checkoutTipoBoletaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoBoletaBtn.classList.add('text-gray-400');
+                } else {
+                    checkoutTipoBoletaBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoBoletaBtn.classList.remove('text-gray-400');
+                    checkoutTipoFacturaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoFacturaBtn.classList.add('text-gray-400');
+                }
+                if (checkoutFacturaForm) checkoutFacturaForm.classList.toggle('hidden', !isFactura);
+                checkoutFacturaFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.required = isFactura;
+                        el.disabled = !isFactura;
+                    }
+                });
+                if (checkoutEmailField) { checkoutEmailField.required = isFactura; checkoutEmailField.disabled = !isFactura; }
+            };
+
+            if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.addEventListener('click', () => setCheckoutTipo('boleta'));
+            if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.addEventListener('click', () => setCheckoutTipo('factura'));
+
+            const loadCheckoutFacturacion = async () => {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) return;
+                    const { data, error } = await supabaseClient
+                        .from('datos_facturacion')
+                        .select('*')
+                        .eq('usuario_id', session.user.id)
+                        .order('id', { ascending: false })
+                        .limit(1);
+                    if (error || !data || data.length === 0) { setCheckoutTipo(null); return; }
+                    const d = data[0];
+                    document.getElementById('checkout-rut').value = d.rut || '';
+                    document.getElementById('checkout-razon-social').value = d.razon_social || '';
+                    document.getElementById('checkout-giro').value = d.giro || '';
+                    document.getElementById('checkout-direccion').value = d.direccion || '';
+                    document.getElementById('checkout-comuna').value = d.comuna || '';
+                    document.getElementById('checkout-email').value = d.email_facturacion || '';
+                    setCheckoutTipo(d.tipo_documento === 'factura' ? 'factura' : (d.tipo_documento === 'boleta' ? 'boleta' : null));
+                } catch (err) {
+                    console.error('Error cargando datos de facturación para el pago:', err);
+                    setCheckoutTipo(null);
+                }
+            };
+
+            const guardarComprobante = async (tipo) => {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) return { ok: false, msg: 'Sesión no válida. Inicia sesión nuevamente.' };
+                const isFactura = tipo === 'factura';
+                const payload = {
+                    usuario_id: session.user.id,
+                    tipo_documento: tipo,
+                    rut: document.getElementById('checkout-rut').value.trim() || null,
+                    razon_social: document.getElementById('checkout-razon-social').value.trim() || null,
+                    giro: isFactura ? (document.getElementById('checkout-giro').value.trim() || null) : null,
+                    direccion: document.getElementById('checkout-direccion').value.trim() || null,
+                    comuna: document.getElementById('checkout-comuna').value.trim() || null,
+                    email_facturacion: document.getElementById('checkout-email').value.trim() || null
+                };
+                const { error } = await supabaseClient.from('datos_facturacion').insert(payload);
+                if (error) return { ok: false, msg: error.message };
+                return { ok: true, msg: '' };
+            };
+
+            checkoutSelectedPlanBtn.addEventListener('click', async () => {
+                if (!selectedPlan) return;
+                if (selectedCheckoutTipo === null) {
+                    showCheckoutTipoError('Debes elegir Boleta o Factura para continuar.');
+                    return;
+                }
+                if (selectedCheckoutTipo === 'factura') {
+                    const rut = document.getElementById('checkout-rut').value.trim();
+                    const razonSocial = document.getElementById('checkout-razon-social').value.trim();
+                    const giro = document.getElementById('checkout-giro').value.trim();
+                    const direccion = document.getElementById('checkout-direccion').value.trim();
+                    const comuna = document.getElementById('checkout-comuna').value.trim();
+                    const email = document.getElementById('checkout-email').value.trim();
+                    if (!rut || !razonSocial || !giro || !direccion || !comuna || !email) {
+                        showCheckoutTipoError('Completa todos los campos de la factura.');
+                        return;
+                    }
+                    if (!validarRut(rut)) {
+                        showCheckoutTipoError('El RUT no es válido. Usa formato 12345678-9.');
+                        return;
+                    }
+                    if (!esComunaValida(comuna.toUpperCase())) {
+                        showCheckoutTipoError('La comuna no es válida. Selecciona una de la lista.');
+                        return;
+                    }
+                }
+                const res = await guardarComprobante(selectedCheckoutTipo);
+                if (!res.ok) {
+                    showCheckoutTipoError('Error al guardar los datos: ' + res.msg);
+                    return;
+                }
+                hideCheckoutTipoError();
+                await checkoutPlan(selectedPlan, checkoutSelectedPlanBtn);
             });
 
             // Open modal from "Gestionar suscripción" (Facturación) and "Mejorar plan" (Configuración)
