@@ -2745,12 +2745,16 @@
                             <p class="text-sm text-gray-300">La activación del servicio se realizará una vez confirmado el pago. Recibirás por correo el documento tributario (boleta o factura) correspondiente y la confirmación de tu suscripción.</p>
                         </div>
 
-                        <div class="bg-surface-dark p-6 rounded-lg border border-dark mb-8">
+                        <div class="bg-surface-dark p-6 rounded-lg border border-primary-green/40 mb-8">
                             <h3 class="text-xl font-bold text-white mb-4">Mi suscripción</h3>
                             <div id="mi-suscripcion-plan" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                <div>
-                                    <p id="mi-suscripcion-plan-nombre" class="text-2xl font-extrabold text-white">Cargando...</p>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="text-xs font-bold uppercase tracking-wider text-primary-green">Plan actual</span>
+                                        <p id="mi-suscripcion-plan-nombre" class="text-2xl font-extrabold text-white">Cargando...</p>
+                                    </div>
                                     <p id="mi-suscripcion-plan-detalle" class="text-sm text-gray-400 mt-1">Obteniendo tu plan actual...</p>
+                                    <p id="mi-suscripcion-vencimiento" class="hidden text-sm text-gray-400 mt-1"></p>
                                 </div>
                                 <button type="button" id="gestionar-suscripcion-btn"
                                     class="btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover whitespace-nowrap">
@@ -3373,6 +3377,23 @@
                 subscriptionModal.classList.add('opacity-0', 'pointer-events-none');
             };
 
+            // Cuando el pago (pestaña pago-resultado.html) llega a un estado
+            // terminal (aceptado o rechazado), cerramos el modal "Gestionar
+            // suscripción" y recargamos para reflejar el plan vigente.
+            const paymentChannel = typeof BroadcastChannel !== 'undefined'
+                ? new BroadcastChannel('boletapro-pago')
+                : null;
+            if (paymentChannel) {
+                paymentChannel.addEventListener('message', (e) => {
+                    const msg = e.data;
+                    if (!msg || msg.type !== 'pago-resultado') return;
+                    const terminal = msg.estado === 'pagado' || msg.estado === 'rechazado' || msg.estado === 'anulado';
+                    if (!terminal) return;
+                    closeSubscriptionModal();
+                    setTimeout(() => window.location.reload(), 150);
+                });
+            }
+
             const cartEmpty = document.getElementById('cart-empty');
             const cartContent = document.getElementById('cart-content');
             const cartPlanName = document.getElementById('cart-plan-name');
@@ -3979,11 +4000,20 @@
                 const loadMiSuscripcion = async () => {
                     const planNombreEl = document.getElementById('mi-suscripcion-plan-nombre');
                     const planDetalleEl = document.getElementById('mi-suscripcion-plan-detalle');
+                    const vencimientoEl = document.getElementById('mi-suscripcion-vencimiento');
                     if (!planNombreEl || !planDetalleEl) return;
+                    const setVencimiento = (fecha) => {
+                        if (!vencimientoEl) return;
+                        if (!fecha) { vencimientoEl.classList.add('hidden'); vencimientoEl.textContent = ''; return; }
+                        const d = new Date(fecha);
+                        if (isNaN(d.getTime())) { vencimientoEl.classList.add('hidden'); vencimientoEl.textContent = ''; return; }
+                        vencimientoEl.innerHTML = `Vence el <strong class="text-white font-bold">${d.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>`;
+                        vencimientoEl.classList.remove('hidden');
+                    };
                     try {
                         const { data: profile } = await supabaseClient
                             .from('perfiles')
-                            .select('plan_id, planes(nombre, precio, limite_llamadas_api)')
+                            .select('plan_id, fecha_expiracion_plan, planes(nombre, precio, limite_llamadas_api)')
                             .eq('usuario_id', user.id)
                             .single();
                         const plan = profile && profile.planes ? profile.planes : null;
@@ -3991,17 +4021,21 @@
                             planNombreEl.textContent = plan.nombre;
                             const precio = (parseInt(plan.precio, 10) || 0);
                             const detalle = precio === 0
-                                ? `Plan gratuito &bull; ${plan.limite_llamadas_api} boletas al mes`
-                                : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; ${plan.limite_llamadas_api} boletas al mes`;
+                                ? `Plan gratuito &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`
+                                : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`;
                             planDetalleEl.innerHTML = detalle;
+                            if (precio > 0) setVencimiento(profile?.fecha_expiracion_plan);
+                            else setVencimiento(null);
                         } else {
                             planNombreEl.textContent = 'Gratuito';
                             planDetalleEl.textContent = 'Plan gratuito';
+                            setVencimiento(null);
                         }
                     } catch (err) {
                         console.error('Error cargando mi suscripción:', err);
                         planNombreEl.textContent = 'Gratuito';
                         planDetalleEl.textContent = 'Plan gratuito';
+                        setVencimiento(null);
                     }
                 };
 

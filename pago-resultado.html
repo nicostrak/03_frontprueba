@@ -125,17 +125,28 @@
                 return;
             }
 
+            // Avisar a la pestaña de BoletaPro (original) para que cierre el
+            // modal "Gestionar suscripción" y recargue al confirmarse el pago.
+            const bc = typeof BroadcastChannel !== 'undefined'
+                ? new BroadcastChannel('boletapro-pago')
+                : null;
+            const notifyOpenerTab = (estado) => {
+                if (bc) bc.postMessage({ type: 'pago-resultado', estado });
+            };
+
             const renderResult = (data) => {
                 if (data.estado === 'pagado') {
                     document.getElementById('success-plan').textContent = `#${data.plan_id}`;
                     document.getElementById('success-order').textContent = data.commerceOrder;
                     show(success);
                     stopPolling();
+                    notifyOpenerTab('pagado');
                     return true;
                 }
                 if (data.estado === 'rechazado' || data.estado === 'anulado') {
                     show(rejected);
                     stopPolling();
+                    notifyOpenerTab(data.estado);
                     return true;
                 }
                 return false;
@@ -176,6 +187,7 @@
                         pollTimer = setTimeout(poll, 5000);
                     } else {
                         show(rejected);
+                        notifyOpenerTab('rechazado');
                     }
                 }
             };
@@ -192,6 +204,7 @@
             } catch (err) {
                 console.error('Error consultando estado:', err);
                 show(rejected);
+                notifyOpenerTab('rechazado');
             }
         });
     </script>
