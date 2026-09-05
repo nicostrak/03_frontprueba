@@ -3369,10 +3369,12 @@
                 try {
                     const resp = await fetch(`${FLOW_API_BASE}/create-order`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.access_token}`
+                        },
                         body: JSON.stringify({
                             plan_id: planId,
-                            user_id: session.user.id,
                             amount: amount,
                             subject: subject,
                             periodo: periodo

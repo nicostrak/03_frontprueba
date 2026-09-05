@@ -90,8 +90,8 @@
                 </svg>
             </div>
             <h1 class="text-2xl font-extrabold text-white mb-2">Pago no concretado</h1>
-            <p class="text-gray-400 mb-6">El pago no se pudo completar. Puedes intentarlo nuevamente o contactar a
-                soporte.</p>
+            <p id="rejected-message" class="text-gray-400 mb-6">El pago no se pudo completar. Puedes intentarlo
+                nuevamente o contactar a soporte.</p>
             <a href="/#pricing"
                 class="w-full btn bg-[#00B37E] text-white py-3 rounded-md font-bold hover:bg-[#00996A] inline-block mb-3">Reintentar
                 pago</a>
@@ -104,6 +104,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const accessToken = session ? session.access_token : null;
             const FLOW_API_BASE = 'http://localhost:8080/flow';
 
             const params = new URLSearchParams(window.location.search);
@@ -120,8 +122,19 @@
                 el.classList.remove('hidden');
             };
 
+            const setRejectedMessage = (text) => {
+                const el = document.getElementById('rejected-message');
+                if (el) el.textContent = text;
+                show(rejected);
+            };
+
             if (!commerceOrder) {
                 show(rejected);
+                return;
+            }
+
+            if (!accessToken) {
+                setRejectedMessage('Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.');
                 return;
             }
 
@@ -153,7 +166,12 @@
             };
 
             const queryStatus = async () => {
-                const resp = await fetch(`${FLOW_API_BASE}/status/${encodeURIComponent(commerceOrder)}`);
+                const resp = await fetch(`${FLOW_API_BASE}/status/${encodeURIComponent(commerceOrder)}`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (resp.status === 401 || resp.status === 403) {
+                    throw Object.assign(new Error('Sesión expirada o sin permisos.'), { sesion: true });
+                }
                 if (!resp.ok) throw new Error('Orden no encontrada');
                 return resp.json();
             };
@@ -182,11 +200,16 @@
                     }
                 } catch (err) {
                     console.error('Error consultando estado:', err);
+                    if (err.sesion) {
+                        setRejectedMessage('Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.');
+                        notifyOpenerTab('rechazado');
+                        return;
+                    }
                     if (attempts < MAX_ATTEMPTS) {
                         attempts += 1;
                         pollTimer = setTimeout(poll, 5000);
                     } else {
-                        show(rejected);
+                        setRejectedMessage('El pago no se pudo completar. Puedes intentarlo nuevamente o contactar a soporte.');
                         notifyOpenerTab('rechazado');
                     }
                 }
@@ -203,7 +226,11 @@
                 }
             } catch (err) {
                 console.error('Error consultando estado:', err);
-                show(rejected);
+                setRejectedMessage(
+                    err.sesion
+                        ? 'Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.'
+                        : 'El pago no se pudo completar. Puedes intentarlo nuevamente o contactar a soporte.'
+                );
                 notifyOpenerTab('rechazado');
             }
         });
