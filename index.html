@@ -2785,6 +2785,25 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div id="historial-pagos-paginacion"
+                                class="hidden items-center justify-between p-4 border-t border-dark">
+                                <div class="flex items-center space-x-2">
+                                    <label for="historial-pagos-page-size" class="text-sm text-gray-400">Mostrar:</label>
+                                    <select id="historial-pagos-page-size"
+                                        class="bg-gray-900 border border-dark rounded-md p-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <button id="historial-pagos-prev"
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Anterior</button>
+                                    <span id="historial-pagos-indicator" class="text-sm text-gray-400"></span>
+                                    <button id="historial-pagos-next"
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Siguiente</button>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -4094,24 +4113,33 @@
                     return `<span class="inline-block px-2 py-0.5 rounded text-xs font-semibold capitalize ${cls}">${label}</span>`;
                 };
 
-                const loadHistorialPagos = async () => {
-                    const body = document.getElementById('historial-pagos-body');
-                    if (!body) return;
-                    body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Cargando historial...</td></tr>';
-                    try {
-                        const { data: { session } } = await supabaseClient.auth.getSession();
-                        if (!session) throw new Error('Sin sesión');
-                        const resp = await fetch(`${FLOW_API_BASE}/historial`, {
-                            headers: { 'Authorization': `Bearer ${session.access_token}` }
-                        });
-                        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                        const payload = await resp.json();
-                        const pagos = (payload && payload.pagos) || [];
-                        if (!pagos.length) {
-                            body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Aún no tienes pagos registrados.</td></tr>';
-                            return;
-                        }
-                        body.innerHTML = pagos.map(p => {
+                let historialPagosAll = [];
+                let historialPagosPage = 0;
+                let historialPagosSize = parseInt(document.getElementById('historial-pagos-page-size').value, 10) || 5;
+
+                const historialPagosEls = {
+                    body: document.getElementById('historial-pagos-body'),
+                    paginacion: document.getElementById('historial-pagos-paginacion'),
+                    prev: document.getElementById('historial-pagos-prev'),
+                    next: document.getElementById('historial-pagos-next'),
+                    indicator: document.getElementById('historial-pagos-indicator'),
+                    size: document.getElementById('historial-pagos-page-size'),
+                };
+
+                const renderHistorialPagos = () => {
+                    const { body, paginacion, prev, next, indicator } = historialPagosEls;
+                    const totalRecords = historialPagosAll.length;
+                    const totalPages = Math.ceil(totalRecords / historialPagosSize) || 1;
+                    if (historialPagosPage >= totalPages) historialPagosPage = Math.max(0, totalPages - 1);
+                    if (!totalRecords) {
+                        if (body) body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Aún no tienes pagos registrados.</td></tr>';
+                        if (paginacion) paginacion.classList.add('hidden');
+                        return;
+                    }
+                    if (paginacion) paginacion.classList.remove('hidden');
+                    const from = historialPagosPage * historialPagosSize;
+                    if (body) {
+                        body.innerHTML = historialPagosAll.slice(from, from + historialPagosSize).map(p => {
                             const fecha = p.fecha_pago ? new Date(p.fecha_pago) : null;
                             const fechaStr = fecha && !isNaN(fecha.getTime())
                                 ? fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -4131,10 +4159,44 @@
                                     data-order="${p.flow_order_id || ''}">Adjuntar</a></td>
                             </tr>`;
                         }).join('');
+                    }
+                    if (indicator) indicator.textContent = `Página ${historialPagosPage + 1} de ${totalPages || 1}`;
+                    if (prev) prev.disabled = historialPagosPage === 0;
+                    if (next) next.disabled = from + historialPagosSize >= totalRecords;
+                };
+
+                const loadHistorialPagos = async () => {
+                    const body = historialPagosEls.body;
+                    if (!body) return;
+                    body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Cargando historial...</td></tr>';
+                    try {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (!session) throw new Error('Sin sesión');
+                        const resp = await fetch(`${FLOW_API_BASE}/historial`, {
+                            headers: { 'Authorization': `Bearer ${session.access_token}` }
+                        });
+                        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                        const payload = await resp.json();
+                        historialPagosAll = (payload && payload.pagos) || [];
+                        historialPagosPage = 0;
+                        renderHistorialPagos();
                     } catch (err) {
                         console.error('Error cargando historial de pagos:', err);
                         body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">No se pudo cargar el historial.</td></tr>';
                     }
+                };
+
+                // Paginación del historial de pagos (misma UX que en Resumen)
+                if (historialPagosEls.prev) historialPagosEls.prev.onclick = () => {
+                    if (historialPagosPage > 0) { historialPagosPage--; renderHistorialPagos(); }
+                };
+                if (historialPagosEls.next) historialPagosEls.next.onclick = () => {
+                    if ((historialPagosPage + 1) * historialPagosSize < historialPagosAll.length) { historialPagosPage++; renderHistorialPagos(); }
+                };
+                if (historialPagosEls.size) historialPagosEls.size.onchange = (e) => {
+                    historialPagosSize = parseInt(e.target.value, 10) || 5;
+                    historialPagosPage = 0;
+                    renderHistorialPagos();
                 };
 
                 // El enlace de factura es un placeholder: evita el salto de página (href="#").
