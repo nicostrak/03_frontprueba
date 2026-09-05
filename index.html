@@ -2775,12 +2775,11 @@
                                             <th class="p-4 font-semibold text-gray-400">Boletas/mes</th>
                                             <th class="p-4 font-semibold text-gray-400">Período</th>
                                             <th class="p-4 font-semibold text-gray-400">Estado</th>
-                                            <th class="p-4 font-semibold text-gray-400">Factura</th>
                                         </tr>
                                     </thead>
                                     <tbody id="historial-pagos-body">
                                         <tr>
-                                            <td colspan="7" class="p-4 text-gray-400 text-center">Cargando historial...</td>
+<td colspan="6" class="p-4 text-gray-400 text-center">Cargando historial...</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -4132,7 +4131,7 @@
                     const totalPages = Math.ceil(totalRecords / historialPagosSize) || 1;
                     if (historialPagosPage >= totalPages) historialPagosPage = Math.max(0, totalPages - 1);
                     if (!totalRecords) {
-                        if (body) body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Aún no tienes pagos registrados.</td></tr>';
+                        if (body) body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">Aún no tienes pagos registrados.</td></tr>';
                         if (paginacion) paginacion.classList.add('hidden');
                         return;
                     }
@@ -4153,10 +4152,6 @@
                                 <td class="p-4 text-gray-300">${p.limite_llamadas_api != null ? p.limite_llamadas_api : '—'}</td>
                                 <td class="p-4 text-gray-300">${per}</td>
                                 <td class="p-4">${estadoBadgePago(p.estado)}</td>
-                                <td class="p-4"><a href="#"
-                                    title="Próximamente podrás adjuntar la factura asociada a este pago"
-                                    class="text-primary-green underline hover:text-primary-green-hover font-medium historial-factura-link"
-                                    data-order="${p.flow_order_id || ''}">Adjuntar</a></td>
                             </tr>`;
                         }).join('');
                     }
@@ -4168,7 +4163,7 @@
                 const loadHistorialPagos = async () => {
                     const body = historialPagosEls.body;
                     if (!body) return;
-                    body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">Cargando historial...</td></tr>';
+                    body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">Cargando historial...</td></tr>';
                     try {
                         const { data: { session } } = await supabaseClient.auth.getSession();
                         if (!session) throw new Error('Sin sesión');
@@ -4182,7 +4177,7 @@
                         renderHistorialPagos();
                     } catch (err) {
                         console.error('Error cargando historial de pagos:', err);
-                        body.innerHTML = '<tr><td colspan="7" class="p-4 text-gray-400 text-center">No se pudo cargar el historial.</td></tr>';
+                        body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">No se pudo cargar el historial.</td></tr>';
                     }
                 };
 
@@ -4198,12 +4193,6 @@
                     historialPagosPage = 0;
                     renderHistorialPagos();
                 };
-
-                // El enlace de factura es un placeholder: evita el salto de página (href="#").
-                document.body.addEventListener('click', (e) => {
-                    const link = e.target.closest('.historial-factura-link');
-                    if (link) e.preventDefault();
-                });
 
                 // Modals
                 closeErrorModal.onclick = hideErrorModal;
