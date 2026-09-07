@@ -3191,7 +3191,7 @@
                 try {
                     const { data: { session } } = await supabaseClient.auth.getSession();
                     if (!session) return;
-                    const res = await fetch('http://127.0.0.1:8010/admin/me', {
+                    const res = await fetch('https://boletapro-api-742039510932.southamerica-west1.run.app/admin/me', {
                         headers: { 'Authorization': `Bearer ${session.access_token}` }
                     });
                     const data = await res.json();
