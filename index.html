@@ -1126,6 +1126,15 @@
             transform: translateY(-12px);
         }
 
+        .plan-option {
+            cursor: pointer;
+        }
+
+        .plan-option-selected {
+            border-color: var(--primary-green) !important;
+            box-shadow: 0 0 0 2px var(--primary-green), 0 30px 60px -25px rgba(0, 179, 126, 0.4);
+        }
+
         .pricing-badge {
             position: absolute;
             top: -12px;
@@ -1696,9 +1705,10 @@
                                 <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte WhatsApp
                                 </li>
                             </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Inicial%20de%20BoletaPro"
-                                target="_blank"
-                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center">Contratar</a>
+                            <button
+                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center plan-checkout-btn"
+                                data-plan-id="2" data-plan-name="Inicial" data-amount="7990"
+                                data-subject="Plan Inicial BoletaPro">Contratar</button>
                         </div>
                         <div class="pricing-card pricing-card-featured">
                             <span class="pricing-badge">M&Aacute;S ELEGIDO</span>
@@ -1716,9 +1726,10 @@
                                 <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte
                                     prioritario</li>
                             </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Profesional%20de%20BoletaPro"
-                                target="_blank"
-                                class="w-full btn bg-primary-green text-white py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center">Contratar</a>
+                            <button
+                                class="w-full btn bg-primary-green text-white py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center plan-checkout-btn"
+                                data-plan-id="3" data-plan-name="Profesional" data-amount="13990"
+                                data-subject="Plan Profesional BoletaPro">Contratar</button>
                         </div>
                         <div class="pricing-card">
                             <h3 class="text-lg font-bold text-white mb-1">Empresa</h3>
@@ -1735,9 +1746,29 @@
                                 <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte
                                     prioritario</li>
                             </ul>
-                            <a href="https://wa.me/56938859332?text=Hola,%20quiero%20el%20Plan%20Empresa%20de%20BoletaPro"
-                                target="_blank"
-                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center">Contratar</a>
+                            <button
+                                class="w-full btn btn-secondary text-white py-2.5 rounded-md font-bold text-sm text-center plan-checkout-btn"
+                                data-plan-id="4" data-plan-name="Empresa" data-amount="44990"
+                                data-subject="Plan Empresa BoletaPro">Contratar</button>
+                        </div>
+                        <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-amber-400 mb-1">Test
+                                <span class="text-xs font-mono-accent text-gray-500">(pruebas)</span></h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">10 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$350</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> 10 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Pago de prueba
+                                    (sandbox)</li>
+                            </ul>
+                            <button
+                                class="w-full btn bg-primary-green text-white py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center plan-checkout-btn"
+                                data-plan-id="5" data-plan-name="Test" data-amount="350"
+                                data-subject="Plan Test BoletaPro">Contratar</button>
                         </div>
                         <div class="pricing-card">
                             <h3 class="text-lg font-bold text-amber-400 mb-1 flex items-center gap-2">Corporativo<svg
@@ -2225,6 +2256,18 @@
                         </svg>
                         Configuración
                     </a>
+                    <a href="admin.html" id="sidebar-admin-link" data-view="admin-view" data-external="true"
+                        class="sidebar-link hidden flex items-center p-3 rounded-md text-gray-400 font-semibold">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-7 9a7 7 0 0114 0">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3l1.456 2.474M4 7l2.76 1.174M4 17l2.76-1.174M20 7l-2.76 1.174M20 17l-2.76-1.174">
+                            </path>
+                        </svg>
+                        Panel Admin
+                    </a>
                 </nav>
                 <div class="mt-auto">
                     <a id="sidebar-video-tutorial-btn" href="https://www.youtube.com/watch?v=uFF5wq_MXw8"
@@ -2665,7 +2708,7 @@
 
                     <!-- Settings View -->
                     <div id="settings-view" class="dashboard-view hidden">
-                        <h2 class="text-4xl font-bold text-white mb-8">Configuración</h2>
+                        <h2 class="text-4xl font-bold text-white mb-8">Configuración y planes</h2>
                         <div class="space-y-8">
                             <div class="bg-surface-dark p-6 rounded-lg border border-dark">
                                 <h3 class="text-xl font-bold text-white mb-4">Mi Perfil</h3>
@@ -2692,14 +2735,13 @@
                                         <p class="text-gray-400 text-sm mt-1">Aumenta tu límite de emisiones contratando
                                             un plan superior.</p>
                                     </div>
-                                    <a href="https://wa.me/56938859332?text=Hola,%20quisiera%20mejorar%20mi%20plan%20en%20BoletaPro"
-                                        target="_blank"
+                                    <a href="#" id="upgrade-plan-btn"
                                         class="btn bg-primary-green text-white px-5 py-2 rounded-md font-semibold bg-primary-green-hover flex items-center gap-2">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
                                             <path
                                                 d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326z" />
                                         </svg>
-                                        Contactar para Upgrade
+                                        Mejorar plan (Flow)
                                     </a>
                                 </div>
                             </div>
@@ -2716,82 +2758,75 @@
                     </div>
                     <div id="billing-view" class="dashboard-view hidden">
                         <h2 class="text-4xl font-bold text-white mb-8">Facturación</h2>
-                        <p class="text-gray-400 mb-6">Completa tus datos de facturación. Puedes actualizarlos cuando lo desees.</p>
+                        <p class="text-gray-400 mb-6">Gestiona tu suscripción. El comprobante tributario (boleta o factura) lo eliges al momento de pagar.</p>
 
                         <div class="bg-surface-dark p-4 rounded-lg border border-primary-green/30 bg-primary-green/5 mb-8">
                             <p class="text-sm text-gray-300">La activación del servicio se realizará una vez confirmado el pago. Recibirás por correo el documento tributario (boleta o factura) correspondiente y la confirmación de tu suscripción.</p>
                         </div>
 
-                        <div class="bg-surface-dark p-6 rounded-lg border border-dark mb-8">
-                            <h3 class="text-xl font-bold text-white mb-4">Datos de Facturación</h3>
-                            <div id="billing-loading" class="text-gray-400 text-center py-4">Cargando datos...</div>
-                            <div id="billing-success-message" class="hidden p-3 mb-4 text-sm text-green-400 bg-green-900/50 rounded-md"></div>
-                            <div id="billing-error-message" class="hidden p-3 mb-4 text-sm text-red-400 bg-red-900/50 rounded-md"></div>
-                            <div id="billing-tipo-wrapper" class="mb-6">
-                                <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
-                                <div class="inline-flex rounded-lg bg-gray-900 border border-dark p-1">
-                                    <button type="button" id="tipo-factura-btn"
-                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 bg-primary-green text-white shadow-md">
-                                        Factura
-                                    </button>
-                                    <button type="button" id="tipo-boleta-btn"
-                                        class="tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
-                                        Boleta
-                                    </button>
+                        <div class="bg-surface-dark p-6 rounded-lg border border-primary-green/40 mb-8">
+                            <h3 class="text-xl font-bold text-white mb-4">Mi suscripción</h3>
+                            <div id="mi-suscripcion-plan" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="text-xs font-bold uppercase tracking-wider text-primary-green">Plan actual</span>
+                                        <p id="mi-suscripcion-plan-nombre" class="text-2xl font-extrabold text-white">Cargando...</p>
+                                    </div>
+                                    <p id="mi-suscripcion-plan-detalle" class="text-sm text-gray-400 mt-1">Obteniendo tu plan actual...</p>
+                                    <p id="mi-suscripcion-vencimiento" class="hidden text-sm text-gray-400 mt-1"></p>
+                                </div>
+                                <button type="button" id="gestionar-suscripcion-btn"
+                                    class="btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover whitespace-nowrap">
+                                    Gestionar suscripción
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-dark p-6 rounded-lg border border-dark">
+                            <h3 class="text-xl font-bold text-white mb-4">Historial de pagos y suscripciones</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead>
+                                        <tr class="border-b border-dark">
+                                            <th class="p-4 font-semibold text-gray-400">Fecha</th>
+                                            <th class="p-4 font-semibold text-gray-400">Plan</th>
+                                            <th class="p-4 font-semibold text-gray-400">Monto</th>
+                                            <th class="p-4 font-semibold text-gray-400">Boletas/mes</th>
+                                            <th class="p-4 font-semibold text-gray-400">Período</th>
+                                            <th class="p-4 font-semibold text-gray-400">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historial-pagos-body">
+                                        <tr>
+<td colspan="6" class="p-4 text-gray-400 text-center">Cargando historial...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="historial-pagos-paginacion"
+                                class="hidden items-center justify-between p-4 border-t border-dark">
+                                <div class="flex items-center space-x-2">
+                                    <label for="historial-pagos-page-size" class="text-sm text-gray-400">Mostrar:</label>
+                                    <select id="historial-pagos-page-size"
+                                        class="bg-gray-900 border border-dark rounded-md p-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <button id="historial-pagos-prev"
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Anterior</button>
+                                    <span id="historial-pagos-indicator" class="text-sm text-gray-400"></span>
+                                    <button id="historial-pagos-next"
+                                        class="pagination-btn btn btn-secondary text-white px-4 py-2 rounded-md font-semibold text-sm">Siguiente</button>
                                 </div>
                             </div>
-                            <form id="billing-form" class="hidden space-y-4">
-                                <div>
-                                    <label for="billing-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label>
-                                    <input type="text" id="billing-rut" required placeholder="12345678-9"
-                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-razon-social" class="block text-sm font-medium text-gray-400 mb-1">Razón Social o Nombre</label>
-                                    <input type="text" id="billing-razon-social" required placeholder="Razón Social o Nombre Completo"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div id="billing-giro-wrapper">
-                                    <label for="billing-giro" class="block text-sm font-medium text-gray-400 mb-1">Giro Comercial (Actividad Económica)</label>
-                                    <input type="text" id="billing-giro" required placeholder="Ej: Servicios de contabilidad y auditoría"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-direccion" class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
-                                    <input type="text" id="billing-direccion" required placeholder="Calle, número, depto/oficina"
-                                        class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div>
-                                    <label for="billing-comuna" class="block text-sm font-medium text-gray-400 mb-1">Comuna</label>
-                                    <div class="relative">
-                                        <input type="text" id="billing-comuna" required placeholder="Escribe para buscar tu comuna..."
-                                            class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green"
-                                            autocomplete="off">
-                                        <ul id="billing-comuna-dropdown" class="hidden absolute z-20 w-full mt-1 bg-gray-900 border border-dark rounded-md max-h-60 overflow-y-auto shadow-lg"></ul>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="billing-email" class="block text-sm font-medium text-gray-400 mb-1">Correo Electrónico</label>
-                                    <input type="email" id="billing-email" required placeholder="correo@ejemplo.com"
-                                        class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
-                                </div>
-                                <div class="flex space-x-4">
-                                    <button type="button" id="billing-edit-btn"
-                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
-                                        Modificar
-                                    </button>
-                                    <button type="submit" id="billing-save-btn"
-                                        class="hidden btn bg-primary-green text-white px-6 py-3 rounded-md font-bold bg-primary-green-hover">
-                                        Guardar Datos de Facturación
-                                    </button>
-                                    <button type="button" id="billing-cancel-btn"
-                                        class="hidden btn btn-secondary text-white px-6 py-3 rounded-md font-semibold">
-                                        Salir sin guardar
-                                    </button>
-                                </div>
-                            </form>
                         </div>
+
                     </div>
+
+                    <!-- Plans View -->
                 </div>
 
                 <!-- Footer for Dashboard -->
@@ -2828,6 +2863,154 @@
                     class="btn btn-secondary text-white px-5 py-2 rounded-md font-semibold">Cancelar</button>
                 <button id="confirm-delete-btn" class="btn btn-danger text-white px-5 py-2 rounded-md font-semibold">Sí,
                     eliminar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Suscripción / Gestionar plan -->
+    <section id="subscription-modal-section"
+        class="modal-container fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div class="bg-surface-dark w-full max-w-6xl p-6 rounded-lg border border-dark shadow-2xl transform scale-95 max-h-[95vh] overflow-y-auto overflow-x-hidden">
+            <div class="flex justify-between items-start gap-4 mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Gestionar suscripción</h2>
+                    <p class="text-xs text-gray-300 mt-1">Elige un plan y presiona <strong class="text-primary-green">Pagar</strong> (con Flow.cl). Tu
+                        cupo se activa al confirmarse. Sin contratos, cancela cuando quieras.</p>
+                </div>
+                <button id="close-subscription-modal" class="text-gray-500 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+
+            <!-- Planes: una sola fila con tarjetas compactas -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-stretch">
+                <div class="pricing-card plan-option p-4" data-plan-id="2" data-plan-name="Inicial" data-amount="7990">
+                    <h3 class="text-base font-bold text-white">Inicial</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">50 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$7.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 50 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 3 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte WhatsApp</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="3" data-plan-name="Profesional" data-amount="13990">
+                    <h3 class="text-base font-bold text-white">Profesional</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">100 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$13.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 100 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 6 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="4" data-plan-name="Empresa" data-amount="44990">
+                    <h3 class="text-base font-bold text-white">Empresa</h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">500 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$44.990</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 500 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 12 meses</li>
+                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="5" data-plan-name="Test" data-amount="350">
+                    <h3 class="text-base font-bold text-amber-400">Test <span class="text-[11px] font-mono-accent text-gray-500">(pruebas)</span></h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">10 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$350</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> 10 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Pago de prueba (sandbox)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Carrito compacto horizontal -->
+            <div id="subscription-cart"
+                class="bg-surface-dark border border-primary-green/30 rounded-lg p-4 mt-4">
+                <div class="flex flex-col lg:flex-row items-center gap-4 flex-wrap justify-between">
+                    <div class="flex-1 min-w-[180px]">
+                        <h3 class="text-sm font-bold text-white mb-1">Tu carrito</h3>
+                        <div id="cart-empty" class="text-gray-500 text-sm">Selecciona un plan para continuar.</div>
+                        <div id="cart-content" class="hidden space-y-0.5">
+                            <div class="flex items-center gap-3">
+                                <span id="cart-plan-name" class="text-gray-200 font-semibold">-</span>
+                                <span id="cart-plan-price" class="text-white font-bold">-</span>
+                            </div>
+                            <div class="text-xs text-gray-500" id="cart-plan-subject">-</div>
+                        </div>
+                    </div>
+                    <label id="anual-switch-row" class="flex items-center gap-2 text-sm text-gray-300 order-3 lg:order-none">
+                        <span>Pago Anual <strong class="text-primary-green">-20%</strong></span>
+                        <button id="anual-switch" type="button" role="switch" aria-checked="false"
+                            class="relative w-11 h-6 rounded-full bg-gray-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                            <span class="anual-switch-knob absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"></span>
+                        </button>
+                    </label>
+                    <div class="text-right">
+                        <div class="text-xs text-gray-300">Total</div>
+                        <div id="cart-total" class="text-xl text-primary-green font-extrabold leading-tight">-</div>
+                        <div id="cart-total-period" class="text-[11px] text-gray-500"></div>
+                    </div>
+                    <button id="checkout-selected-plan" disabled
+                        class="btn bg-primary-green text-white px-6 py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center disabled:opacity-50 disabled:cursor-not-allowed">Pagar</button>
+                </div>
+
+                <!-- Comprobante tributario (obligatorio) -->
+                <div id="checkout-tipo-wrapper" class="mt-4 border-t border-dark pt-4">
+                    <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
+                    <div id="checkout-tipo-error" class="hidden p-2 mb-3 text-xs text-red-400 bg-red-900/50 rounded-md"></div>
+                    <div class="inline-flex rounded-lg bg-gray-900 border border-dark p-1">
+                        <button type="button" id="checkout-tipo-boleta"
+                            class="checkout-tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">Boleta</button>
+                        <button type="button" id="checkout-tipo-factura"
+                            class="checkout-tipo-pill px-6 py-2 rounded-md text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">Factura</button>
+                    </div>
+
+                    <form id="checkout-factura-form" class="hidden mt-4 space-y-4">
+                        <div>
+                            <label for="checkout-rut" class="block text-sm font-medium text-gray-400 mb-1">RUT</label>
+                            <input type="text" id="checkout-rut" placeholder="12345678-9"
+                                class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-razon-social" class="block text-sm font-medium text-gray-400 mb-1">Razón Social o Nombre</label>
+                            <input type="text" id="checkout-razon-social" placeholder="Razón Social o Nombre Completo"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-giro" class="block text-sm font-medium text-gray-400 mb-1">Giro Comercial (Actividad Económica)</label>
+                            <input type="text" id="checkout-giro" placeholder="Ej: Servicios de contabilidad y auditoría"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-direccion" class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
+                            <input type="text" id="checkout-direccion" placeholder="Calle, número, depto/oficina"
+                                class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                        <div>
+                            <label for="checkout-comuna" class="block text-sm font-medium text-gray-400 mb-1">Comuna</label>
+                            <div class="relative">
+                                <input type="text" id="checkout-comuna" placeholder="Escribe para buscar tu comuna..."
+                                    class="w-full p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green" autocomplete="off">
+                                <ul id="checkout-comuna-dropdown" class="hidden absolute z-20 w-full mt-1 bg-gray-900 border border-dark rounded-md max-h-60 overflow-y-auto shadow-lg"></ul>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="checkout-email" class="block text-sm font-medium text-gray-400 mb-1">Correo Electrónico</label>
+                            <input type="email" id="checkout-email" placeholder="correo@ejemplo.com"
+                                class="w-full md:w-1/2 p-3 bg-gray-900 border border-dark rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-green">
+                        </div>
+                    </form>
+                </div>
+                <p class="text-[11px] text-gray-500 mt-3 text-center">Precios en CLP &middot; IVA incluido. Pago
+                    procesado con <strong class="text-primary-green">Flow.cl</strong>.</p>
             </div>
         </div>
     </section>
@@ -3025,9 +3208,497 @@
             supabaseClient.auth.onAuthStateChange(async (event, session) => {
                 if (session) {
                     showDashboard(session.user);
+                    checkAdminAccess();
                 } else {
                     showLanding();
                     isDashboardInitialized = false;
+                }
+            });
+
+            async function checkAdminAccess() {
+                const adminLink = document.getElementById('sidebar-admin-link');
+                if (!adminLink) return;
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) return;
+                    const res = await fetch('http://127.0.0.1:8010/admin/me', {
+                        headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.es_admin) {
+                        adminLink.classList.remove('hidden');
+                    } else {
+                        adminLink.classList.add('hidden');
+                    }
+                } catch (err) {
+                    adminLink.classList.add('hidden');
+                }
+            }
+
+            // --- Flow.cl Checkout (Pricing) ---
+            const FLOW_API_BASE = 'https://boletapro-api-test-742039510932.southamerica-west1.run.app/flow';
+
+            // --- Shared helpers (validación de facturación: RUT, comunas) ---
+            const validarRut = (rut) => {
+                const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+                if (cleaned.length < 2) return false;
+                const dv = cleaned.slice(-1);
+                const body = cleaned.slice(0, -1);
+                let sum = 0;
+                let multiplier = 2;
+                for (let i = body.length - 1; i >= 0; i--) {
+                    sum += parseInt(body[i]) * multiplier;
+                    multiplier = multiplier < 7 ? multiplier + 1 : 2;
+                }
+                const expectedDv = 11 - (sum % 11);
+                let expectedChar;
+                if (expectedDv === 11) expectedChar = '0';
+                else if (expectedDv === 10) expectedChar = 'K';
+                else expectedChar = expectedDv.toString();
+                return dv === expectedChar;
+            };
+
+            const COMUNAS_VALIDAS_JS = [
+                "ALGARROBO","ALHUE","ALTO BIO BIO","ALTO DEL CARMEN","ALTO HOSPICIO",
+                "ANCUD","ANDACOLLO","ANGOL","ANTOFAGASTA","ANTUCO","ARAUCO","ARICA",
+                "AYSEN","BUIN","BULNES","CABILDO","CABO DE HORNOS","CABRERO","CALAMA",
+                "CALBUCO","CALDERA","CALERA DE TANGO","CALLE LARGA","CAMARONES","CAMINA",
+                "CANELA","CANETE","CARAHUE","CARTAGENA","CASABLANCA","CASTRO","CATEMU",
+                "CAUQUENES","CERRILLOS","CERRO NAVIA","CHAITEN","CHANARAL","CHANCO",
+                "CHEPICA","CHIGUAYANTE","CHILE CHICO","CHILLAN","CHILLAN VIEJO",
+                "CHIMBARONGO","CHOLCHOL","CHONCHI","CISNES","COBQUECURA","COCHAMO",
+                "COCHRANE","CODEGUA","COELEMU","COIHUECO","COINCO","COLBUN","COLCHANE",
+                "COLINA","COLLIPULLI","COLTAUCO","COMBARBALA","CON CON","CONCEPCION",
+                "CONCHALI","CONSTITUCION","CONTULMO","COPIAPO","COQUIMBO","CORONEL",
+                "CORRAL","COYHAIQUE","CUNCO","CURACAVI","CURACAUTIN","CURACO DE VELEZ",
+                "CURANILAHUE","CURARREHUE","CUREPTO","CURICO","DALCAHUE","DIEGO DE ALMAGRO",
+                "DONIHUE","EL BOSQUE","EL CARMEN","EL MONTE","EL QUISCO","EL TABO",
+                "EMPEDRADO","ERCILLA","EST CENTRAL","FLORIDA","FREIRE","FREIRINA","FRESIA",
+                "FRUTILLAR","FUTALEUFU","FUTRONO","GALVARINO","GENERAL LAGOS","GORBEA",
+                "GRANEROS","GUAITECAS","HIJUELAS","HUALAIHUE","HUALANE","HUALPEN","HUALQUI",
+                "HUARA","HUASCO","HUECHURABA","ILLAPEL","INDEPENDENCIA","IQUIQUE",
+                "ISLA DE MAIPO","ISLA DE PASCUA","JUAN FERNANDEZ","LA CALERA","LA CISTERNA",
+                "LA CRUZ","LA ESTRELLA","LA FLORIDA","LA GRANJA","LA HIGUERA","LA LIGUA",
+                "LA PINTANA","LA REINA","LA SERENA","LA UNION","LAGO RANCO","LAGO VERDE",
+                "LAGUNA BLANCA","LAJA","LAMPA","LANCO","LAS CABRAS","LAS CONDES","LAUTARO",
+                "LEBU","LICANTEN","LIMACHE","LINARES","LITUECHE","LLANQUIHUE","LLAY-LLAY",
+                "LO BARNECHEA","LO ESPEJO","LO PRADO","LOLOL","LONCOCHE","LONGAVI",
+                "LONQUIMAY","LOS ALAMOS","LOS ANDES","LOS ANGELES","LOS LAGOS",
+                "LOS MUERMOS","LOS SAUCES","LOS VILOS","LOTA","LUMACO","MACHALI","MACUL",
+                "MAFIL","MAIPU","MALLOA","MARCHIGUE","MARIA ELENA","MARIA PINTO",
+                "MARIQUINA","MAULE","MAULLIN","MEJILLONES","MELIPEUCO","MELIPILLA",
+                "MOLINA","MONTE PATRIA","MULCHEN","NACIMIENTO","NANCAGUA","NAVIDAD",
+                "NEGRETE","NINHUE","NOGALES","NUEVA IMPERIAL","NUNOA","O'HIGGINS","OLIVAR",
+                "OLLAGUE","OLMUE","OSORNO","OVALLE","P AGUIRRE CERDA","PADRE HURTADO",
+                "PADRE LAS CASAS","PAIHUANO","PAILLACO","PAINE","PALENA","PALMILLA",
+                "PANGUIPULLI","PANQUEHUE","PAPUDO","PAREDONES","PARRAL","PELARCO",
+                "PELLUHUE","PEMUCO","PENAFLOR","PENALOLEN","PENCAHUE","PENCO","PERALILLO",
+                "PERQUENCO","PETORCA","PEUMO","PICA","PICHIDEGUA","PICHILEMU","PINTO",
+                "PIRQUE","PITRUFQUEN","PLACILLA","PORTEZUELO","PORVENIR","POZO ALMONTE",
+                "PRIMAVERA","PROVIDENCIA","PUCHUNCAVI","PUCON","PUDAHUEL","PUENTE ALTO",
+                "PUERTO MONTT","PUERTO NATALES","PUERTO OCTAY","PUERTO VARAS","PUMANQUE",
+                "PUNITAQUI","PUNTA ARENAS","PUQUELDON","PUREN","PURRANQUE","PUTAENDO",
+                "PUTRE","PUYEHUE","QUEILEN","QUELLON","QUEMCHI","QUILACO","QUILICURA",
+                "QUILLECO","QUILLON","QUILLOTA","QUILPUE","QUINCHAO","QUINTA NORMAL",
+                "QUINTA TILCOCO","QUINTERO","QUIRIHUE","RANCAGUA","RANQUIL","RAUCO",
+                "RECOLETA","RENAICO","RENCA","RENGO","REQUINOA","RETIRO","RINCONADA",
+                "RIO BUENO","RIO CLARO","RIO HURTADO","RIO IBANEZ","RIO NEGRO","RIO VERDE",
+                "ROMERAL","SAAVEDRA","SAGRADA FAMILIA","SALAMANCA","SAN ANTONIO",
+                "SAN BERNARDO","SAN CARLOS","SAN CLEMENTE","SAN ESTEBAN","SAN FABIAN",
+                "SAN FELIPE","SAN FERNANDO","SAN FRANCISCO DE MOSTAZAL","SAN GREG NIQUEN",
+                "SAN GREGORIO","SAN IGNACIO","SAN JAVIER","SAN JOAQUIN","SAN JOSE MAIPO",
+                "SAN JUAN DE LA COSTA","SAN MIGUEL","SAN NICOLAS","SAN PABLO",
+                "SAN PEDRO DE ATACAMA","SAN PEDRO DE LA PAZ","SAN PEDRO DE MELIPILLA",
+                "SAN RAFAEL","SAN RAMON","SAN ROSENDO","SAN VICENTE","SANTA BARBARA",
+                "SANTA CRUZ","SANTA JUANA","SANTA MARIA","SANTIAGO","SANTO DOMINGO",
+                "SIERRA GORDA","TALAGANTE","TALCA","TALCAHUANO","TALTAL","TEMUCO","TENO",
+                "TEODORO SCHMIDT","TIERRA AMARILLA","TIL-TIL","TIMAUKEL","TIRUA","TOCOPILLA",
+                "TOLTEN","TOME","TORRES DE PAINE","TORTEL","TRAIGUEN","TREHUACO","TUCAPEL",
+                "VALDIVIA","VALLENAR","VALPARAISO","VICHUQUEN","VICTORIA","VICUNA","VILCUN",
+                "VILLA ALEGRE","VILLA ALEMANA","VILLARRICA","VINA DEL MAR","VITACURA",
+                "YERBAS BUENAS","YUMBEL","YUNGAY","ZAPALLAR"
+            ];
+            const esComunaValida = (comuna) => COMUNAS_VALIDAS_JS.some(c => c === comuna);
+
+            const setupComunaAutocomplete = (inputEl, dropdownEl) => {
+                let selectedIndex = -1;
+                const closeDropdown = () => { dropdownEl.classList.add('hidden'); selectedIndex = -1; };
+                const selectComuna = (comuna) => { inputEl.value = comuna; closeDropdown(); };
+                inputEl.addEventListener('input', () => {
+                    const query = inputEl.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+                    dropdownEl.innerHTML = '';
+                    selectedIndex = -1;
+                    if (!query) { dropdownEl.classList.add('hidden'); return; }
+                    const matches = COMUNAS_VALIDAS_JS.filter(c =>
+                        c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(query)
+                    ).slice(0, 15);
+                    if (matches.length === 0) { dropdownEl.classList.add('hidden'); return; }
+                    matches.forEach(c => {
+                        const li = document.createElement('li');
+                        li.textContent = c;
+                        li.className = 'px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer text-sm';
+                        li.addEventListener('mousedown', (e) => { e.preventDefault(); selectComuna(c); });
+                        dropdownEl.appendChild(li);
+                    });
+                    dropdownEl.classList.remove('hidden');
+                });
+                inputEl.addEventListener('keydown', (e) => {
+                    const items = dropdownEl.querySelectorAll('li');
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === selectedIndex));
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (items.length === 0) return;
+                        selectedIndex = Math.max(selectedIndex - 1, 0);
+                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === selectedIndex));
+                    } else if (e.key === 'Enter') {
+                        if (selectedIndex >= 0 && items[selectedIndex]) {
+                            e.preventDefault();
+                            selectComuna(items[selectedIndex].textContent);
+                        }
+                    } else if (e.key === 'Escape') {
+                        closeDropdown();
+                    }
+                });
+                inputEl.addEventListener('blur', () => { setTimeout(closeDropdown, 150); });
+            };
+
+            const checkoutPlan = async (plan, btn) => {
+                const planId = parseInt(plan.id, 10);
+                const planName = plan.nombre || plan.name;
+                const amount = parseFloat(plan.amount);
+                const subject = plan.subject || `Plan ${planName} BoletaPro`;
+                const periodo = plan.periodo || 'mensual';
+
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) {
+                    showAuthModal('signup');
+                    return;
+                }
+
+                if (btn) {
+                    btn.disabled = true;
+                    btn.dataset.originalText = btn.innerHTML;
+                    btn.innerHTML = '<div class="spinner inline-block mr-2"></div>Redirigiendo...';
+                }
+
+                try {
+                    const resp = await fetch(`${FLOW_API_BASE}/create-order`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.access_token}`
+                        },
+                        body: JSON.stringify({
+                            plan_id: planId,
+                            amount: amount,
+                            subject: subject,
+                            periodo: periodo
+                        })
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok) {
+                        throw new Error(data.detail || 'No se pudo crear la orden de pago');
+                    }
+                    // Abrir el checkout de Flow en una pestaña nueva, dejando BoletaPro abierta
+                    window.open(data.redirect_url, '_blank', 'noopener');
+                } catch (err) {
+                    console.error('Flow checkout error:', err);
+                    alert('Error al crear la orden de pago: ' + err.message);
+                } finally {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = btn.dataset.originalText;
+                    }
+                }
+            };
+
+            // Landing page pricing buttons
+            document.querySelectorAll('.plan-checkout-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    checkoutPlan({
+                        id: parseInt(btn.dataset.planId, 10),
+                        nombre: btn.dataset.planName,
+                        amount: parseFloat(btn.dataset.amount),
+                        subject: btn.dataset.subject
+                    }, btn);
+                });
+            });
+
+            // --- Subscription modal (Gestionar suscripción / Gestionar plan) ---
+            const subscriptionModal = document.getElementById('subscription-modal-section');
+            const openSubscriptionModal = () => {
+                if (!subscriptionModal) return;
+                subscriptionModal.classList.remove('opacity-0', 'pointer-events-none');
+                loadCheckoutFacturacion();
+            };
+            const closeSubscriptionModal = () => {
+                if (!subscriptionModal) return;
+                subscriptionModal.classList.add('opacity-0', 'pointer-events-none');
+            };
+
+            // Cuando el pago (pestaña pago-resultado.html) llega a un estado
+            // terminal (aceptado o rechazado), cerramos el modal "Gestionar
+            // suscripción" y recargamos para reflejar el plan vigente.
+            const paymentChannel = typeof BroadcastChannel !== 'undefined'
+                ? new BroadcastChannel('boletapro-pago')
+                : null;
+            if (paymentChannel) {
+                paymentChannel.addEventListener('message', (e) => {
+                    const msg = e.data;
+                    if (!msg || msg.type !== 'pago-resultado') return;
+                    const terminal = msg.estado === 'pagado' || msg.estado === 'rechazado' || msg.estado === 'anulado';
+                    if (!terminal) return;
+                    closeSubscriptionModal();
+                    setTimeout(() => window.location.reload(), 150);
+                });
+            }
+
+            const cartEmpty = document.getElementById('cart-empty');
+            const cartContent = document.getElementById('cart-content');
+            const cartPlanName = document.getElementById('cart-plan-name');
+            const cartPlanPrice = document.getElementById('cart-plan-price');
+            const cartPlanSubject = document.getElementById('cart-plan-subject');
+            const cartTotal = document.getElementById('cart-total');
+            const cartTotalPeriod = document.getElementById('cart-total-period');
+            const anualSwitch = document.getElementById('anual-switch');
+            const anualSwitchRow = document.getElementById('anual-switch-row');
+            const anualSwitchKnob = document.querySelector('.anual-switch-knob');
+            const checkoutSelectedPlanBtn = document.getElementById('checkout-selected-plan');
+            let selectedPlan = null;
+
+            const fmtMensual = (monthlyPrice) =>
+                monthlyPrice === 0 ? 'Gratis' : '$' + monthlyPrice.toLocaleString('es-CL') + ' CLP /mes';
+
+            const fmtAnual = (monthlyPrice) => {
+                if (monthlyPrice === 0) return 'Gratis';
+                const total = Math.round(monthlyPrice * 12 * 0.8);
+                return '$' + total.toLocaleString('es-CL') + ' CLP /año';
+            };
+
+            const recalcCart = (periodo) => {
+                if (!selectedPlan) return;
+                const price = (parseInt(selectedPlan.mensual, 10) || 0);
+                const isFree = price === 0;
+                const isAnual = periodo === 'anual' && !isFree;
+
+                // El amount que se envía al backend debe coincidir con la periodicidad
+                selectedPlan.amount = isAnual ? Math.round(price * 12 * 0.8) : price;
+                selectedPlan.periodo = isAnual ? 'anual' : 'mensual';
+
+                cartTotal.textContent = isAnual ? fmtAnual(price) : fmtMensual(price);
+                cartTotalPeriod.textContent = isAnual ? '12 meses • ahorro 20%' : '';
+
+                anualSwitch.setAttribute('aria-checked', isAnual ? 'true' : 'false');
+                if (isAnual) {
+                    anualSwitchKnob.classList.add('translate-x-5');
+                    anualSwitchKnob.classList.remove('translate-x-0');
+                    anualSwitch.classList.add('bg-primary-green');
+                    anualSwitch.classList.remove('bg-gray-600');
+                } else {
+                    anualSwitchKnob.classList.remove('translate-x-5');
+                    anualSwitchKnob.classList.add('translate-x-0');
+                    anualSwitch.classList.remove('bg-primary-green');
+                    anualSwitch.classList.add('bg-gray-600');
+                }
+
+                anualSwitch.disabled = isFree;
+                if (isFree) anualSwitchRow.classList.add('opacity-40', 'pointer-events-none');
+                else anualSwitchRow.classList.remove('opacity-40', 'pointer-events-none');
+            };
+
+            anualSwitch.addEventListener('click', () => {
+                const isAnual = selectedPlan && selectedPlan.periodo !== 'anual' && (parseInt(selectedPlan.mensual, 10) || 0) > 0;
+                if (selectedPlan) {
+                    recalcCart(isAnual ? 'anual' : 'mensual');
+                }
+            });
+
+            const updateCart = (plan) => {
+                const mensual = (parseInt(plan.amount, 10) || 0);
+                selectedPlan = { ...plan, mensual: mensual, amount: mensual, periodo: 'mensual' };
+                const price = mensual;
+                const priceFmt = price === 0 ? 'Gratis' : '$' + price.toLocaleString('es-CL');
+                cartPlanName.textContent = plan.nombre;
+                cartPlanPrice.textContent = priceFmt;
+                cartPlanSubject.textContent = `${plan.nombre} &bull; ${plan.cupo}`;
+                cartEmpty.classList.add('hidden');
+                cartContent.classList.remove('hidden');
+                checkoutSelectedPlanBtn.disabled = (price === 0);
+                checkoutSelectedPlanBtn.innerHTML = price === 0 ? 'Plan gratuito' : 'Pagar';
+                recalcCart('mensual');
+            };
+
+            const planOptions = document.querySelectorAll('.plan-option');
+            planOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    planOptions.forEach(o => o.classList.remove('plan-option-selected'));
+                    option.classList.add('plan-option-selected');
+                    updateCart({
+                        id: option.dataset.planId,
+                        nombre: option.dataset.planName,
+                        amount: option.dataset.amount,
+                        cupo: option.querySelector('.font-mono-accent')?.textContent || ''
+                    });
+                });
+            });
+
+            if (subscriptionModal) {
+                document.getElementById('close-subscription-modal').addEventListener('click', closeSubscriptionModal);
+                subscriptionModal.addEventListener('click', (e) => {
+                    if (e.target === subscriptionModal) closeSubscriptionModal();
+                });
+            }
+            // --- Comprobante tributario (Boleta/Factura) en el pago de suscripción ---
+            const checkoutTipoBoletaBtn = document.getElementById('checkout-tipo-boleta');
+            const checkoutTipoFacturaBtn = document.getElementById('checkout-tipo-factura');
+            const checkoutTipoError = document.getElementById('checkout-tipo-error');
+            const checkoutFacturaForm = document.getElementById('checkout-factura-form');
+            const checkoutFacturaFields = ['checkout-rut', 'checkout-razon-social', 'checkout-giro', 'checkout-direccion', 'checkout-comuna'];
+            const checkoutEmailField = document.getElementById('checkout-email');
+            let selectedCheckoutTipo = null;
+
+            const checkoutComunaInput = document.getElementById('checkout-comuna');
+            const checkoutComunaDropdown = document.getElementById('checkout-comuna-dropdown');
+
+            if (checkoutComunaInput && checkoutComunaDropdown) {
+                setupComunaAutocomplete(checkoutComunaInput, checkoutComunaDropdown);
+            }
+
+            const showCheckoutTipoError = (msg) => {
+                if (!checkoutTipoError) return;
+                checkoutTipoError.textContent = msg;
+                checkoutTipoError.classList.remove('hidden');
+            };
+            const hideCheckoutTipoError = () => {
+                if (checkoutTipoError) checkoutTipoError.classList.add('hidden');
+            };
+
+            const setCheckoutTipo = (tipo) => {
+                selectedCheckoutTipo = tipo === 'boleta' ? 'boleta' : (tipo === 'factura' ? 'factura' : null);
+                hideCheckoutTipoError();
+                const isFactura = selectedCheckoutTipo === 'factura';
+                if (selectedCheckoutTipo === null) {
+                    if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.classList.add('text-gray-400');
+                    if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.classList.add('text-gray-400');
+                } else if (isFactura) {
+                    checkoutTipoFacturaBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoFacturaBtn.classList.remove('text-gray-400');
+                    checkoutTipoBoletaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoBoletaBtn.classList.add('text-gray-400');
+                } else {
+                    checkoutTipoBoletaBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoBoletaBtn.classList.remove('text-gray-400');
+                    checkoutTipoFacturaBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
+                    checkoutTipoFacturaBtn.classList.add('text-gray-400');
+                }
+                if (checkoutFacturaForm) checkoutFacturaForm.classList.toggle('hidden', !isFactura);
+                checkoutFacturaFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.required = isFactura;
+                        el.disabled = !isFactura;
+                    }
+                });
+                if (checkoutEmailField) { checkoutEmailField.required = isFactura; checkoutEmailField.disabled = !isFactura; }
+            };
+
+            if (checkoutTipoBoletaBtn) checkoutTipoBoletaBtn.addEventListener('click', () => setCheckoutTipo('boleta'));
+            if (checkoutTipoFacturaBtn) checkoutTipoFacturaBtn.addEventListener('click', () => setCheckoutTipo('factura'));
+
+            const loadCheckoutFacturacion = async () => {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) return;
+                    const { data, error } = await supabaseClient
+                        .from('datos_facturacion')
+                        .select('*')
+                        .eq('usuario_id', session.user.id)
+                        .order('id', { ascending: false })
+                        .limit(1);
+                    if (error || !data || data.length === 0) { setCheckoutTipo(null); return; }
+                    const d = data[0];
+                    document.getElementById('checkout-rut').value = d.rut || '';
+                    document.getElementById('checkout-razon-social').value = d.razon_social || '';
+                    document.getElementById('checkout-giro').value = d.giro || '';
+                    document.getElementById('checkout-direccion').value = d.direccion || '';
+                    document.getElementById('checkout-comuna').value = d.comuna || '';
+                    document.getElementById('checkout-email').value = d.email_facturacion || '';
+                    setCheckoutTipo(d.tipo_documento === 'factura' ? 'factura' : (d.tipo_documento === 'boleta' ? 'boleta' : null));
+                } catch (err) {
+                    console.error('Error cargando datos de facturación para el pago:', err);
+                    setCheckoutTipo(null);
+                }
+            };
+
+            const guardarComprobante = async (tipo) => {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) return { ok: false, msg: 'Sesión no válida. Inicia sesión nuevamente.' };
+                const isFactura = tipo === 'factura';
+                const payload = {
+                    usuario_id: session.user.id,
+                    tipo_documento: tipo,
+                    rut: document.getElementById('checkout-rut').value.trim() || null,
+                    razon_social: document.getElementById('checkout-razon-social').value.trim() || null,
+                    giro: isFactura ? (document.getElementById('checkout-giro').value.trim() || null) : null,
+                    direccion: document.getElementById('checkout-direccion').value.trim() || null,
+                    comuna: document.getElementById('checkout-comuna').value.trim() || null,
+                    email_facturacion: document.getElementById('checkout-email').value.trim() || null
+                };
+                const { error } = await supabaseClient.from('datos_facturacion').insert(payload);
+                if (error) return { ok: false, msg: error.message };
+                return { ok: true, msg: '' };
+            };
+
+            checkoutSelectedPlanBtn.addEventListener('click', async () => {
+                if (!selectedPlan) return;
+                if (selectedCheckoutTipo === null) {
+                    showCheckoutTipoError('Debes elegir Boleta o Factura para continuar.');
+                    return;
+                }
+                if (selectedCheckoutTipo === 'factura') {
+                    const rut = document.getElementById('checkout-rut').value.trim();
+                    const razonSocial = document.getElementById('checkout-razon-social').value.trim();
+                    const giro = document.getElementById('checkout-giro').value.trim();
+                    const direccion = document.getElementById('checkout-direccion').value.trim();
+                    const comuna = document.getElementById('checkout-comuna').value.trim();
+                    const email = document.getElementById('checkout-email').value.trim();
+                    if (!rut || !razonSocial || !giro || !direccion || !comuna || !email) {
+                        showCheckoutTipoError('Completa todos los campos de la factura.');
+                        return;
+                    }
+                    if (!validarRut(rut)) {
+                        showCheckoutTipoError('El RUT no es válido. Usa formato 12345678-9.');
+                        return;
+                    }
+                    if (!esComunaValida(comuna.toUpperCase())) {
+                        showCheckoutTipoError('La comuna no es válida. Selecciona una de la lista.');
+                        return;
+                    }
+                }
+                const res = await guardarComprobante(selectedCheckoutTipo);
+                if (!res.ok) {
+                    showCheckoutTipoError('Error al guardar los datos: ' + res.msg);
+                    return;
+                }
+                hideCheckoutTipoError();
+                await checkoutPlan(selectedPlan, checkoutSelectedPlanBtn);
+            });
+
+            // Open modal from "Gestionar suscripción" (Facturación) and "Mejorar plan" (Configuración)
+            const openModalButtons = ['gestionar-suscripcion-btn', 'upgrade-plan-btn'];
+            openModalButtons.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openSubscriptionModal();
+                    });
                 }
             });
 
@@ -3359,13 +4030,14 @@
 
                 sidebarLinks.forEach(link => {
                     link.onclick = (e) => {
+                        if (link.dataset.external === 'true') return;
                         e.preventDefault();
                         sidebarLinks.forEach(l => l.classList.remove('active'));
                         link.classList.add('active');
                         dashboardViews.forEach(v => v.classList.add('hidden'));
                         document.getElementById(link.dataset.view).classList.remove('hidden');
                         if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
-                        if (link.dataset.view === 'billing-view') loadBillingData();
+                        if (link.dataset.view === 'billing-view') { loadMiSuscripcion(); loadHistorialPagos(); }
                     };
                 });
 
@@ -3388,337 +4060,160 @@
 
                 // --- Billing Logic ---
 
-                const validarRut = (rut) => {
-                    const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
-                    if (cleaned.length < 2) return false;
-                    const dv = cleaned.slice(-1);
-                    const body = cleaned.slice(0, -1);
-                    let sum = 0;
-                    let multiplier = 2;
-                    for (let i = body.length - 1; i >= 0; i--) {
-                        sum += parseInt(body[i]) * multiplier;
-                        multiplier = multiplier < 7 ? multiplier + 1 : 2;
-                    }
-                    const expectedDv = 11 - (sum % 11);
-                    let expectedChar;
-                    if (expectedDv === 11) expectedChar = '0';
-                    else if (expectedDv === 10) expectedChar = 'K';
-                    else expectedChar = expectedDv.toString();
-                    return dv === expectedChar;
-                };
-
-                const billingFields = [
-                    'billing-rut', 'billing-razon-social', 'billing-giro',
-                    'billing-direccion', 'billing-comuna', 'billing-email'
-                ];
-
-                const setBillingFieldsDisabled = (disabled) => {
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.disabled = disabled;
-                    });
-                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
-                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
-                    if (tipoFacturaBtn) tipoFacturaBtn.disabled = disabled;
-                    if (tipoBoletaBtn) tipoBoletaBtn.disabled = disabled;
-                };
-
-                let selectedTipoDocumento = 'factura';
-
-                const setTipoDocumentoUI = (tipo) => {
-                    selectedTipoDocumento = tipo === 'boleta' ? 'boleta' : 'factura';
-                    const tipoFacturaBtn = document.getElementById('tipo-factura-btn');
-                    const tipoBoletaBtn = document.getElementById('tipo-boleta-btn');
-                    const giroWrapper = document.getElementById('billing-giro-wrapper');
-                    const giroInput = document.getElementById('billing-giro');
-
-                    const activate = (activeBtn, inactiveBtn) => {
-                        activeBtn.classList.add('bg-primary-green', 'text-white', 'shadow-md');
-                        activeBtn.classList.remove('text-gray-400');
-                        inactiveBtn.classList.remove('bg-primary-green', 'text-white', 'shadow-md');
-                        inactiveBtn.classList.add('text-gray-400');
+                const loadMiSuscripcion = async () => {
+                    const planNombreEl = document.getElementById('mi-suscripcion-plan-nombre');
+                    const planDetalleEl = document.getElementById('mi-suscripcion-plan-detalle');
+                    const vencimientoEl = document.getElementById('mi-suscripcion-vencimiento');
+                    if (!planNombreEl || !planDetalleEl) return;
+                    const setVencimiento = (fecha) => {
+                        if (!vencimientoEl) return;
+                        if (!fecha) { vencimientoEl.classList.add('hidden'); vencimientoEl.textContent = ''; return; }
+                        const d = new Date(fecha);
+                        if (isNaN(d.getTime())) { vencimientoEl.classList.add('hidden'); vencimientoEl.textContent = ''; return; }
+                        vencimientoEl.innerHTML = `Vence el <strong class="text-white font-bold">${d.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>`;
+                        vencimientoEl.classList.remove('hidden');
                     };
-
-                    if (selectedTipoDocumento === 'boleta') {
-                        activate(tipoBoletaBtn, tipoFacturaBtn);
-                        if (giroWrapper) giroWrapper.classList.add('hidden');
-                        if (giroInput) { giroInput.required = false; giroInput.disabled = true; }
-                    } else {
-                        activate(tipoFacturaBtn, tipoBoletaBtn);
-                        if (giroWrapper) giroWrapper.classList.remove('hidden');
-                        if (giroInput) { giroInput.required = true; giroInput.disabled = false; }
-                    }
-                };
-
-                document.getElementById('tipo-factura-btn').addEventListener('click', () => setTipoDocumentoUI('factura'));
-                document.getElementById('tipo-boleta-btn').addEventListener('click', () => setTipoDocumentoUI('boleta'));
-
-                const loadBillingData = async () => {
-                    const loadingEl = document.getElementById('billing-loading');
-                    const form = document.getElementById('billing-form');
-                    const editBtn = document.getElementById('billing-edit-btn');
-                    const saveBtn = document.getElementById('billing-save-btn');
-                    loadingEl.classList.remove('hidden');
-                    form.classList.add('hidden');
-
-                    const { data, error } = await supabaseClient
-                        .from('datos_facturacion')
-                        .select('*')
-                        .eq('usuario_id', user.id)
-                        .order('id', { ascending: false })
-                        .limit(1);
-
-                    loadingEl.classList.add('hidden');
-
-                    const cancelBtn = document.getElementById('billing-cancel-btn');
-
-                    if (!error && data && data.length > 0) {
-                        const d = data[0];
-                        document.getElementById('billing-rut').value = d.rut || '';
-                        document.getElementById('billing-razon-social').value = d.razon_social || '';
-                        document.getElementById('billing-giro').value = d.giro || '';
-                        document.getElementById('billing-direccion').value = d.direccion || '';
-                        document.getElementById('billing-comuna').value = d.comuna || '';
-                        document.getElementById('billing-email').value = d.email_facturacion || '';
-                        setTipoDocumentoUI(d.tipo_documento || 'factura');
-                        form.classList.remove('hidden');
-                        setBillingFieldsDisabled(true);
-                        editBtn.classList.remove('hidden');
-                        saveBtn.classList.add('hidden');
-                        cancelBtn.classList.add('hidden');
-                    } else {
-                        form.classList.remove('hidden');
-                        setBillingFieldsDisabled(false);
-                        editBtn.classList.add('hidden');
-                        saveBtn.classList.remove('hidden');
-                        cancelBtn.classList.add('hidden');
-                    }
-                };
-
-                let billingOriginalValues = {};
-
-                const editBtn = document.getElementById('billing-edit-btn');
-                editBtn.addEventListener('click', () => {
-                    billingOriginalValues = {};
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) billingOriginalValues[id] = el.value;
-                    });
-                    billingOriginalValues['tipo_documento'] = selectedTipoDocumento;
-                    setBillingFieldsDisabled(false);
-                    setTipoDocumentoUI(selectedTipoDocumento);
-                    editBtn.classList.add('hidden');
-                    document.getElementById('billing-save-btn').classList.remove('hidden');
-                    document.getElementById('billing-cancel-btn').classList.remove('hidden');
-                    document.getElementById('billing-rut').focus();
-                });
-
-                const cancelBtn = document.getElementById('billing-cancel-btn');
-                cancelBtn.addEventListener('click', () => {
-                    billingFields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.value = billingOriginalValues[id] || '';
-                    });
-                    setTipoDocumentoUI(billingOriginalValues['tipo_documento'] || 'factura');
-                    setBillingFieldsDisabled(true);
-                    cancelBtn.classList.add('hidden');
-                    document.getElementById('billing-save-btn').classList.add('hidden');
-                    editBtn.classList.remove('hidden');
-                    document.getElementById('billing-success-message').classList.add('hidden');
-                    document.getElementById('billing-error-message').classList.add('hidden');
-                });
-
-                // --- Comuna Autocomplete ---
-                const COMUNAS_VALIDAS_JS = [
-                    "ALGARROBO","ALHUE","ALTO BIO BIO","ALTO DEL CARMEN","ALTO HOSPICIO",
-                    "ANCUD","ANDACOLLO","ANGOL","ANTOFAGASTA","ANTUCO","ARAUCO","ARICA",
-                    "AYSEN","BUIN","BULNES","CABILDO","CABO DE HORNOS","CABRERO","CALAMA",
-                    "CALBUCO","CALDERA","CALERA DE TANGO","CALLE LARGA","CAMARONES","CAMINA",
-                    "CANELA","CANETE","CARAHUE","CARTAGENA","CASABLANCA","CASTRO","CATEMU",
-                    "CAUQUENES","CERRILLOS","CERRO NAVIA","CHAITEN","CHANARAL","CHANCO",
-                    "CHEPICA","CHIGUAYANTE","CHILE CHICO","CHILLAN","CHILLAN VIEJO",
-                    "CHIMBARONGO","CHOLCHOL","CHONCHI","CISNES","COBQUECURA","COCHAMO",
-                    "COCHRANE","CODEGUA","COELEMU","COIHUECO","COINCO","COLBUN","COLCHANE",
-                    "COLINA","COLLIPULLI","COLTAUCO","COMBARBALA","CON CON","CONCEPCION",
-                    "CONCHALI","CONSTITUCION","CONTULMO","COPIAPO","COQUIMBO","CORONEL",
-                    "CORRAL","COYHAIQUE","CUNCO","CURACAVI","CURACAUTIN","CURACO DE VELEZ",
-                    "CURANILAHUE","CURARREHUE","CUREPTO","CURICO","DALCAHUE","DIEGO DE ALMAGRO",
-                    "DONIHUE","EL BOSQUE","EL CARMEN","EL MONTE","EL QUISCO","EL TABO",
-                    "EMPEDRADO","ERCILLA","EST CENTRAL","FLORIDA","FREIRE","FREIRINA","FRESIA",
-                    "FRUTILLAR","FUTALEUFU","FUTRONO","GALVARINO","GENERAL LAGOS","GORBEA",
-                    "GRANEROS","GUAITECAS","HIJUELAS","HUALAIHUE","HUALANE","HUALPEN","HUALQUI",
-                    "HUARA","HUASCO","HUECHURABA","ILLAPEL","INDEPENDENCIA","IQUIQUE",
-                    "ISLA DE MAIPO","ISLA DE PASCUA","JUAN FERNANDEZ","LA CALERA","LA CISTERNA",
-                    "LA CRUZ","LA ESTRELLA","LA FLORIDA","LA GRANJA","LA HIGUERA","LA LIGUA",
-                    "LA PINTANA","LA REINA","LA SERENA","LA UNION","LAGO RANCO","LAGO VERDE",
-                    "LAGUNA BLANCA","LAJA","LAMPA","LANCO","LAS CABRAS","LAS CONDES","LAUTARO",
-                    "LEBU","LICANTEN","LIMACHE","LINARES","LITUECHE","LLANQUIHUE","LLAY-LLAY",
-                    "LO BARNECHEA","LO ESPEJO","LO PRADO","LOLOL","LONCOCHE","LONGAVI",
-                    "LONQUIMAY","LOS ALAMOS","LOS ANDES","LOS ANGELES","LOS LAGOS",
-                    "LOS MUERMOS","LOS SAUCES","LOS VILOS","LOTA","LUMACO","MACHALI","MACUL",
-                    "MAFIL","MAIPU","MALLOA","MARCHIGUE","MARIA ELENA","MARIA PINTO",
-                    "MARIQUINA","MAULE","MAULLIN","MEJILLONES","MELIPEUCO","MELIPILLA",
-                    "MOLINA","MONTE PATRIA","MULCHEN","NACIMIENTO","NANCAGUA","NAVIDAD",
-                    "NEGRETE","NINHUE","NOGALES","NUEVA IMPERIAL","NUNOA","O'HIGGINS","OLIVAR",
-                    "OLLAGUE","OLMUE","OSORNO","OVALLE","P AGUIRRE CERDA","PADRE HURTADO",
-                    "PADRE LAS CASAS","PAIHUANO","PAILLACO","PAINE","PALENA","PALMILLA",
-                    "PANGUIPULLI","PANQUEHUE","PAPUDO","PAREDONES","PARRAL","PELARCO",
-                    "PELLUHUE","PEMUCO","PENAFLOR","PENALOLEN","PENCAHUE","PENCO","PERALILLO",
-                    "PERQUENCO","PETORCA","PEUMO","PICA","PICHIDEGUA","PICHILEMU","PINTO",
-                    "PIRQUE","PITRUFQUEN","PLACILLA","PORTEZUELO","PORVENIR","POZO ALMONTE",
-                    "PRIMAVERA","PROVIDENCIA","PUCHUNCAVI","PUCON","PUDAHUEL","PUENTE ALTO",
-                    "PUERTO MONTT","PUERTO NATALES","PUERTO OCTAY","PUERTO VARAS","PUMANQUE",
-                    "PUNITAQUI","PUNTA ARENAS","PUQUELDON","PUREN","PURRANQUE","PUTAENDO",
-                    "PUTRE","PUYEHUE","QUEILEN","QUELLON","QUEMCHI","QUILACO","QUILICURA",
-                    "QUILLECO","QUILLON","QUILLOTA","QUILPUE","QUINCHAO","QUINTA NORMAL",
-                    "QUINTA TILCOCO","QUINTERO","QUIRIHUE","RANCAGUA","RANQUIL","RAUCO",
-                    "RECOLETA","RENAICO","RENCA","RENGO","REQUINOA","RETIRO","RINCONADA",
-                    "RIO BUENO","RIO CLARO","RIO HURTADO","RIO IBANEZ","RIO NEGRO","RIO VERDE",
-                    "ROMERAL","SAAVEDRA","SAGRADA FAMILIA","SALAMANCA","SAN ANTONIO",
-                    "SAN BERNARDO","SAN CARLOS","SAN CLEMENTE","SAN ESTEBAN","SAN FABIAN",
-                    "SAN FELIPE","SAN FERNANDO","SAN FRANCISCO DE MOSTAZAL","SAN GREG NIQUEN",
-                    "SAN GREGORIO","SAN IGNACIO","SAN JAVIER","SAN JOAQUIN","SAN JOSE MAIPO",
-                    "SAN JUAN DE LA COSTA","SAN MIGUEL","SAN NICOLAS","SAN PABLO",
-                    "SAN PEDRO DE ATACAMA","SAN PEDRO DE LA PAZ","SAN PEDRO DE MELIPILLA",
-                    "SAN RAFAEL","SAN RAMON","SAN ROSENDO","SAN VICENTE","SANTA BARBARA",
-                    "SANTA CRUZ","SANTA JUANA","SANTA MARIA","SANTIAGO","SANTO DOMINGO",
-                    "SIERRA GORDA","TALAGANTE","TALCA","TALCAHUANO","TALTAL","TEMUCO","TENO",
-                    "TEODORO SCHMIDT","TIERRA AMARILLA","TIL-TIL","TIMAUKEL","TIRUA","TOCOPILLA",
-                    "TOLTEN","TOME","TORRES DE PAINE","TORTEL","TRAIGUEN","TREHUACO","TUCAPEL",
-                    "VALDIVIA","VALLENAR","VALPARAISO","VICHUQUEN","VICTORIA","VICUNA","VILCUN",
-                    "VILLA ALEGRE","VILLA ALEMANA","VILLARRICA","VINA DEL MAR","VITACURA",
-                    "YERBAS BUENAS","YUMBEL","YUNGAY","ZAPALLAR"
-                ];
-
-                const comunaInput = document.getElementById('billing-comuna');
-                const comunaDropdown = document.getElementById('billing-comuna-dropdown');
-                let comunaSelectedIndex = -1;
-
-                const closeComunaDropdown = () => {
-                    comunaDropdown.classList.add('hidden');
-                    comunaSelectedIndex = -1;
-                };
-
-                const selectComuna = (comuna) => {
-                    comunaInput.value = comuna;
-                    closeComunaDropdown();
-                };
-
-                comunaInput.addEventListener('input', () => {
-                    const query = comunaInput.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-                    comunaDropdown.innerHTML = '';
-                    comunaSelectedIndex = -1;
-                    if (!query) { comunaDropdown.classList.add('hidden'); return; }
-                    const matches = COMUNAS_VALIDAS_JS.filter(c =>
-                        c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(query)
-                    ).slice(0, 15);
-                    if (matches.length === 0) { comunaDropdown.classList.add('hidden'); return; }
-                    matches.forEach(c => {
-                        const li = document.createElement('li');
-                        li.textContent = c;
-                        li.className = 'px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer text-sm';
-                        li.addEventListener('mousedown', (e) => { e.preventDefault(); selectComuna(c); });
-                        comunaDropdown.appendChild(li);
-                    });
-                    comunaDropdown.classList.remove('hidden');
-                });
-
-                comunaInput.addEventListener('keydown', (e) => {
-                    const items = comunaDropdown.querySelectorAll('li');
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        if (items.length === 0) return;
-                        comunaSelectedIndex = Math.min(comunaSelectedIndex + 1, items.length - 1);
-                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        if (items.length === 0) return;
-                        comunaSelectedIndex = Math.max(comunaSelectedIndex - 1, 0);
-                        items.forEach((li, i) => li.classList.toggle('bg-gray-700', i === comunaSelectedIndex));
-                    } else if (e.key === 'Enter') {
-                        if (comunaSelectedIndex >= 0 && items[comunaSelectedIndex]) {
-                            e.preventDefault();
-                            selectComuna(items[comunaSelectedIndex].textContent);
-                        }
-                    } else if (e.key === 'Escape') {
-                        closeComunaDropdown();
-                    }
-                });
-
-                comunaInput.addEventListener('blur', () => {
-                    setTimeout(closeComunaDropdown, 150);
-                });
-
-                const esComunaValida = (comuna) => COMUNAS_VALIDAS_JS.some(c => c === comuna);
-
-                const billingForm = document.getElementById('billing-form');
-                billingForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const successMsg = document.getElementById('billing-success-message');
-                    const errorMsg = document.getElementById('billing-error-message');
-                    successMsg.classList.add('hidden');
-                    errorMsg.classList.add('hidden');
-
-                    const rut = document.getElementById('billing-rut').value.trim();
-                    const razonSocial = document.getElementById('billing-razon-social').value.trim();
-                    const giro = document.getElementById('billing-giro').value.trim();
-                    const direccion = document.getElementById('billing-direccion').value.trim();
-                    const comuna = document.getElementById('billing-comuna').value.trim();
-                    const email = document.getElementById('billing-email').value.trim();
-
-                    if (!validarRut(rut)) {
-                        errorMsg.textContent = 'El RUT ingresado no es válido. Usa formato 12345678-9.';
-                        errorMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    if (!esComunaValida(comuna)) {
-                        errorMsg.textContent = 'La comuna ingresada no es válida. Selecciona una de la lista.';
-                        errorMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    const saveBtn = document.getElementById('billing-save-btn');
-                    const originalText = saveBtn.innerHTML;
-                    saveBtn.disabled = true;
-                    saveBtn.innerHTML = '<div class="spinner inline-block mr-2"></div>Guardando...';
-
                     try {
-                        const { error: insertError } = await supabaseClient
-                            .from('datos_facturacion')
-                            .insert({
-                                usuario_id: user.id,
-                                rut,
-                                razon_social: razonSocial,
-                                giro: selectedTipoDocumento === 'boleta' ? null : giro,
-                                direccion,
-                                comuna,
-                                email_facturacion: email,
-                                tipo_documento: selectedTipoDocumento
-                            });
-
-                        if (insertError) {
-                            errorMsg.textContent = insertError.message;
-                            errorMsg.classList.remove('hidden');
+                        const { data: profile } = await supabaseClient
+                            .from('perfiles')
+                            .select('plan_id, planes(nombre, precio, limite_llamadas_api)')
+                            .eq('usuario_id', user.id)
+                            .single();
+                        const plan = profile && profile.planes ? profile.planes : null;
+                        if (plan) {
+                            planNombreEl.textContent = plan.nombre;
+                            const precio = (parseInt(plan.precio, 10) || 0);
+                            const detalle = precio === 0
+                                ? `Plan gratuito &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`
+                                : `$${precio.toLocaleString('es-CL')} CLP al mes &bull; <strong class="text-primary-green font-bold">${plan.limite_llamadas_api} boletas al mes</strong>`;
+                            planDetalleEl.innerHTML = detalle;
+                            if (precio > 0) {
+                                // La fecha de vencimiento viene del backend (leería suscripciones
+                                // con service role, sin depender de la RLS de esa tabla).
+                                let fechaFin = null;
+                                try {
+                                    const { data: { session } } = await supabaseClient.auth.getSession();
+                                    if (session) {
+                                        const resp = await fetch(`${FLOW_API_BASE}/mi-suscripcion`, {
+                                            headers: { 'Authorization': `Bearer ${session.access_token}` }
+                                        });
+                                        if (resp.ok) {
+                                            const payload = await resp.json();
+                                            fechaFin = payload && payload.fecha_fin_periodo;
+                                        }
+                                    }
+                                } catch { /* Error de red u otro: no se muestra vencimiento */ }
+                                setVencimiento(fechaFin);
+                            } else {
+                                setVencimiento(null);
+                            }
                         } else {
-                            successMsg.textContent = 'Datos de facturación guardados correctamente.';
-                            successMsg.classList.remove('hidden');
-                            loadBillingData();
+                            planNombreEl.textContent = 'Gratuito';
+                            planDetalleEl.textContent = 'Plan gratuito';
+                            setVencimiento(null);
                         }
                     } catch (err) {
-                        console.error('Error guardando datos de facturación:', err);
-                        errorMsg.textContent = 'Error al guardar: ' + (err.message || err);
-                        errorMsg.classList.remove('hidden');
-                    } finally {
-                        saveBtn.disabled = false;
-                        saveBtn.innerHTML = originalText;
+                        console.error('Error cargando mi suscripción:', err);
+                        planNombreEl.textContent = 'Gratuito';
+                        planDetalleEl.textContent = 'Plan gratuito';
+                        setVencimiento(null);
                     }
+                };
 
-                    setTimeout(() => {
-                        successMsg.classList.add('hidden');
-                        errorMsg.classList.add('hidden');
-                    }, 5000);
-                });
+                // Modals
+                const estadoBadgePago = (estado) => {
+                    const map = {
+                        pagado: 'bg-green-500/10 text-green-400',
+                        pendiente: 'bg-yellow-500/10 text-yellow-400',
+                        rechazado: 'bg-red-500/10 text-red-400',
+                        anulado: 'bg-gray-500/10 text-gray-400',
+                    };
+                    const cls = map[estado] || 'bg-gray-500/10 text-gray-400';
+                    const label = (estado || 'desconocido').toLowerCase();
+                    return `<span class="inline-block px-2 py-0.5 rounded text-xs font-semibold capitalize ${cls}">${label}</span>`;
+                };
+
+                let historialPagosAll = [];
+                let historialPagosPage = 0;
+                let historialPagosSize = parseInt(document.getElementById('historial-pagos-page-size').value, 10) || 5;
+
+                const historialPagosEls = {
+                    body: document.getElementById('historial-pagos-body'),
+                    paginacion: document.getElementById('historial-pagos-paginacion'),
+                    prev: document.getElementById('historial-pagos-prev'),
+                    next: document.getElementById('historial-pagos-next'),
+                    indicator: document.getElementById('historial-pagos-indicator'),
+                    size: document.getElementById('historial-pagos-page-size'),
+                };
+
+                const renderHistorialPagos = () => {
+                    const { body, paginacion, prev, next, indicator } = historialPagosEls;
+                    const totalRecords = historialPagosAll.length;
+                    const totalPages = Math.ceil(totalRecords / historialPagosSize) || 1;
+                    if (historialPagosPage >= totalPages) historialPagosPage = Math.max(0, totalPages - 1);
+                    if (!totalRecords) {
+                        if (body) body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">Aún no tienes pagos registrados.</td></tr>';
+                        if (paginacion) paginacion.classList.add('hidden');
+                        return;
+                    }
+                    if (paginacion) paginacion.classList.remove('hidden');
+                    const from = historialPagosPage * historialPagosSize;
+                    if (body) {
+                        body.innerHTML = historialPagosAll.slice(from, from + historialPagosSize).map(p => {
+                            const fecha = p.fecha_pago ? new Date(p.fecha_pago) : null;
+                            const fechaStr = fecha && !isNaN(fecha.getTime())
+                                ? fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })
+                                : '—';
+                            const monto = p.monto != null ? `$${Number(p.monto).toLocaleString('es-CL')} CLP` : '—';
+                            const per = p.periodo === 'anual' ? 'Anual' : 'Mensual';
+                            return `<tr class="border-b border-dark">
+                                <td class="p-4 text-gray-300">${fechaStr}</td>
+                                <td class="p-4 text-gray-300">${p.plan_nombre || '—'}</td>
+                                <td class="p-4 text-gray-300">${monto}</td>
+                                <td class="p-4 text-gray-300">${p.limite_llamadas_api != null ? p.limite_llamadas_api : '—'}</td>
+                                <td class="p-4 text-gray-300">${per}</td>
+                                <td class="p-4">${estadoBadgePago(p.estado)}</td>
+                            </tr>`;
+                        }).join('');
+                    }
+                    if (indicator) indicator.textContent = `Página ${historialPagosPage + 1} de ${totalPages || 1}`;
+                    if (prev) prev.disabled = historialPagosPage === 0;
+                    if (next) next.disabled = from + historialPagosSize >= totalRecords;
+                };
+
+                const loadHistorialPagos = async () => {
+                    const body = historialPagosEls.body;
+                    if (!body) return;
+                    body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">Cargando historial...</td></tr>';
+                    try {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (!session) throw new Error('Sin sesión');
+                        const resp = await fetch(`${FLOW_API_BASE}/historial`, {
+                            headers: { 'Authorization': `Bearer ${session.access_token}` }
+                        });
+                        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                        const payload = await resp.json();
+                        historialPagosAll = (payload && payload.pagos) || [];
+                        historialPagosPage = 0;
+                        renderHistorialPagos();
+                    } catch (err) {
+                        console.error('Error cargando historial de pagos:', err);
+                        body.innerHTML = '<tr><td colspan="6" class="p-4 text-gray-400 text-center">No se pudo cargar el historial.</td></tr>';
+                    }
+                };
+
+                // Paginación del historial de pagos (misma UX que en Resumen)
+                if (historialPagosEls.prev) historialPagosEls.prev.onclick = () => {
+                    if (historialPagosPage > 0) { historialPagosPage--; renderHistorialPagos(); }
+                };
+                if (historialPagosEls.next) historialPagosEls.next.onclick = () => {
+                    if ((historialPagosPage + 1) * historialPagosSize < historialPagosAll.length) { historialPagosPage++; renderHistorialPagos(); }
+                };
+                if (historialPagosEls.size) historialPagosEls.size.onchange = (e) => {
+                    historialPagosSize = parseInt(e.target.value, 10) || 5;
+                    historialPagosPage = 0;
+                    renderHistorialPagos();
+                };
 
                 // Modals
                 closeErrorModal.onclick = hideErrorModal;

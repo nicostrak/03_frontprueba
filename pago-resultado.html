@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado del Pago - BoletaPro</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Google Fonts: Manrope + Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --surface-dark: #1a1a1a;
+            --primary-green: #00B37E;
+            --primary-green-hover: #00996A;
+            --primary-amber: #f59e0b;
+            --primary-red: #e53e3e;
+            --border-dark: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --accent-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Manrope', system-ui, sans-serif;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-8 text-center">
+        <!-- Loading -->
+        <div id="result-loading">
+            <div class="w-14 h-14 mx-auto mb-6 rounded-full border-4 border-[#00B37E]/20 border-t-[#00B37E] animate-spin"></div>
+            <p class="text-white font-semibold">Consultando el estado de tu pago...</p>
+            <p class="text-gray-500 text-sm mt-1">Espera un segundo mientras verificamos el resultado.</p>
+        </div>
+
+        <!-- Success -->
+        <div id="result-success" class="hidden">
+            <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#00B37E]/15 flex items-center justify-center">
+                <svg class="w-8 h-8 text-[#00B37E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white mb-2">¡Pago exitoso!</h1>
+            <p class="text-gray-400 mb-6">Tu plan <span id="success-plan" class="font-bold text-[#00B37E]"></span> se ha
+                activado. Tu cupo mensual ya está disponible.</p>
+            <p class="text-xs text-gray-500 font-mono mb-8" style="font-family:var(--accent-mono)">Orden: <span
+                    id="success-order" class="text-gray-400"></span></p>
+            <a href="/"
+                class="w-full btn bg-[#00B37E] text-white py-3 rounded-md font-bold hover:bg-[#00996A] inline-block">Ir a mi
+                panel</a>
+        </div>
+
+        <!-- Pending (espera confirmación) -->
+        <div id="result-pending" class="hidden">
+            <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#f59e0b]/15 flex items-center justify-center">
+                <div class="w-8 h-8 rounded-full border-4 border-[#f59e0b]/20 border-t-[#f59e0b] animate-spin"></div>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white mb-2">Confirmando tu pago...</h1>
+            <p class="text-gray-400 mb-2">Tu pago está siendo procesado por Flow. Esto toma unos segundos.</p>
+            <p class="text-xs text-gray-500 mb-6">Esta página se actualizará automáticamente cuando se confirme el pago.</p>
+            <p class="text-xs text-gray-500 font-mono mb-8" style="font-family:var(--accent-mono)">Orden: <span
+                    id="pending-order" class="text-gray-400"></span></p>
+            <a href="/" class="text-[#00B37E] hover:text-[#00996A] font-semibold">Volver al inicio</a>
+        </div>
+
+        <!-- Rejected / Error -->
+        <div id="result-rejected" class="hidden">
+            <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#e53e3e]/15 flex items-center justify-center">
+                <svg class="w-8 h-8 text-[#e53e3e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white mb-2">Pago no concretado</h1>
+            <p id="rejected-message" class="text-gray-400 mb-6">El pago no se pudo completar. Puedes intentarlo
+                nuevamente o contactar a soporte.</p>
+            <a href="/#pricing"
+                class="w-full btn bg-[#00B37E] text-white py-3 rounded-md font-bold hover:bg-[#00996A] inline-block mb-3">Reintentar
+                pago</a>
+            <a href="https://wa.me/56938859332" target="_blank"
+                class="block text-gray-400 hover:text-white font-semibold text-sm">Contactar soporte</a>
+        </div>
+    </div>
+
+    <script src="env.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const accessToken = session ? session.access_token : null;
+            const FLOW_API_BASE = 'https://boletapro-api-test-742039510932.southamerica-west1.run.app/flow';
+
+            const params = new URLSearchParams(window.location.search);
+            const commerceOrder = params.get('commerceOrder') || params.get('commerce_order');
+
+            const loading = document.getElementById('result-loading');
+            const success = document.getElementById('result-success');
+            const pending = document.getElementById('result-pending');
+            const rejected = document.getElementById('result-rejected');
+
+            const show = (el) => {
+                loading.classList.add('hidden');
+                [success, pending, rejected].forEach(x => x.classList.add('hidden'));
+                el.classList.remove('hidden');
+            };
+
+            const setRejectedMessage = (text) => {
+                const el = document.getElementById('rejected-message');
+                if (el) el.textContent = text;
+                show(rejected);
+            };
+
+            if (!commerceOrder) {
+                show(rejected);
+                return;
+            }
+
+            if (!accessToken) {
+                setRejectedMessage('Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.');
+                return;
+            }
+
+            // Avisar a la pestaña de BoletaPro (original) para que cierre el
+            // modal "Gestionar suscripción" y recargue al confirmarse el pago.
+            const bc = typeof BroadcastChannel !== 'undefined'
+                ? new BroadcastChannel('boletapro-pago')
+                : null;
+            const notifyOpenerTab = (estado) => {
+                if (bc) bc.postMessage({ type: 'pago-resultado', estado });
+            };
+
+            const renderResult = (data) => {
+                if (data.estado === 'pagado') {
+                    document.getElementById('success-plan').textContent = data.plan_nombre || (data.plan_id ? `#${data.plan_id}` : '');
+                    document.getElementById('success-order').textContent = data.commerceOrder;
+                    show(success);
+                    stopPolling();
+                    notifyOpenerTab('pagado');
+                    return true;
+                }
+                if (data.estado === 'rechazado' || data.estado === 'anulado') {
+                    show(rejected);
+                    stopPolling();
+                    notifyOpenerTab(data.estado);
+                    return true;
+                }
+                return false;
+            };
+
+            const queryStatus = async () => {
+                const resp = await fetch(`${FLOW_API_BASE}/status/${encodeURIComponent(commerceOrder)}`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (resp.status === 401 || resp.status === 403) {
+                    throw Object.assign(new Error('Sesión expirada o sin permisos.'), { sesion: true });
+                }
+                if (!resp.ok) throw new Error('Orden no encontrada');
+                return resp.json();
+            };
+
+            let pollTimer = null;
+            let attempts = 0;
+            const MAX_ATTEMPTS = 36; // ~3 min de espera a 5s
+            const stopPolling = () => {
+                if (pollTimer) {
+                    clearTimeout(pollTimer);
+                    pollTimer = null;
+                }
+            };
+
+            const poll = async () => {
+                try {
+                    const data = await queryStatus();
+                    if (renderResult(data)) return;
+                    // Sigue pendiente: reintenta en 5s
+                    if (attempts < MAX_ATTEMPTS) {
+                        attempts += 1;
+                        pollTimer = setTimeout(poll, 5000);
+                    } else {
+                        // Tiempo agotado sin resolución: queda en espera permanente (informa por webhook)
+                        show(pending);
+                    }
+                } catch (err) {
+                    console.error('Error consultando estado:', err);
+                    if (err.sesion) {
+                        setRejectedMessage('Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.');
+                        notifyOpenerTab('rechazado');
+                        return;
+                    }
+                    if (attempts < MAX_ATTEMPTS) {
+                        attempts += 1;
+                        pollTimer = setTimeout(poll, 5000);
+                    } else {
+                        setRejectedMessage('El pago no se pudo completar. Puedes intentarlo nuevamente o contactar a soporte.');
+                        notifyOpenerTab('rechazado');
+                    }
+                }
+            };
+
+            try {
+                const data = await queryStatus();
+                if (!renderResult(data)) {
+                    // El pago aún no se confirma: esperar el webhook con reintentos
+                    document.getElementById('pending-order').textContent = data.commerceOrder;
+                    attempts += 1;
+                    pollTimer = setTimeout(poll, 5000);
+                    show(pending);
+                }
+            } catch (err) {
+                console.error('Error consultando estado:', err);
+                setRejectedMessage(
+                    err.sesion
+                        ? 'Tu sesión ha expirado. Vuelve a iniciar sesión en BoletaPro e intenta el pago nuevamente.'
+                        : 'El pago no se pudo completar. Puedes intentarlo nuevamente o contactar a soporte.'
+                );
+                notifyOpenerTab('rechazado');
+            }
+        });
+    </script>
+</body>
+
+</html>
