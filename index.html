@@ -1752,6 +1752,25 @@
                                 data-subject="Plan Empresa BoletaPro">Contratar</button>
                         </div>
                         <div class="pricing-card">
+                            <h3 class="text-lg font-bold text-amber-400 mb-1">Test
+                                <span class="text-xs font-mono-accent text-gray-500">(pruebas)</span></h3>
+                            <p class="text-gray-500 text-xs mb-5 font-mono-accent">10 boletas / mes</p>
+                            <div class="mb-6"><span
+                                    class="pricing-price text-4xl font-extrabold text-white">$350</span><span
+                                    class="text-sm text-gray-500">/mes</span></div>
+                            <ul class="text-sm space-y-2.5 text-gray-300 mb-8 flex-grow">
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> 10 boletas
+                                    mensuales</li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> BHE y BHT</li>
+                                <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Pago de prueba
+                                    (sandbox)</li>
+                            </ul>
+                            <button
+                                class="w-full btn bg-primary-green text-white py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center plan-checkout-btn"
+                                data-plan-id="5" data-plan-name="Test" data-amount="350"
+                                data-subject="Plan Test BoletaPro">Contratar</button>
+                        </div>
+                        <div class="pricing-card">
                             <h3 class="text-lg font-bold text-amber-400 mb-1 flex items-center gap-2">Corporativo<svg
                                     class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path
@@ -2863,17 +2882,6 @@
 
             <!-- Planes: una sola fila con tarjetas compactas -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-stretch">
-                <div class="pricing-card plan-option p-4" data-plan-id="1" data-plan-name="Gratis" data-amount="0">
-                    <h3 class="text-base font-bold text-gray-300">Gratis</h3>
-                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">5 boletas / mes</p>
-                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$0</span><span
-                            class="text-xs text-gray-500">/mes</span></div>
-                    <ul class="text-xs space-y-1.5 text-gray-300">
-                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> 5 boletas mensuales</li>
-                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
-                        <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte por WhatsApp</li>
-                    </ul>
-                </div>
                 <div class="pricing-card plan-option p-4" data-plan-id="2" data-plan-name="Inicial" data-amount="7990">
                     <h3 class="text-base font-bold text-white">Inicial</h3>
                     <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">50 boletas / mes</p>
@@ -2908,6 +2916,17 @@
                         <li class="flex gap-2"><span class="text-primary-green">&bull;</span> BHE y BHT</li>
                         <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Historial 12 meses</li>
                         <li class="flex gap-2"><span class="text-primary-green">&bull;</span> Soporte prioritario</li>
+                    </ul>
+                </div>
+                <div class="pricing-card plan-option p-4" data-plan-id="5" data-plan-name="Test" data-amount="350">
+                    <h3 class="text-base font-bold text-amber-400">Test <span class="text-[11px] font-mono-accent text-gray-500">(pruebas)</span></h3>
+                    <p class="text-gray-500 text-[11px] mb-2 font-mono-accent">10 boletas / mes</p>
+                    <div class="mb-3"><span class="pricing-price text-3xl font-extrabold text-white">$350</span><span
+                            class="text-xs text-gray-500">/mes</span></div>
+                    <ul class="text-xs space-y-1.5 text-gray-300">
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> 10 boletas mensuales</li>
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> BHE y BHT</li>
+                        <li class="flex gap-2"><span class="text-amber-400">&bull;</span> Pago de prueba (sandbox)</li>
                     </ul>
                 </div>
             </div>
@@ -3217,7 +3236,7 @@
             }
 
             // --- Flow.cl Checkout (Pricing) ---
-            const FLOW_API_BASE = 'http://localhost:8080/flow';
+            const FLOW_API_BASE = 'https://boletapro-api-test-742039510932.southamerica-west1.run.app/flow';
 
             // --- Shared helpers (validación de facturación: RUT, comunas) ---
             const validarRut = (rut) => {

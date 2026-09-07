@@ -106,7 +106,7 @@
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             const { data: { session } } = await supabaseClient.auth.getSession();
             const accessToken = session ? session.access_token : null;
-            const FLOW_API_BASE = 'http://localhost:8080/flow';
+            const FLOW_API_BASE = 'https://boletapro-api-test-742039510932.southamerica-west1.run.app/flow';
 
             const params = new URLSearchParams(window.location.search);
             const commerceOrder = params.get('commerceOrder') || params.get('commerce_order');
@@ -149,7 +149,7 @@
 
             const renderResult = (data) => {
                 if (data.estado === 'pagado') {
-                    document.getElementById('success-plan').textContent = `#${data.plan_id}`;
+                    document.getElementById('success-plan').textContent = data.plan_nombre || (data.plan_id ? `#${data.plan_id}` : '');
                     document.getElementById('success-order').textContent = data.commerceOrder;
                     show(success);
                     stopPolling();
