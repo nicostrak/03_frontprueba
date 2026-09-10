@@ -3191,7 +3191,7 @@
                 try {
                     const { data: { session } } = await supabaseClient.auth.getSession();
                     if (!session) return;
-                    const res = await fetch('https://boletapro-api-742039510932.southamerica-west1.run.app/admin/me', {
+                    const res = await fetch('https://test-api.boletapro.cl/admin/me', {
                         headers: { 'Authorization': `Bearer ${session.access_token}` }
                     });
                     const data = await res.json();
@@ -3206,7 +3206,7 @@
             }
 
             // --- Flow.cl Checkout (Pricing) ---
-            const FLOW_API_BASE = 'https://boletapro-api-742039510932.southamerica-west1.run.app/flow';
+            const FLOW_API_BASE = 'https://test-api.boletapro.cl/flow';
 
             // --- Shared helpers (validación de facturación: RUT, comunas) ---
             const validarRut = (rut) => {
@@ -3746,7 +3746,7 @@
 
                         const formData = new FormData(form);
                         const selectedApi = document.getElementById('api-select').value;
-                        const proxyApiUrl = `https://boletapro-api-mddl5s4dta-tl.a.run.app/${selectedApi}`;
+                        const proxyApiUrl = `https://test-api.boletapro.cl/${selectedApi}`;
 
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
@@ -4863,7 +4863,7 @@
                             formData.append('hdn_muestra_glosa', hdnMuestraGlosa);
                         }
 
-                        const proxyApiUrl = `https://boletapro-api-mddl5s4dta-tl.a.run.app/${selectedTipoBoleta}/emitir-csv`;
+                        const proxyApiUrl = `https://test-api.boletapro.cl/${selectedTipoBoleta}/emitir-csv`;
                         const response = await fetch(proxyApiUrl, {
                             method: 'POST',
                             headers: { 'Authorization': `Bearer ${session.access_token}` },

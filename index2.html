@@ -1169,7 +1169,7 @@ td,th{padding:.625rem .75rem}
                         formData.append('clave', clave);
                         formData.append('csv_file', uploadedFile);
                         if (selectedTipoBoleta === 'bhe') { if (tipoRetencion) formData.append('tipo_retencion', tipoRetencion); formData.append('hdn_muestra_glosa', hdnMuestraGlosa); }
-                        var proxyApiUrl = 'https://boletapro-api-742039510932.southamerica-west1.run.app/' + selectedTipoBoleta + '/emitir-csv';
+                        var proxyApiUrl = 'https://test-api.boletapro.cl/' + selectedTipoBoleta + '/emitir-csv';
                         var response = await fetch(proxyApiUrl, { method: 'POST', headers: { 'Authorization': 'Bearer ' + session.access_token }, body: formData });
                         var contentType = response.headers.get("content-type");
                         if (!response.ok) {
