@@ -33,7 +33,7 @@
         <div id="contenido-admin" class="hidden">
             <section class="mb-8">
                 <h2 class="text-lg font-semibold mb-3">Resumen global</h2>
-                <div id="cards-resumen" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+                <div id="cards-resumen" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4"></div>
             </section>
 
             <section class="mb-8">
@@ -45,12 +45,22 @@
                         <button id="btn-buscar" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">Buscar</button>
                     </div>
                 </div>
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <select id="select-plan" class="px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-lg">
+                        <option value="">Todos los planes</option>
+                    </select>
+                    <button id="btn-filtro-activo" class="px-3 py-2 text-sm rounded-lg transition-colors bg-slate-800 hover:bg-slate-700">Plan activo</button>
+                    <button id="btn-filtro-nuevos" class="px-3 py-2 text-sm rounded-lg transition-colors bg-slate-800 hover:bg-slate-700">Nuevos este mes</button>
+                    <button id="btn-limpiar-filtros" class="px-3 py-2 text-sm rounded-lg bg-slate-800/60 hover:bg-slate-700 text-slate-300">Limpiar filtros</button>
+                </div>
                 <div class="overflow-x-auto bg-slate-900 rounded-lg border border-slate-800">
                     <table class="w-full text-sm">
                         <thead class="bg-slate-800 text-left text-slate-300">
                             <tr>
                                 <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="email">Email <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="plan">Plan <span class="orden-ico text-cyan-400"></span></th>
+                                <th class="p-3">Registrado</th>
+                                <th class="p-3">Expira plan</th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="limite">Límite <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="consumo">Consumo mes <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="errores">Errores mes <span class="orden-ico text-cyan-400"></span></th>
@@ -142,21 +152,42 @@
             document.getElementById('contenido-admin').classList.add('hidden');
         }
 
+        function fmtCLP(n) {
+            return '$' + Number(n || 0).toLocaleString('es-CL');
+        }
+
         async function cargarResumen() {
             const data = await apiCall('GET', '/admin/metricas/resumen');
             const hoy = new Date();
+            const mes = NOMBRES_MES[hoy.getMonth()];
             const cards = [
                 { label: 'Usuarios registrados', valor: data.usuarios_registrados, color: 'text-cyan-400' },
-                { label: `Usuarios con emisiones (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.usuarios_con_emisiones_mes, color: 'text-teal-400' },
-                { label: `Boletas emitidas (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.boletas_emitidas_mes, color: 'text-green-400' },
-                { label: `Registros con error (${NOMBRES_MES[hoy.getMonth()]})`, valor: data.registros_con_error_mes, color: 'text-red-400' },
+                { label: 'Usuarios con plan activo', valor: data.usuarios_plan_activo, color: 'text-emerald-400', filtro: 'activo' },
+                { label: `Usuarios nuevos (${mes})`, valor: data.usuarios_nuevos_mes, color: 'text-sky-400', filtro: 'nuevos' },
+                { label: `Ingresos (${mes})`, valor: fmtCLP(data.ingresos_mes), color: 'text-lime-400' },
+                { label: 'Ingresos históricos', valor: fmtCLP(data.ingresos_historicos), color: 'text-green-400' },
+                { label: `Usuarios con emisiones (${mes})`, valor: data.usuarios_con_emisiones_mes, color: 'text-teal-400' },
+                { label: `Boletas emitidas (${mes})`, valor: data.boletas_emitidas_mes, color: 'text-green-400' },
+                { label: `Registros con error (${mes})`, valor: data.registros_con_error_mes, color: 'text-red-400' },
                 { label: 'Claves API activas', valor: data.claves_api_activas, color: 'text-amber-400' },
             ];
             document.getElementById('cards-resumen').innerHTML = cards.map(c => `
-                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800">
-                    <div class="text-slate-400 text-sm">${c.label}</div>
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800 ${c.filtro ? 'cursor-pointer hover:border-cyan-600' : ''}" ${c.filtro ? `data-accion="${c.filtro}"` : ''}>
+                    <div class="text-slate-400 text-sm">${c.label}${c.filtro ? ' <span class="text-cyan-500 text-xs">↳ filtrar</span>' : ''}</div>
                     <div class="text-3xl font-bold ${c.color}">${c.valor}</div>
                 </div>`).join('');
+            document.querySelectorAll('#cards-resumen [data-accion]').forEach(card => {
+                card.addEventListener('click', () => {
+                    if (card.dataset.accion === 'activo') {
+                        filtroEstadoActivo = true; filtroNuevosMes = false; filtroPlanId = null;
+                    } else if (card.dataset.accion === 'nuevos') {
+                        filtroNuevosMes = true; filtroEstadoActivo = false; filtroPlanId = null;
+                    }
+                    paginaActual = 1;
+                    sincronizarFiltrosUI();
+                    cargarUsuarios(document.getElementById('input-busqueda').value);
+                });
+            });
         }
 
         function renderTabla(usuarios) {
@@ -170,6 +201,11 @@
             vacio.classList.add('hidden');
             usuarios.forEach(u => {
                 const rest = u.boletas_restantes === null ? '∞' : u.boletas_restantes;
+                const badge = u.estado_plan === 'activo'
+                    ? ' <span class="ml-1 text-xs text-emerald-400">● Activo</span>'
+                    : u.estado_plan === 'vencido'
+                        ? ' <span class="ml-1 text-xs text-red-400">● Vencido</span>'
+                        : '';
                 const fila = document.createElement('tr');
                 fila.className = 'border-t border-slate-800 hover:bg-slate-800/40';
                 fila.innerHTML = `
@@ -177,7 +213,9 @@
                         <div>${esc(u.email || '—')}</div>
                         <div class="text-slate-500 text-xs">${esc(u.nombre_completo || '')} <span class="text-slate-600">${esc((u.id || '').slice(0, 8))}</span></div>
                     </td>
-                    <td class="p-3">${esc(u.plan_nombre || 'Sin Plan')}</td>
+                    <td class="p-3 whitespace-nowrap">${esc(u.plan_nombre || 'Sin Plan')}${badge}</td>
+                    <td class="p-3 text-slate-400 whitespace-nowrap">${fmtFecha(u.fecha_registro)}</td>
+                    <td class="p-3 text-slate-400 whitespace-nowrap">${fmtFecha(u.fecha_expiracion_plan)}</td>
                     <td class="p-3 text-right">${u.limite_mensual >= 999999 ? '∞' : u.limite_mensual}</td>
                     <td class="p-3 text-right">${u.consumo_mes_actual}</td>
                     <td class="p-3 text-right ${u.boletas_con_error_mes > 0 ? 'text-red-400' : ''}">${u.boletas_con_error_mes}</td>
@@ -193,6 +231,35 @@
         let totalPaginas = 0;
         let ordenColumna = null;
         let ordenDireccion = 'asc';
+        let filtroPlanId = null;
+        let filtroEstadoActivo = false;
+        let filtroNuevosMes = false;
+        let planesCargados = false;
+        const CLASE_BTN_FILTRO = 'px-3 py-2 text-sm rounded-lg transition-colors ';
+
+        function sincronizarFiltrosUI() {
+            const sel = document.getElementById('select-plan');
+            if (sel) sel.value = filtroPlanId === null ? '' : String(filtroPlanId);
+            document.getElementById('btn-filtro-activo').className = CLASE_BTN_FILTRO + (filtroEstadoActivo ? 'bg-cyan-600 hover:bg-cyan-500' : 'bg-slate-800 hover:bg-slate-700');
+            document.getElementById('btn-filtro-nuevos').className = CLASE_BTN_FILTRO + (filtroNuevosMes ? 'bg-cyan-600 hover:bg-cyan-500' : 'bg-slate-800 hover:bg-slate-700');
+        }
+
+        async function cargarPlanes() {
+            if (planesCargados) return;
+            try {
+                const data = await apiCall('GET', '/admin/planes');
+                const sel = document.getElementById('select-plan');
+                (data.planes || []).filter(p => p.id !== 1).forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = p.nombre;
+                    sel.appendChild(opt);
+                });
+                planesCargados = true;
+            } catch (e) {
+                console.warn('No se pudieron cargar los planes:', e);
+            }
+        }
 
         async function cargarUsuarios(busqueda) {
             const params = new URLSearchParams();
@@ -203,6 +270,9 @@
                 params.set('orden_por', ordenColumna);
                 params.set('orden_dir', ordenDireccion);
             }
+            if (filtroPlanId !== null) params.set('plan_id', filtroPlanId);
+            if (filtroEstadoActivo) params.set('estado_plan', 'activo');
+            if (filtroNuevosMes) params.set('registro_mes', 'true');
             const data = await apiCall('GET', '/admin/usuarios?' + params.toString());
             renderTabla(data.usuarios);
             totalPaginas = data.total_paginas || 0;
@@ -260,6 +330,7 @@
         function renderDetalle(u) {
             const rest = u.boletas_restantes === null ? '∞' : u.boletas_restantes;
             const regs = u.registros_uso_recientes || [];
+            const pagos = u.pagos_recientes || [];
             const cuerpo = document.getElementById('detalle-cuerpo');
 
             const resumenHtml = `
@@ -269,7 +340,7 @@
                         <span class="text-slate-400 text-xs">${esc(u.email || '')} · ${esc(u.id)}</span>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                        <div><div class="text-slate-400 text-xs">Plan</div><div class="font-medium">${esc(u.plan_nombre || 'Sin Plan')}</div></div>
+                        <div><div class="text-slate-400 text-xs">Plan</div><div class="font-medium">${esc(u.plan_nombre || 'Sin Plan')}${u.estado_plan === 'activo' ? ' <span class="text-xs text-emerald-400">● Activo</span>' : u.estado_plan === 'vencido' ? ' <span class="text-xs text-red-400">● Vencido</span>' : ''}</div></div>
                         <div><div class="text-slate-400 text-xs">Límite</div><div class="font-medium">${u.limite_mensual >= 999999 ? '∞' : u.limite_mensual}</div></div>
                         <div><div class="text-slate-400 text-xs">Consumo mes</div><div class="font-medium">${u.consumo_mes_actual}</div></div>
                         <div><div class="text-slate-400 text-xs">Restantes</div><div class="font-medium">${rest}</div></div>
@@ -310,6 +381,39 @@
                     <div id="lista-claves" class="space-y-2 text-sm"></div>
                 </div>`;
 
+            const badgeEstadoPago = (estado) => {
+                const colores = {
+                    pagado: 'bg-emerald-900/50 text-emerald-300',
+                    pendiente: 'bg-amber-900/50 text-amber-300',
+                    rechazado: 'bg-red-900/50 text-red-300',
+                    anulado: 'bg-slate-700 text-slate-300',
+                };
+                return `<span class="px-2 py-0.5 rounded-full text-xs ${colores[estado] || 'bg-slate-700 text-slate-300'}">${esc(estado || '—')}</span>`;
+            };
+
+            const pagosHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
+                    <h4 class="font-semibold mb-3">Pagos realizados (${pagos.length})</h4>
+                    ${pagos.length === 0 ? '<div class="text-slate-500 text-sm">Sin pagos registrados.</div>' : `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-800 text-left text-slate-300">
+                                <tr><th class="p-2">Fecha</th><th class="p-2">Orden</th><th class="p-2">Estado</th><th class="p-2 text-right">Monto</th><th class="p-2">Medio</th></tr>
+                            </thead>
+                            <tbody>
+                                ${pagos.map(p => `
+                                    <tr class="border-t border-slate-800">
+                                        <td class="p-2 whitespace-nowrap">${fmtFecha(p.fecha_pago)}</td>
+                                        <td class="p-2 font-mono text-xs">${esc(p.flow_order_id || '—')}${p.es_sandbox ? ' <span class="px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 text-[10px] uppercase">sandbox</span>' : ''}</td>
+                                        <td class="p-2">${badgeEstadoPago(p.estado)}</td>
+                                        <td class="p-2 text-right whitespace-nowrap">${fmtCLP(p.monto)}</td>
+                                        <td class="p-2 text-slate-400">${esc(p.medio_pago || '—')}</td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`}
+                </div>`;
+
             const registrosHtml = `
                 <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
                     <h4 class="font-semibold mb-3">Registros de uso recientes (${regs.length})</h4>
@@ -331,7 +435,7 @@
                     </div>
                 </div>`;
 
-            cuerpo.innerHTML = resumenHtml + cambioPlanHtml + clavesHtml + registrosHtml;
+            cuerpo.innerHTML = resumenHtml + cambioPlanHtml + clavesHtml + pagosHtml + registrosHtml;
 
             cargarClaves(u.id);
 
@@ -405,6 +509,8 @@
             document.getElementById('vista-detalle').classList.add('hidden');
             document.getElementById('contenido-admin').classList.remove('hidden');
             await cargarResumen();
+            await cargarPlanes();
+            sincronizarFiltrosUI();
             paginaActual = 1;
             await cargarUsuarios(document.getElementById('input-busqueda').value);
         }
@@ -435,6 +541,35 @@
         });
         document.getElementById('btn-buscar').addEventListener('click', () => { paginaActual = 1; cargarUsuarios(document.getElementById('input-busqueda').value); });
         document.getElementById('input-busqueda').addEventListener('keydown', e => { if (e.key === 'Enter') { paginaActual = 1; cargarUsuarios(document.getElementById('input-busqueda').value); } });
+        document.getElementById('select-plan').addEventListener('change', e => {
+            filtroPlanId = e.target.value === '' ? null : parseInt(e.target.value, 10);
+            paginaActual = 1;
+            sincronizarFiltrosUI();
+            cargarUsuarios(document.getElementById('input-busqueda').value);
+        });
+        document.getElementById('btn-filtro-activo').addEventListener('click', () => {
+            filtroEstadoActivo = !filtroEstadoActivo;
+            if (filtroEstadoActivo) filtroNuevosMes = false;
+            paginaActual = 1;
+            sincronizarFiltrosUI();
+            cargarUsuarios(document.getElementById('input-busqueda').value);
+        });
+        document.getElementById('btn-filtro-nuevos').addEventListener('click', () => {
+            filtroNuevosMes = !filtroNuevosMes;
+            if (filtroNuevosMes) filtroEstadoActivo = false;
+            paginaActual = 1;
+            sincronizarFiltrosUI();
+            cargarUsuarios(document.getElementById('input-busqueda').value);
+        });
+        document.getElementById('btn-limpiar-filtros').addEventListener('click', () => {
+            filtroPlanId = null;
+            filtroEstadoActivo = false;
+            filtroNuevosMes = false;
+            document.getElementById('input-busqueda').value = '';
+            paginaActual = 1;
+            sincronizarFiltrosUI();
+            cargarUsuarios('');
+        });
         document.getElementById('btn-volver').addEventListener('click', verTodos);
         document.getElementById('btn-pag-ant').addEventListener('click', () => {
             if (paginaActual > 1) { paginaActual--; cargarUsuarios(document.getElementById('input-busqueda').value); }
