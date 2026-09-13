@@ -60,6 +60,7 @@
                                 <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="email">Email <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 cursor-pointer hover:text-white select-none" data-orden="plan">Plan <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3">Registrado</th>
+                                <th class="p-3">Expira plan</th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="limite">Límite <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="consumo">Consumo mes <span class="orden-ico text-cyan-400"></span></th>
                                 <th class="p-3 text-right cursor-pointer hover:text-white select-none" data-orden="errores">Errores mes <span class="orden-ico text-cyan-400"></span></th>
@@ -214,6 +215,7 @@
                     </td>
                     <td class="p-3 whitespace-nowrap">${esc(u.plan_nombre || 'Sin Plan')}${badge}</td>
                     <td class="p-3 text-slate-400 whitespace-nowrap">${fmtFecha(u.fecha_registro)}</td>
+                    <td class="p-3 text-slate-400 whitespace-nowrap">${fmtFecha(u.fecha_expiracion_plan)}</td>
                     <td class="p-3 text-right">${u.limite_mensual >= 999999 ? '∞' : u.limite_mensual}</td>
                     <td class="p-3 text-right">${u.consumo_mes_actual}</td>
                     <td class="p-3 text-right ${u.boletas_con_error_mes > 0 ? 'text-red-400' : ''}">${u.boletas_con_error_mes}</td>
@@ -328,6 +330,7 @@
         function renderDetalle(u) {
             const rest = u.boletas_restantes === null ? '∞' : u.boletas_restantes;
             const regs = u.registros_uso_recientes || [];
+            const pagos = u.pagos_recientes || [];
             const cuerpo = document.getElementById('detalle-cuerpo');
 
             const resumenHtml = `
@@ -378,6 +381,39 @@
                     <div id="lista-claves" class="space-y-2 text-sm"></div>
                 </div>`;
 
+            const badgeEstadoPago = (estado) => {
+                const colores = {
+                    pagado: 'bg-emerald-900/50 text-emerald-300',
+                    pendiente: 'bg-amber-900/50 text-amber-300',
+                    rechazado: 'bg-red-900/50 text-red-300',
+                    anulado: 'bg-slate-700 text-slate-300',
+                };
+                return `<span class="px-2 py-0.5 rounded-full text-xs ${colores[estado] || 'bg-slate-700 text-slate-300'}">${esc(estado || '—')}</span>`;
+            };
+
+            const pagosHtml = `
+                <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
+                    <h4 class="font-semibold mb-3">Pagos realizados (${pagos.length})</h4>
+                    ${pagos.length === 0 ? '<div class="text-slate-500 text-sm">Sin pagos registrados.</div>' : `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-800 text-left text-slate-300">
+                                <tr><th class="p-2">Fecha</th><th class="p-2">Orden</th><th class="p-2">Estado</th><th class="p-2 text-right">Monto</th><th class="p-2">Medio</th></tr>
+                            </thead>
+                            <tbody>
+                                ${pagos.map(p => `
+                                    <tr class="border-t border-slate-800">
+                                        <td class="p-2 whitespace-nowrap">${fmtFecha(p.fecha_pago)}</td>
+                                        <td class="p-2 font-mono text-xs">${esc(p.flow_order_id || '—')}${p.es_sandbox ? ' <span class="px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 text-[10px] uppercase">sandbox</span>' : ''}</td>
+                                        <td class="p-2">${badgeEstadoPago(p.estado)}</td>
+                                        <td class="p-2 text-right whitespace-nowrap">${fmtCLP(p.monto)}</td>
+                                        <td class="p-2 text-slate-400">${esc(p.medio_pago || '—')}</td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`}
+                </div>`;
+
             const registrosHtml = `
                 <div class="bg-slate-900 rounded-lg border border-slate-800 p-5">
                     <h4 class="font-semibold mb-3">Registros de uso recientes (${regs.length})</h4>
@@ -399,7 +435,7 @@
                     </div>
                 </div>`;
 
-            cuerpo.innerHTML = resumenHtml + cambioPlanHtml + clavesHtml + registrosHtml;
+            cuerpo.innerHTML = resumenHtml + cambioPlanHtml + clavesHtml + pagosHtml + registrosHtml;
 
             cargarClaves(u.id);
 
