@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupones de descuento - BoletaPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="env.js"></script>
+    <style>
+        body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        .spinner { border: 3px solid rgba(255,255,255,.2); border-top-color: #22d3ee; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <header class="flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold">Cupones de descuento</h1>
+                <p class="text-slate-400 text-sm">BoletaPro · montos fijos aplicables a cualquier plan</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="session-info" class="text-slate-400 text-sm"></span>
+                <a href="admin.html" class="px-3 py-2 text-sm bg-cyan-600 hover:bg-cyan-500 rounded-lg">← Volver al panel</a>
+                <button id="btn-logout" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">Salir</button>
+            </div>
+        </header>
+
+        <div id="msg-permiso" class="hidden p-4 mb-6 bg-red-900/40 border border-red-700 rounded-lg text-red-200"></div>
+
+        <div id="contenido-cupones" class="hidden">
+            <section class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Nuevo cupón</h2>
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800 grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+                    <div class="md:col-span-1">
+                        <label class="block text-xs text-slate-400 mb-1">Código *</label>
+                        <input id="inp-codigo" type="text" placeholder="VERANO5000" class="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg uppercase">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs text-slate-400 mb-1">Descuento (CLP) *</label>
+                        <input id="inp-monto" type="number" min="1" step="1" placeholder="5000" class="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs text-slate-400 mb-1">Límite de usos</label>
+                        <input id="inp-limite" type="number" min="1" step="1" placeholder="ilimitado" class="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs text-slate-400 mb-1">Expira (fecha y hora)</label>
+                        <input id="inp-expira" type="datetime-local" class="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs text-slate-400 mb-1">Descripción</label>
+                        <input id="inp-descripcion" type="text" placeholder="opcional" class="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg">
+                    </div>
+                    <div class="md:col-span-1">
+                        <button id="btn-crear" class="w-full px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 rounded-lg">Crear cupón</button>
+                    </div>
+                </div>
+                <div id="resultado-crear" class="hidden mt-3 p-3 bg-slate-900 rounded-lg border border-slate-800 text-sm"></div>
+                <p class="text-slate-500 text-xs mt-2">El cupón se aplica al total del plan (mensual o anual). Se agota con el límite de usos <strong>o</strong> la fecha de expiración, lo que ocurra primero. Sin límite/fecha = sin restricción.</p>
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold">Cupones existentes</h2>
+                    <button id="btn-recargar" class="px-3 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg">Recargar</button>
+                </div>
+                <div class="overflow-x-auto bg-slate-900 rounded-lg border border-slate-800">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-800 text-left text-slate-300">
+                            <tr>
+                                <th class="p-3">Código</th>
+                                <th class="p-3 text-right">Descuento</th>
+                                <th class="p-3 text-right">Usos</th>
+                                <th class="p-3">Expira</th>
+                                <th class="p-3">Estado</th>
+                                <th class="p-3">Descripción</th>
+                                <th class="p-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-cupones"></tbody>
+                    </table>
+                    <div id="tabla-vacio" class="hidden p-6 text-center text-slate-500">Aún no hay cupones.</div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Mismo backend según entorno (test vs producción), sin depender de la rama.
+        const ES_TEST = ['test.boletapro.cl', 'localhost', '127.0.0.1'].includes(location.hostname);
+        const API_BASE = ES_TEST
+            ? 'https://test-api.boletapro.cl'
+            : 'https://boletapro-api-742039510932.southamerica-west1.run.app';
+
+        async function getToken() {
+            const { data } = await supabaseClient.auth.getSession();
+            return data.session ? data.session.access_token : null;
+        }
+
+        async function apiCall(method, path, body) {
+            const token = await getToken();
+            if (!token) throw new Error('Sesión expirada');
+            const res = await fetch(API_BASE + path, {
+                method,
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                body: body ? JSON.stringify(body) : undefined
+            });
+            if (res.status === 401) throw new Error('No autenticado');
+            if (res.status === 403) throw new Error('FORBIDDEN');
+            if (!res.ok) {
+                const d = await res.json().catch(() => ({}));
+                throw new Error(d.detail || ('Error HTTP ' + res.status));
+            }
+            return res.json();
+        }
+
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function fmtCLP(n) { return '$' + Number(n || 0).toLocaleString('es-CL'); }
+
+        function fmtFecha(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return isNaN(d) ? '—' : d.toLocaleString('es-CL', { dateStyle: 'short', timeStyle: 'short' });
+        }
+
+        function estadoCupon(c) {
+            if (!c.activo) return { txt: 'Inactivo', cls: 'text-slate-400' };
+            if (c.fecha_expiracion && new Date(c.fecha_expiracion) <= new Date()) return { txt: 'Expirado', cls: 'text-amber-400' };
+            if (c.limite_usos != null && (c.usos || 0) >= c.limite_usos) return { txt: 'Agotado', cls: 'text-red-400' };
+            return { txt: 'Activo', cls: 'text-emerald-400' };
+        }
+
+        function renderCupones(cupones) {
+            const tbody = document.getElementById('tbody-cupones');
+            const vacio = document.getElementById('tabla-vacio');
+            tbody.innerHTML = '';
+            if (!cupones || !cupones.length) { vacio.classList.remove('hidden'); return; }
+            vacio.classList.add('hidden');
+            cupones.forEach(c => {
+                const est = estadoCupon(c);
+                const usos = c.limite_usos == null ? `${c.usos || 0} / ∞` : `${c.usos || 0} / ${c.limite_usos}`;
+                const tr = document.createElement('tr');
+                tr.className = 'border-t border-slate-800';
+                tr.innerHTML = `
+                    <td class="p-3 font-mono font-medium">${esc(c.codigo)}</td>
+                    <td class="p-3 text-right">${fmtCLP(c.monto_descuento)}</td>
+                    <td class="p-3 text-right">${usos}</td>
+                    <td class="p-3">${fmtFecha(c.fecha_expiracion)}</td>
+                    <td class="p-3 ${est.cls}">${est.txt}</td>
+                    <td class="p-3 text-slate-400">${esc(c.descripcion || '')}</td>
+                    <td class="p-3 whitespace-nowrap text-right">
+                        <button class="btn-toggle px-2 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700" data-id="${c.id}" data-activo="${c.activo}">${c.activo ? 'Desactivar' : 'Activar'}</button>
+                        <button class="btn-eliminar px-2 py-1 text-xs rounded bg-red-900/60 hover:bg-red-800 ml-1" data-id="${c.id}" data-codigo="${esc(c.codigo)}">Eliminar</button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function cargarCupones() {
+            const data = await apiCall('GET', '/admin/cupones');
+            renderCupones(data.cupones || []);
+        }
+
+        function mostrarResultado(id, html, ok) {
+            const box = document.getElementById(id);
+            box.classList.remove('hidden');
+            box.innerHTML = html;
+        }
+
+        document.getElementById('btn-crear').addEventListener('click', async () => {
+            const codigo = document.getElementById('inp-codigo').value.trim().toUpperCase();
+            const monto = parseInt(document.getElementById('inp-monto').value, 10);
+            const limiteRaw = document.getElementById('inp-limite').value.trim();
+            const expiraRaw = document.getElementById('inp-expira').value;
+            const descripcion = document.getElementById('inp-descripcion').value.trim();
+            if (!codigo || !monto || monto <= 0) {
+                mostrarResultado('resultado-crear', '<span class="text-red-400">Código y monto (>0) son obligatorios.</span>');
+                return;
+            }
+            const body = {
+                codigo,
+                monto_descuento: monto,
+                limite_usos: limiteRaw ? parseInt(limiteRaw, 10) : null,
+                fecha_expiracion: expiraRaw ? new Date(expiraRaw).toISOString() : null,
+                descripcion: descripcion || null
+            };
+            mostrarResultado('resultado-crear', '<span class="spinner mr-2"></span>Creando...');
+            try {
+                await apiCall('POST', '/admin/cupones', body);
+                mostrarResultado('resultado-crear', `<span class="text-emerald-400">✓ Cupón ${esc(codigo)} creado.</span>`);
+                ['inp-codigo','inp-monto','inp-limite','inp-expira','inp-descripcion'].forEach(id => document.getElementById(id).value = '');
+                await cargarCupones();
+            } catch (e) {
+                mostrarResultado('resultado-crear', `<span class="text-red-400">Error: ${esc(e.message)}</span>`);
+            }
+        });
+
+        document.getElementById('btn-recargar').addEventListener('click', () => cargarCupones().catch(e => alert(e.message)));
+
+        document.getElementById('tbody-cupones').addEventListener('click', async (ev) => {
+            const toggle = ev.target.closest('.btn-toggle');
+            const del = ev.target.closest('.btn-eliminar');
+            try {
+                if (toggle) {
+                    const id = toggle.dataset.id;
+                    const nuevo = toggle.dataset.activo !== 'true';
+                    await apiCall('PATCH', `/admin/cupones/${id}`, { activo: nuevo });
+                    await cargarCupones();
+                } else if (del) {
+                    const id = del.dataset.id;
+                    if (!confirm(`¿Eliminar el cupón ${del.dataset.codigo}? Esta acción no se puede deshacer.`)) return;
+                    await apiCall('DELETE', `/admin/cupones/${id}`);
+                    await cargarCupones();
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        async function init() {
+            const { data } = await supabaseClient.auth.getSession();
+            if (!data.session) { window.location.href = 'index.html'; return; }
+            document.getElementById('session-info').textContent = data.session.user.email || 'Sesión iniciada';
+            try {
+                await cargarCupones();
+                document.getElementById('contenido-cupones').classList.remove('hidden');
+            } catch (e) {
+                const box = document.getElementById('msg-permiso');
+                box.classList.remove('hidden');
+                box.textContent = e.message === 'FORBIDDEN'
+                    ? 'No tienes permisos de administrador.'
+                    : 'Error de acceso: ' + e.message;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

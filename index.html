@@ -2932,6 +2932,15 @@
                         class="btn bg-primary-green text-white px-6 py-2.5 rounded-md font-bold text-sm bg-primary-green-hover text-center disabled:opacity-50 disabled:cursor-not-allowed">Pagar</button>
                 </div>
 
+                <!-- Cupón de descuento -->
+                <div id="checkout-cupon-wrapper" class="mt-3 flex items-center gap-2 flex-wrap">
+                    <input id="checkout-cupon-input" type="text" placeholder="Código de descuento" autocomplete="off"
+                           class="px-3 py-2 text-sm bg-gray-900 border border-dark rounded-md uppercase text-gray-200 placeholder-gray-500">
+                    <button id="checkout-cupon-btn" type="button"
+                            class="px-4 py-2 text-sm rounded-md bg-gray-800 hover:bg-gray-700 text-gray-200">Aplicar cupón</button>
+                    <span id="checkout-cupon-msg" class="text-xs text-gray-500"></span>
+                </div>
+
                 <!-- Comprobante tributario (obligatorio) -->
                 <div id="checkout-tipo-wrapper" class="mt-4 border-t border-dark pt-4">
                     <label class="block text-sm font-medium text-gray-400 mb-3">¿Cómo quieres recibir tu comprobante tributario?</label>
@@ -3389,7 +3398,8 @@
                             plan_id: planId,
                             amount: amount,
                             subject: subject,
-                            periodo: periodo
+                            periodo: periodo,
+                            codigo_descuento: cuponAplicado ? cuponAplicado.codigo : null
                         })
                     });
                     const data = await resp.json();
@@ -3462,6 +3472,17 @@
             const anualSwitchKnob = document.querySelector('.anual-switch-knob');
             const checkoutSelectedPlanBtn = document.getElementById('checkout-selected-plan');
             let selectedPlan = null;
+            let cuponAplicado = null; // { codigo, monto }
+
+            const MENSAJES_CUPON = {
+                no_existe: 'El cupón no existe.',
+                inactivo: 'El cupón no está activo.',
+                expirado: 'El cupón ha expirado.',
+                agotado: 'El cupón alcanzó su límite de usos.',
+                ya_usado: 'Ya usaste este cupón.',
+                error: 'No se pudo validar el cupón.'
+            };
+            const mensajeCupon = (m) => MENSAJES_CUPON[m] || 'Cupón inválido.';
 
             const fmtMensual = (monthlyPrice) =>
                 monthlyPrice === 0 ? 'Gratis' : '$' + monthlyPrice.toLocaleString('es-CL') + ' CLP /mes';
@@ -3478,12 +3499,17 @@
                 const isFree = price === 0;
                 const isAnual = periodo === 'anual' && !isFree;
 
-                // El amount que se envía al backend debe coincidir con la periodicidad
-                selectedPlan.amount = isAnual ? Math.round(price * 12 * factorAnual()) : price;
+                // Monto base (con posible descuento anual) y luego cupón de monto fijo.
+                const base = isAnual ? Math.round(price * 12 * factorAnual()) : price;
+                const cuponMonto = cuponAplicado ? cuponAplicado.monto : 0;
+                const totalFinal = base - cuponMonto;
+                selectedPlan.amount = totalFinal;
                 selectedPlan.periodo = isAnual ? 'anual' : 'mensual';
 
-                cartTotal.textContent = isAnual ? fmtAnual(price) : fmtMensual(price);
-                cartTotalPeriod.textContent = isAnual ? `12 meses • ahorro ${descuentoAnualPct}%` : '';
+                const sufijo = isAnual ? ' /año' : ' /mes';
+                cartTotal.textContent = totalFinal <= 0 ? '$0 CLP' : ('$' + totalFinal.toLocaleString('es-CL') + ' CLP' + sufijo);
+                cartTotalPeriod.textContent = (isAnual ? `12 meses • ahorro ${descuentoAnualPct}%` : '')
+                    + (cuponAplicado ? ` • cupón ${cuponAplicado.codigo} -$${cuponMonto.toLocaleString('es-CL')}` : '');
 
                 anualSwitch.setAttribute('aria-checked', isAnual ? 'true' : 'false');
                 if (isAnual) {
@@ -3524,6 +3550,42 @@
                 checkoutSelectedPlanBtn.innerHTML = price === 0 ? 'Plan gratuito' : 'Pagar';
                 recalcCart('mensual');
             };
+
+            const aplicarCupon = async () => {
+                const input = document.getElementById('checkout-cupon-input');
+                const msg = document.getElementById('checkout-cupon-msg');
+                const codigo = (input.value || '').trim().toUpperCase();
+                if (!codigo) { msg.textContent = 'Ingresa un código.'; msg.className = 'text-xs text-amber-400'; return; }
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) { showAuthModal('login'); return; }
+                msg.textContent = 'Validando...'; msg.className = 'text-xs text-gray-400';
+                try {
+                    const r = await fetch(`${FLOW_API_BASE}/validar-cupon`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+                        body: JSON.stringify({ codigo })
+                    });
+                    const d = await r.json();
+                    if (!r.ok) throw new Error(d.detail || 'No se pudo validar el cupón');
+                    if (d.valido) {
+                        cuponAplicado = { codigo: d.codigo, monto: Number(d.monto_descuento) };
+                        msg.textContent = `Cupón ${d.codigo} aplicado: -$${cuponAplicado.monto.toLocaleString('es-CL')}`;
+                        msg.className = 'text-xs text-emerald-400';
+                    } else {
+                        cuponAplicado = null;
+                        msg.textContent = mensajeCupon(d.motivo);
+                        msg.className = 'text-xs text-red-400';
+                    }
+                    if (selectedPlan) recalcCart(selectedPlan.periodo);
+                } catch (e) {
+                    msg.textContent = 'Error: ' + e.message;
+                    msg.className = 'text-xs text-red-400';
+                }
+            };
+            document.getElementById('checkout-cupon-btn').addEventListener('click', aplicarCupon);
+            document.getElementById('checkout-cupon-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); aplicarCupon(); }
+            });
 
             const planOptions = document.querySelectorAll('.plan-option');
             planOptions.forEach(option => {
