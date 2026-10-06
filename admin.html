@@ -103,6 +103,32 @@
                 </div>
                 <div id="resultado-downgrade" class="hidden mt-3 p-4 bg-slate-900 rounded-lg border border-slate-800 text-sm"></div>
             </section>
+
+            <section class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Configuración</h2>
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800 flex items-end gap-4 flex-wrap">
+                    <div>
+                        <label for="input-descuento-anual" class="block text-sm font-medium mb-1">Descuento plan anual (%)</label>
+                        <p class="text-slate-400 text-xs mb-2">Aplicado al pagar 12 meses por adelantado. Ej: 30 ⇒ precio_anual = precio_mensual × 12 × 0.70.</p>
+                        <input id="input-descuento-anual" type="number" min="0" max="100" step="1"
+                               class="w-32 px-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg">
+                    </div>
+                    <button id="btn-guardar-descuento" class="px-4 py-2 text-sm bg-cyan-600 hover:bg-cyan-500 rounded-lg">Guardar</button>
+                </div>
+                <div id="resultado-configuracion" class="hidden mt-3 p-4 bg-slate-900 rounded-lg border border-slate-800 text-sm"></div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Cupones de descuento</h2>
+                <div class="p-4 bg-slate-900 rounded-lg border border-slate-800 flex items-center gap-4 flex-wrap">
+                    <div>
+                        <p class="font-medium">Administrar cupones</p>
+                        <p class="text-slate-400 text-sm">Crea, edita y elimina códigos de descuento (monto fijo, límite de usos y expiración).</p>
+                    </div>
+                    <a href="admin-cupones.html" target="_blank" rel="noopener"
+                       class="px-4 py-2 text-sm bg-cyan-600 hover:bg-cyan-500 rounded-lg">Abrir gestor de cupones ↗</a>
+                </div>
+            </section>
         </div>
 
         <div id="vista-detalle" class="hidden">
@@ -258,6 +284,17 @@
                 planesCargados = true;
             } catch (e) {
                 console.warn('No se pudieron cargar los planes:', e);
+            }
+        }
+
+        async function cargarConfiguracion() {
+            try {
+                const data = await apiCall('GET', '/admin/configuracion');
+                const item = (data.configuracion || []).find(c => c.clave === 'descuento_anual_pct');
+                const input = document.getElementById('input-descuento-anual');
+                if (input && item) input.value = item.valor;
+            } catch (e) {
+                console.warn('No se pudo cargar la configuración:', e);
             }
         }
 
@@ -525,6 +562,7 @@
             info.textContent = data.session.user.email || 'Sesión iniciada';
             try {
                 await verTodos();
+                await cargarConfiguracion();
                 document.getElementById('contenido-admin').classList.remove('hidden');
             } catch (e) {
                 if (e.message === 'FORBIDDEN') {
@@ -599,6 +637,20 @@
                         <div><div class="text-slate-400 text-xs">Errores</div><div class="text-lg font-bold ${r.errores && r.errores.length ? 'text-red-400' : ''}">${r.errores ? r.errores.length : 0}</div></div>
                     </div>
                     ${r.errores && r.errores.length ? '<div class="mt-2 text-red-400 text-xs">' + r.errores.map(esc).join('<br>') + '</div>' : ''}`;
+            } catch (e) {
+                box.innerHTML = '<div class="text-red-400">Error: ' + esc(e.message) + '</div>';
+            }
+        });
+
+        document.getElementById('btn-guardar-descuento').addEventListener('click', async () => {
+            const box = document.getElementById('resultado-configuracion');
+            const input = document.getElementById('input-descuento-anual');
+            const valor = input.value.trim();
+            box.classList.remove('hidden');
+            box.innerHTML = '<span class="spinner mr-2"></span>Guardando...';
+            try {
+                await apiCall('PATCH', '/admin/configuracion', { clave: 'descuento_anual_pct', valor });
+                box.innerHTML = '<span class="text-emerald-400">✓ Descuento anual actualizado a ' + esc(valor) + '%</span>';
             } catch (e) {
                 box.innerHTML = '<div class="text-red-400">Error: ' + esc(e.message) + '</div>';
             }
