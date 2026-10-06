@@ -2917,7 +2917,7 @@
                         </div>
                     </div>
                     <label id="anual-switch-row" class="flex items-center gap-2 text-sm text-gray-300 order-3 lg:order-none">
-                        <span>Pago Anual <strong class="text-primary-green">-20%</strong></span>
+                        <span>Pago Anual <strong id="anual-descuento-label" class="text-primary-green">-20%</strong></span>
                         <button id="anual-switch" type="button" role="switch" aria-checked="false"
                             class="relative w-11 h-6 rounded-full bg-gray-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                             <span class="anual-switch-knob absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"></span>
@@ -3208,6 +3208,29 @@
             // --- Flow.cl Checkout (Pricing) ---
             const FLOW_API_BASE = 'https://test-api.boletapro.cl/flow';
 
+            // Descuento anual (%) — se carga desde /flow/config (editable desde el panel admin).
+            // Fallback = 20 (valor previo) para no romper el checkout durante el despliegue:
+            // si el backend aún no expone /flow/config, se mantiene el comportamiento anterior.
+            let descuentoAnualPct = 20;
+            const factorAnual = () => (100 - descuentoAnualPct) / 100;
+            const actualizarLabelDescuento = () => {
+                const el = document.getElementById('anual-descuento-label');
+                if (el) el.textContent = `-${descuentoAnualPct}%`;
+            };
+            (async () => {
+                try {
+                    const r = await fetch(`${FLOW_API_BASE}/config`);
+                    if (r.ok) {
+                        const cfg = await r.json();
+                        const pct = parseInt(cfg.descuento_anual_pct, 10);
+                        if (Number.isFinite(pct) && pct >= 0 && pct <= 100) {
+                            descuentoAnualPct = pct;
+                            actualizarLabelDescuento();
+                        }
+                    }
+                } catch (e) { /* se mantiene el valor por defecto */ }
+            })();
+
             // --- Shared helpers (validación de facturación: RUT, comunas) ---
             const validarRut = (rut) => {
                 const cleaned = rut.replace(/[^0-9kK]/g, '').toUpperCase();
@@ -3445,7 +3468,7 @@
 
             const fmtAnual = (monthlyPrice) => {
                 if (monthlyPrice === 0) return 'Gratis';
-                const total = Math.round(monthlyPrice * 12 * 0.8);
+                const total = Math.round(monthlyPrice * 12 * factorAnual());
                 return '$' + total.toLocaleString('es-CL') + ' CLP /año';
             };
 
@@ -3456,11 +3479,11 @@
                 const isAnual = periodo === 'anual' && !isFree;
 
                 // El amount que se envía al backend debe coincidir con la periodicidad
-                selectedPlan.amount = isAnual ? Math.round(price * 12 * 0.8) : price;
+                selectedPlan.amount = isAnual ? Math.round(price * 12 * factorAnual()) : price;
                 selectedPlan.periodo = isAnual ? 'anual' : 'mensual';
 
                 cartTotal.textContent = isAnual ? fmtAnual(price) : fmtMensual(price);
-                cartTotalPeriod.textContent = isAnual ? '12 meses • ahorro 20%' : '';
+                cartTotalPeriod.textContent = isAnual ? `12 meses • ahorro ${descuentoAnualPct}%` : '';
 
                 anualSwitch.setAttribute('aria-checked', isAnual ? 'true' : 'false');
                 if (isAnual) {
